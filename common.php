@@ -3,7 +3,7 @@
 function &getDBConn()
 {
     static $conn;
-    if (is_object($conn) == true) {
+    if (is_object($conn)) {
         return $conn;
     }
     require "DBConfig.php";
@@ -32,18 +32,23 @@ function &sqlQuery($sql)
     return $result;
 }
 
-function studentIDExists($studentID, $needFilter = true)
+function getSqlError() {
+    $conn = &getDBConn();
+    return $conn->error;
+}
+
+function studentIDExists($studentID, $paramFilter = true)
 {
-    if ($needFilter) {
+    if ($paramFilter) {
         $studentID = filter($studentID);
     }
-    $result = &sqlQuery("select * from user where studentID='$studentID' limit 1");
+    $result = &sqlQuery("select name from user where studentID='$studentID' limit 1");
     return boolval($result->num_rows);
 }
 
-function addUser($name, $studentID, $password, $needMD5 = true, $needFilter = true)
+function addUser($name, $studentID, $password, $needMD5 = true, $paramFilter = true)
 {
-    if ($needFilter) {
+    if ($paramFilter) {
         $name = filter($name);
         $studentID = filter($studentID);
     }
@@ -53,41 +58,87 @@ function addUser($name, $studentID, $password, $needMD5 = true, $needFilter = tr
     return sqlQuery("INSERT INTO user(name, studentID, password, date) VALUES ('$name', '$studentID', '$password', CURDATE())");
 }
 
-function admitUser($studentID, $needFilter = true)
+function admitUser($studentID, $paramFilter = true)
 {
-    if ($needFilter) {
+    if ($paramFilter) {
         $studentID = filter($studentID);
     }
     return sqlQuery("UPDATE user SET admitted=1 WHERE studentID='$studentID'");
 }
 
-function denyUser($studentID, $needFilter = true)
+function denyUser($studentID, $paramFilter = true)
 {
-    if ($needFilter) {
+    if ($paramFilter) {
         $studentID = filter($studentID);
     }
     return sqlQuery("UPDATE user SET admitted=0 WHERE studentID='$studentID'");
 }
 
-function delUser($studentID, $needFilter = true)
+function delUser($studentID, $paramFilter = true)
 {
-    if ($needFilter) {
+    if ($paramFilter) {
         $studentID = filter($studentID);
     }
     return sqlQuery("DELETE FROM user WHERE studentID='$studentID'");
 }
 
-function changeUserName($studentID, $name, $needFilter = true)
+function getUserStudentID($name, $paramFilter = true, $outHTMLFilter = true) {
+    if ($paramFilter) {
+        $name = filter($name);
+    }
+    $result = &sqlQuery("SELECT studentID From user WHERE name='$name' limit 1");
+    if (!$result->num_rows) {
+        return null;
+    }
+    $out = $result->fetch_assoc()['studentID'];
+    if ($outHTMLFilter) {
+        $out = htmlspecialchars($out);
+    }
+    return $out;
+}
+
+function getUserInformation($studentID, $type, $paramFilter = true, $outHTMLFilter = true) {
+    if ($paramFilter) {
+        $studentID = filter($studentID);
+    }
+    $result = &sqlQuery("SELECT `$type` From user WHERE studentID='$studentID' limit 1");
+    if (!$result->num_rows) {
+        return null;
+    }
+    $out = $result->fetch_assoc()[$type];
+    if ($outHTMLFilter) {
+        $out = htmlspecialchars($out);
+    }
+    return $out;
+}
+
+function getUserName($studentID, $paramFilter = true, $outHTMLFilter = true) {
+    return getUserInformation($studentID, 'name', $paramFilter, $outHTMLFilter);
+}
+
+function getUserPassword($studentID, $paramFilter = true, $outHTMLFilter = true) {
+    return getUserInformation($studentID, 'password', $paramFilter, $outHTMLFilter);
+}
+
+function setUserStudentID($studentID, $newID, $paramFilter = true)
 {
-    if ($needFilter) {
+    if ($paramFilter) {
+        $studentID = filter($studentID);
+    }
+    return sqlQuery("UPDATE user SET studentID='$newID' WHERE studentID='$studentID'");
+}
+
+function setUserName($studentID, $name, $paramFilter = true)
+{
+    if ($paramFilter) {
         $studentID = filter($studentID);
     }
     return sqlQuery("UPDATE user SET name='$name' WHERE studentID='$studentID'");
 }
 
-function changeUserPassword($studentID, $password, $needMD5 = true, $needFilter = true)
+function setUserPassword($studentID, $password, $needMD5 = true, $paramFilter = true)
 {
-    if ($needFilter) {
+    if ($paramFilter) {
         $studentID = filter($studentID);
     }
     if ($needMD5) {
