@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <title>登录注册页面</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<div class="content">
+    <form name="login" method="post" action="">
+        <div class="form sign-in">
+            <h2>欢迎回来！同学们</h2>
+            <label>
+                <span>学号</span>
+                <input type="text" />
+            </label>
+            <label>
+                <span>密码</span>
+                <input type="password" />
+            </label>
+            <p class="forgot-pass"><a href="javascript:">忘记密码？</a></p>
+            <button type="submit" class="submit">登 录</button>
+            <button type="button" class="fb-btn">使用 <span>管理员</span> 帐号登录</button>
+        </div>
+    </form>
+    <div class="sub-cont">
+        <div class="img">
+            <div class="img__text m--up">
+                <h2>还未注册？</h2>
+                <br>
+                <p>立即注册</p>
+                <br>
+                <p>与老师同学们共聚一堂</p>
+            </div>
+            <div class="img__text m--in">
+                <h2>已有帐号？</h2>
+                <br>
+                <p>快来登录吧，好久不见了！</p>
+            </div>
+            <div class="img__btn">
+                <span class="m--up">注 册</span>
+                <span class="m--in">登 录</span>
+            </div>
+        </div>
+        <form name="register" method="post" action="">
+            <div class="form sign-up">
+                <h2>立即注册</h2>
+                <label>
+                    <span>用户名</span>
+                    <input type="text" />
+                </label>
+                <label>
+                    <span>学号</span>
+                    <input type="text" />
+                </label>
+                <label>
+                    <span>密码</span>
+                    <input type="password" />
+                </label>
+                <button type="submit" class="submit">注 册</button>
+                <button type="reset" class="fb-btn"> <span>重置</span> </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    document.querySelector('.img__btn').addEventListener('click', function() {
+        document.querySelector('.content').classList.toggle('s--signup')
+    })
+</script>
+</body>
+
+</html>
