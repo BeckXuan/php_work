@@ -7,17 +7,10 @@ function &getDBConn()
         return $conn;
     }
     require "DBConfig.php";
-    global $host, $user, $password, $dbname, $port;
+    /** @noinspection PhpUndefinedVariableInspection */
     $conn = new mysqli($host, $user, $password, $dbname, $port);
     $conn->query('set names "utf8"');
     return $conn;
-}
-
-function &sqlQuery($sql)
-{
-    $conn = &getDBConn();
-    $result = $conn->query($sql);
-    return $result;
 }
 
 function getSqlError() {
@@ -58,7 +51,11 @@ function setUserAccess($studentID, $admitted) {
         $admitted = 0;
     }
     $stmt->bind_param('is', $admitted,$studentID);
-    $result = $stmt->execute();
+    if (!$stmt->execute()) {
+        $stmt->close();
+        return false;
+    }
+    $result = boolval($stmt->affected_rows);
     $stmt->close();
     return $result;
 }
@@ -78,28 +75,14 @@ function delUser($studentID)
     $conn = &getDBConn();
     $stmt = $conn->prepare('DELETE FROM user WHERE studentID=?');
     $stmt->bind_param('s', $studentID);
-    $result = $stmt->execute();
+    if (!$stmt->execute()) {
+        $stmt->close();
+        return false;
+    }
+    $result = boolval($stmt->affected_rows);
     $stmt->close();
     return $result;
 }
-
-//function getUserStudentID($name, $outHTMLFilter = true) {
-//    $conn = &getDBConn();
-//    $stmt = $conn->prepare('SELECT studentID From user WHERE name=? limit 1');
-//    $stmt->bind_param('s', $name);
-//    $stmt->execute();
-//    if (!$stmt->num_rows) {
-//        $stmt->close();
-//        return null;
-//    }
-//    $stmt->bind_result($out);
-//    $stmt->fetch();
-//    $stmt->close();
-//    if ($outHTMLFilter) {
-//        $out = htmlspecialchars($out);
-//    }
-//    return $out;
-//}
 
 function getUserInformation($studentID, $type, $outHTMLFilter = true) {
     $conn = &getDBConn();
@@ -130,8 +113,12 @@ function getUserPassword($studentID, $outHTMLFilter = true) {
 function setUserInformation($studentID, $type, $value) {
     $conn = &getDBConn();
     $stmt = $conn->prepare("UPDATE user SET `$type`=? WHERE studentID=?");
-    $stmt->bind_param('ss',$type, $studentID);
-    $result = $stmt->execute();
+    $stmt->bind_param('ss',$value, $studentID);
+    if (!$stmt->execute()) {
+        $stmt->close();
+        return false;
+    }
+    $result = boolval($stmt->affected_rows);
     $stmt->close();
     return $result;
 }
