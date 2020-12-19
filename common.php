@@ -7,22 +7,10 @@ function &getDBConn()
         return $conn;
     }
     require "DBConfig.php";
-    /** @noinspection PhpUndefinedVariableInspection */
+    global $host, $user, $password, $dbname, $port;
     $conn = new mysqli($host, $user, $password, $dbname, $port);
     $conn->query('set names "utf8"');
     return $conn;
-}
-
-function filter($str)
-{
-    if (PHP_VERSION >= 6 || !get_magic_quotes_gpc()) { // 判断magic_quotes_gpc是否为打开
-        $str = addslashes($str); // magic_quotes_gpc没有打开的时候把数据过滤
-    }
-    $str = str_replace("_", "\_", $str); // 把 '_'过滤掉
-    $str = str_replace("%", "\%", $str); // 把' % '过滤掉
-    $str = nl2br($str); // 回车转换
-    //$str = htmlspecialchars($str); // html标记转换
-    return $str;
 }
 
 function &sqlQuery($sql)
@@ -37,112 +25,131 @@ function getSqlError() {
     return $conn->error;
 }
 
-function studentIDExists($studentID, $paramFilter = true)
+function studentIDExists($studentID)
 {
-    if ($paramFilter) {
-        $studentID = filter($studentID);
-    }
-    $result = &sqlQuery("select name from user where studentID='$studentID' limit 1");
-    return boolval($result->num_rows);
+    $conn = &getDBConn();
+    $stmt = $conn->prepare('select name from user where studentID=? limit 1');
+    $stmt->bind_param('s', $studentID);
+    $stmt->execute();
+    $existed = boolval($stmt->get_result()->num_rows);
+    $stmt->close();
+    return $existed;
 }
 
-function addUser($name, $studentID, $password, $needMD5 = true, $paramFilter = true)
+function addUser($name, $studentID, $password, $needMD5 = true)
 {
-    if ($paramFilter) {
-        $name = filter($name);
-        $studentID = filter($studentID);
-    }
     if ($needMD5) {
         $password = md5($password);
     }
-    return sqlQuery("INSERT INTO user(name, studentID, password, date) VALUES ('$name', '$studentID', '$password', CURDATE())");
+    $conn = &getDBConn();
+    $stmt = $conn->prepare('INSERT INTO user(name, studentID, password, date) VALUES (?, ?, ?, CURDATE())');
+    $stmt->bind_param('sss', $name, $studentID, $password);
+    $result = $stmt->execute();
+    $stmt->close();
+    return $result;
 }
 
-function admitUser($studentID, $paramFilter = true)
+function setUserAccess($studentID, $admitted) {
+    $conn = &getDBConn();
+    $stmt = $conn->prepare('UPDATE user SET admitted=? WHERE studentID=?');
+    if ($admitted) {
+        $admitted = 1;
+    } else {
+        $admitted = 0;
+    }
+    $stmt->bind_param('is', $admitted,$studentID);
+    $result = $stmt->execute();
+    $stmt->close();
+    return $result;
+}
+
+function admitUser($studentID)
 {
-    if ($paramFilter) {
-        $studentID = filter($studentID);
-    }
-    return sqlQuery("UPDATE user SET admitted=1 WHERE studentID='$studentID'");
+    return setUserAccess($studentID, 1);
 }
 
-function denyUser($studentID, $paramFilter = true)
+function denyUser($studentID)
 {
-    if ($paramFilter) {
-        $studentID = filter($studentID);
-    }
-    return sqlQuery("UPDATE user SET admitted=0 WHERE studentID='$studentID'");
+    return setUserAccess($studentID, 0);
 }
 
-function delUser($studentID, $paramFilter = true)
+function delUser($studentID)
 {
-    if ($paramFilter) {
-        $studentID = filter($studentID);
-    }
-    return sqlQuery("DELETE FROM user WHERE studentID='$studentID'");
+    $conn = &getDBConn();
+    $stmt = $conn->prepare('DELETE FROM user WHERE studentID=?');
+    $stmt->bind_param('s', $studentID);
+    $result = $stmt->execute();
+    $stmt->close();
+    return $result;
 }
 
-function getUserStudentID($name, $paramFilter = true, $outHTMLFilter = true) {
-    if ($paramFilter) {
-        $name = filter($name);
-    }
-    $result = &sqlQuery("SELECT studentID From user WHERE name='$name' limit 1");
+//function getUserStudentID($name, $outHTMLFilter = true) {
+//    $conn = &getDBConn();
+//    $stmt = $conn->prepare('SELECT studentID From user WHERE name=? limit 1');
+//    $stmt->bind_param('s', $name);
+//    $stmt->execute();
+//    if (!$stmt->num_rows) {
+//        $stmt->close();
+//        return null;
+//    }
+//    $stmt->bind_result($out);
+//    $stmt->fetch();
+//    $stmt->close();
+//    if ($outHTMLFilter) {
+//        $out = htmlspecialchars($out);
+//    }
+//    return $out;
+//}
+
+function getUserInformation($studentID, $type, $outHTMLFilter = true) {
+    $conn = &getDBConn();
+    $stmt = $conn->prepare("SELECT `$type` From user WHERE studentID=? limit 1");
+    $stmt->bind_param('s', $studentID);
+    $stmt->execute();
+    $result = $stmt->get_result();
     if (!$result->num_rows) {
+        $stmt->close();
         return null;
     }
-    $out = $result->fetch_assoc()['studentID'];
+    $out = $result->fetch_array()[0];
+    $stmt->close();
     if ($outHTMLFilter) {
         $out = htmlspecialchars($out);
     }
     return $out;
 }
 
-function getUserInformation($studentID, $type, $paramFilter = true, $outHTMLFilter = true) {
-    if ($paramFilter) {
-        $studentID = filter($studentID);
-    }
-    $result = &sqlQuery("SELECT `$type` From user WHERE studentID='$studentID' limit 1");
-    if (!$result->num_rows) {
-        return null;
-    }
-    $out = $result->fetch_assoc()[$type];
-    if ($outHTMLFilter) {
-        $out = htmlspecialchars($out);
-    }
-    return $out;
+function getUserName($studentID, $outHTMLFilter = true) {
+    return getUserInformation($studentID, 'name', $outHTMLFilter);
 }
 
-function getUserName($studentID, $paramFilter = true, $outHTMLFilter = true) {
-    return getUserInformation($studentID, 'name', $paramFilter, $outHTMLFilter);
+function getUserPassword($studentID, $outHTMLFilter = true) {
+    return getUserInformation($studentID, 'password', $outHTMLFilter);
 }
 
-function getUserPassword($studentID, $paramFilter = true, $outHTMLFilter = true) {
-    return getUserInformation($studentID, 'password', $paramFilter, $outHTMLFilter);
+function setUserInformation($studentID, $type, $value) {
+    $conn = &getDBConn();
+    $stmt = $conn->prepare("UPDATE user SET `$type`=? WHERE studentID=?");
+    $stmt->bind_param('ss',$type, $studentID);
+    $result = $stmt->execute();
+    $stmt->close();
+    return $result;
 }
 
-function setUserStudentID($studentID, $newID, $paramFilter = true)
+function setUserStudentID($studentID, $newID)
 {
-    if ($paramFilter) {
-        $studentID = filter($studentID);
-    }
-    return sqlQuery("UPDATE user SET studentID='$newID' WHERE studentID='$studentID'");
+    return setUserInformation($studentID, 'studentID', $newID);
 }
 
-function setUserName($studentID, $name, $paramFilter = true)
+function setUserName($studentID, $newName)
 {
-    if ($paramFilter) {
-        $studentID = filter($studentID);
-    }
-    return sqlQuery("UPDATE user SET name='$name' WHERE studentID='$studentID'");
+    return setUserInformation($studentID, 'name', $newName);
 }
 
-function setUserPassword($studentID, $password, $needMD5 = true, $paramFilter = true)
+function setUserPassword($studentID, $newPassword, $needMD5 = true)
 {
-    if ($paramFilter) {
-        $studentID = filter($studentID);
-    }
     if ($needMD5) {
-        $password = md5($password);
+        $newPassword = md5($newPassword);
     }
-    return sqlQuery("UPDATE user SET password='$password' WHERE studentID='$studentID'");
+    return setUserInformation($studentID, 'password', $newPassword);
 }
