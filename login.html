@@ -48,20 +48,20 @@
                 <span class="m--in">登 录</span>
             </div>
         </div>
-        <form name="register" method="post" action="">
+        <form name="register" method="post" action="" onsubmit="return _register()">
             <div class="form sign-up">
                 <h2>立即注册</h2>
                 <label>
                     <span>用户名</span>
-                    <input type="text"/>
+                    <input type="text" name="name"/>
                 </label>
                 <label>
                     <span>学号</span>
-                    <input type="text"/>
+                    <input type="text" name="studentID"/>
                 </label>
                 <label>
                     <span>密码</span>
-                    <input type="password"/>
+                    <input type="password" name="password"/>
                 </label>
                 <button type="submit" class="submit">注 册</button>
                 <button type="reset" class="fb-btn"><span>重置</span></button>
@@ -76,6 +76,8 @@
         document.querySelector('.content').classList.toggle('s--signup')
     })
 </script>
+<script src="js/register.js"></script>
+
 </body>
 
 </html>

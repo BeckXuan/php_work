@@ -280,3 +280,10 @@ input {
     -webkit-transform: translate3d(0, 0, 0);
     transform: translate3d(0, 0, 0);
 }
+
+.check-error {
+    background-image: url(../images/error.png);
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    border-bottom: 2px dashed #cb2341;
+}

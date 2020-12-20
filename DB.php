@@ -8,12 +8,11 @@ class DB
     private function __construct()
     {
         require "DBConfig.php";
-        /** @noinspection PhpUndefinedVariableInspection */
+        /* @noinspection PhpUndefinedVariableInspection */
         $this->_db = new mysqli($host, $user, $password, $dbname, $port);
         $error = $this->_db->connect_error;
         if ($error) {
-            echo '数据库连接失败！错误信息: ' . $error;
-            return;
+            die('数据库连接失败！错误信息: ' . $error);
         }
         $this->_db->query('set names "utf8"');
     }
@@ -36,14 +35,23 @@ class DB
         return $this->_db->error;
     }
 
-    public function studentIDExists($studentID)
+    private function contentExists($field, $value)
     {
-        $stmt = $this->_db->prepare('select name from user where studentID=? limit 1');
-        $stmt->bind_param('s', $studentID);
+        $stmt = $this->_db->prepare("select name from user where `$field`=? limit 1");
+        $stmt->bind_param('s', $value);
         $stmt->execute();
         $existed = boolval($stmt->get_result()->num_rows);
         $stmt->close();
         return $existed;
+    }
+
+    public function studentIDExists($studentID)
+    {
+        return $this->contentExists('studentID', $studentID);
+    }
+
+    public function nameExists($name) {
+        return $this->contentExists('name', $name);
     }
 
     public function addUser($name, $studentID, $password, $needMD5 = true)
@@ -53,7 +61,7 @@ class DB
         }
         $stmt = $this->_db->prepare('INSERT INTO user(name, studentID, password, date) VALUES (?, ?, ?, CURDATE())');
         $stmt->bind_param('sss', $name, $studentID, $password);
-        if ($stmt->execute()) {
+        if (!$stmt->execute()) {
             $stmt->close();
             return false;
         }
