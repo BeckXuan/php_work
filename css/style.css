@@ -6,8 +6,8 @@
 
 body {
     font-family: 'Open Sans', Helvetica, Arial, sans-serif;
-    background: #ededed ;
-    background-image: url("../images/d85a1ac21730fe8e7afc756092abb166.jpg");
+    /*background: #ededed ;*/
+    background-image: url("../images/lower_bg.jpg");
     background-size: cover;
 }
 
@@ -34,14 +34,15 @@ input, button {
     height: 550px;
     margin: -300px 0 0 -450px;
     background: aliceblue;
+    opacity: 88%;
+    border-radius: 25px;
+    box-shadow: 0 0 18px #888888;
 }
 
 .form {
     position: relative;
     width: 640px;
     height: 100%;
-    transition: -webkit-transform 0.6s ease-in-out;
-    transition: transform 0.6s ease-in-out;
     transition: transform 0.6s ease-in-out, -webkit-transform 0.6s ease-in-out;
     padding: 50px 30px 0;
 }
@@ -55,8 +56,6 @@ input, button {
     height: 100%;
     padding-left: 260px;
     background: aliceblue;
-    transition: -webkit-transform 0.6s ease-in-out;
-    transition: transform 0.6s ease-in-out;
     transition: transform 0.6s ease-in-out, -webkit-transform 0.6s ease-in-out;
 }
 
@@ -94,10 +93,8 @@ button {
     top: 0;
     width: 900px;
     height: 100%;
-    background-image: url(../images/bg.jpg);
+    background-image: url(../images/upper_bg.jpg);
     background-size: cover;
-    transition: -webkit-transform 0.6s ease-in-out;
-    transition: transform 0.6s ease-in-out;
     transition: transform 0.6s ease-in-out, -webkit-transform 0.6s ease-in-out;
 }
 
@@ -125,8 +122,6 @@ button {
     padding: 0 20px;
     text-align: center;
     color: #fff;
-    transition: -webkit-transform 0.6s ease-in-out;
-    transition: transform 0.6s ease-in-out;
     transition: transform 0.6s ease-in-out, -webkit-transform 0.6s ease-in-out;
 }
 
@@ -188,8 +183,6 @@ button {
     align-items: center;
     width: 100%;
     height: 100%;
-    transition: -webkit-transform 0.6s;
-    transition: transform 0.6s;
     transition: transform 0.6s, -webkit-transform 0.6s;
 }
 
