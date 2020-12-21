@@ -1,24 +1,40 @@
-let reg_form = document.getElementsByName('register')[0];
-let reg_name = reg_form['name']
-let reg_studentID = reg_form['studentID']
+let reg_form = document.getElementsByName('register')[0]
+let eye = document.getElementById("passwordEye")
+let reg_inputs = {
+    'name': reg_form['name'],
+    'studentID': reg_form['studentID'],
+    'password': reg_form['password']
+}
+let reg_sps = {
+    'name': document.getElementById('sp_name'),
+    'studentID': document.getElementById('sp_studentID')
+}
 let timeId = {
     'name': null,
     'studentID': null
 }
 let XHR = {
     'name': null,
-    'studentID': null
+    'studentID': null,
+    'submit': null
 }
 let sending = {
     'name': false,
     'studentID': false
 }
 
+for (let key in reg_sps) {
+    reg_inputs[key].addEventListener('input', () => {
+        validate(key)
+    }, false)
+}
+eye.addEventListener('click', changeVisibility)
+
 function isEmpty(text) {
     return text === undefined || text === "" || text === null
 }
 
-function validate(type, doc_text) {
+function validate(type) {
     if (timeId[type]) {
         clearTimeout(timeId[type])
         timeId[type] = null
@@ -27,22 +43,25 @@ function validate(type, doc_text) {
         XHR[type].abort()
         sending[type] = false
     }
-    doc_text.className = ''
+    let doc_text = reg_inputs[type]
+    let sp = reg_sps[type]
     timeId[type] = setTimeout(() => {
         timeId[type] = null
         let value = doc_text.value
+        sp.className = ''
         if (isEmpty(value)) {
+            doc_text.className = ''
             return
         }
-        doc_text.className = 'check-process'
+        doc_text.className = 'input-check-process'
         let xhr;
         if (XHR[type]) {
             xhr = XHR[type]
         } else {
-            if (window.XMLHttpRequest) {// IE7+, Firefox, Chrome, Opera, Safari 代码
-                xhr = new XMLHttpRequest();
-            } else {// IE6, IE5 代码
-                xhr = new ActiveXObject("Microsoft.XMLHTTP");
+            xhr = new XMLHttpRequest();
+            if (!xhr) {
+                alert('浏览器不支持xhr！')
+                return
             }
             XHR[type] = xhr
             xhr.onload = function () {
@@ -52,7 +71,8 @@ function validate(type, doc_text) {
                     doc_text.className = ''
                 } else if (xhr.status === 422) {
                     //error
-                    doc_text.className = 'check-error'
+                    doc_text.className = 'input-check-error'
+                    sp.className = 'span-check-error'
                     //alert(xhr.responseText)
                 } else {
                     //fail
@@ -72,10 +92,33 @@ function validate(type, doc_text) {
 }
 
 function resetAll() {
-    reg_name.className = ''
-    reg_studentID.className = ''
+    for (let key in reg_inputs) {
+        reg_inputs[key].className = ''
+        reg_sps[key].className = ''
+    }
+}
+
+function changeVisibility() {
+    eye.classList.toggle("visible")
+    let input_password = reg_inputs['password']
+    if (input_password.type === 'password') {
+        input_password.type = 'text'
+    } else {
+        input_password.type = 'password'
+    }
 }
 
 function _register() {
+    let xhr
+    if (XHR['submit']) {
+        xhr = XHR['submit']
+    } else {
+        xhr = new XMLHttpRequest();
+        if (!xhr) {
+            alert('浏览器不支持xhr！')
+            return
+        }
+    }
+    xhr.open("POST", 'register_check/.php', true);
     return false;
 }

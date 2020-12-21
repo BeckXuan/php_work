@@ -7,7 +7,7 @@
 body {
     font-family: 'Open Sans', Helvetica, Arial, sans-serif;
     /*background: #ededed ;*/
-    background-image: url("../images/lower_bg.jpg");
+    background-image: url(../images/lower_bg.jpg);
     background-size: cover;
 }
 
@@ -139,6 +139,7 @@ button {
     -webkit-transform: translateX(520px);
     transform: translateX(520px);
 }
+
 .img__text.m--in {
     -webkit-transform: translateX(-520px);
     transform: translateX(-520px);
@@ -162,6 +163,7 @@ button {
     font-size: 15px;
     cursor: pointer;
 }
+
 .img__btn:after {
     content: '';
     z-index: 2;
@@ -252,6 +254,7 @@ input {
     border: 2px solid #d3dae9;
     color: #8fa1c7;
 }
+
 .fb-btn span {
     font-weight: bold;
     color: #455a81;
@@ -260,6 +263,7 @@ input {
 .sign-in {
     transition-timing-function: ease-out;
 }
+
 .content.s--signup .sign-in {
     transition-timing-function: ease-in-out;
     transition-duration: 0.6s;
@@ -271,18 +275,45 @@ input {
     -webkit-transform: translate3d(-900px, 0, 0);
     transform: translate3d(-900px, 0, 0);
 }
+
 .content.s--signup .sign-up {
     -webkit-transform: translate3d(0, 0, 0);
     transform: translate3d(0, 0, 0);
 }
 
-.check-process {
+input::-ms-clear {
+    display: none;
+}
+
+input::-ms-reveal {
+    display: none;
+}
+
+#passwordEye {
+    background-image: url(../images/eye.png);
+    position: absolute;
+    margin-left: 10px;
+    margin-top: 7px;
+    cursor: pointer;
+    height: 10px;
+    width: 16px;
+}
+
+.visible {
+    background-position-y: 10px;
+}
+
+.span-check-error {
+    color: #cb2341;
+}
+
+.input-check-process {
     background-image: url(../images/loading.gif);
     background-repeat: no-repeat;
     background-position: right 8px center;
 }
 
-.check-error {
+.input-check-error {
     background-image: url(../images/warning.png);
     background-repeat: no-repeat;
     background-position: right 8px center;

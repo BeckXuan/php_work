@@ -16,11 +16,11 @@
             <h2>欢迎回来！同学们</h2>
             <label>
                 <span>学号</span>
-                <input type="text" required="required"/>
+                <input type="text" required/>
             </label>
             <label>
                 <span>密码</span>
-                <input type="password" required="required"/>
+                <input type="password" required/>
             </label>
             <label>
                 <span>记住我</span>
@@ -54,16 +54,17 @@
             <div class="form sign-up">
                 <h2>立即注册</h2>
                 <label>
-                    <span>用户名</span>
-                    <input type="text" name="name" required="required" oninput="validate('name', this)"/>
+                    <span id="sp_name">用户名</span>
+                    <input type="text" name="name" required/>
                 </label>
                 <label>
-                    <span>学号</span>
-                    <input type="text" name="studentID" required="required" oninput="validate('studentID', this)"/>
+                    <span id="sp_studentID">学号</span>
+                    <input type="text" name="studentID" required/>
                 </label>
                 <label>
-                    <span>密码</span>
-                    <input type="password" name="password" required="required"/>
+                    <span id="sp_password">密码</span>
+                    <a id="passwordEye"></a>
+                    <input type="password" name="password" required/>
                 </label>
                 <button type="submit" class="submit">注 册</button>
                 <button type="reset" class="fb-btn" onclick="resetAll()"><span>重置</span></button>
