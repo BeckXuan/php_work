@@ -276,8 +276,14 @@ input {
     transform: translate3d(0, 0, 0);
 }
 
+.check-process {
+    background-image: url(../images/loading.gif);
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+}
+
 .check-error {
-    background-image: url(../images/error.png);
+    background-image: url(../images/warning.png);
     background-repeat: no-repeat;
     background-position: right 8px center;
     border-bottom: 2px dashed #cb2341;
