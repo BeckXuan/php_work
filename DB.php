@@ -30,6 +30,11 @@ class DB
         return self::$_instance;
     }
 
+    public function &getDBConn()
+    {
+        return $this->_db;
+    }
+
     public function getSqlError()
     {
         return $this->_db->error;
