@@ -1,4 +1,10 @@
 <?php
+session_start();
+
+if (isset($_SESSION['name']) && isset($_SESSION['studentID']) && isset($_SESSION['password'])) {
+    header('location: content.html');
+    return;
+}
 
 if (!isset($_POST['type'])) {
     header('location: login.html');
@@ -10,8 +16,6 @@ require 'DB.php';
 
 //登录处理
 if ($_POST['type'] === 'login') {
-    session_start();
-
     $db = DB::getInstance();
 
     //获取参数
@@ -30,6 +34,9 @@ if ($_POST['type'] === 'login') {
             setcookie('password', $password, time() + 3600);
             header('location: content.html');
         }
+        if(!isset($_POST['rem'])||$_POST['rem']!=='1'){
+            session_destroy();
+        }
     } else {
         echo "用户名不存在！";
     }
@@ -37,8 +44,6 @@ if ($_POST['type'] === 'login') {
 
 //注册处理
 if ($_POST['type'] === 'register') {
-    session_start();
-
     $db = DB::getInstance();
 
     //获取参数
