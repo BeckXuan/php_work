@@ -11,23 +11,23 @@
 
 <body>
 <div class="content">
-    <form name="login" method="post" action="">
+    <form name="login" method="post" action="login_check.php">
         <div class="form sign-in">
             <h2>欢迎回来！同学们</h2>
             <label>
                 <span>学号</span>
-                <input type="text" required/>
+                <input type="text" name="studentID" required/>
             </label>
             <label>
                 <span>密码</span>
-                <input type="password" required/>
+                <input type="password" name="password" required/>
             </label>
             <label>
                 <span>记住我</span>
-                <input type="checkbox" value="">
+                <input type="checkbox" name="rem" value="1">
             </label>
             <p class="forgot-pass"><a href="javascript:">忘记密码？</a></p>
-            <button type="submit" class="submit">登 录</button>
+            <button type="submit" name="type" value="login" class="submit">登 录</button>
             <button type="button" class="fb-btn">使用 <span>管理员</span> 帐号登录</button>
         </div>
     </form>
@@ -50,7 +50,7 @@
                 <span class="m--in">登 录</span>
             </div>
         </div>
-        <form name="register" method="post" action="" onsubmit="return _register()">
+        <form name="register" method="post" action="login_check.php" onsubmit="return _register()">
             <div class="form sign-up">
                 <h2>立即注册</h2>
                 <label>
@@ -66,7 +66,7 @@
                     <a id="passwordEye"></a>
                     <input type="password" name="password" required/>
                 </label>
-                <button type="submit" class="submit">注 册</button>
+                <button type="submit" name="type" value="register" class="submit">注 册</button>
                 <button type="reset" class="fb-btn" onclick="resetAll()"><span>重置</span></button>
             </div>
         </form>
