@@ -116,7 +116,6 @@ function changeVisibility() {
 
 function _register(e) {
     e.preventDefault()
-    alert(hex_md5('test'))
     for (let key in timeId) {
         if (timeId[key] !== null) {
             alert('请等待可用性检查完成...')

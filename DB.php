@@ -66,11 +66,7 @@ class DB
         }
         $stmt = $this->_db->prepare('INSERT INTO user(name, studentID, password, date) VALUES (?, ?, ?, CURDATE())');
         $stmt->bind_param('sss', $name, $studentID, $password);
-        if (!$stmt->execute()) {
-            $stmt->close();
-            return false;
-        }
-        $result = $stmt->insert_id;
+        $result = $stmt->execute();
         $stmt->close();
         return $result;
     }
