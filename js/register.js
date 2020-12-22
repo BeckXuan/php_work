@@ -116,6 +116,7 @@ function changeVisibility() {
 
 function _register(e) {
     e.preventDefault()
+    alert(hex_md5('test'))
     for (let key in timeId) {
         if (timeId[key] !== null) {
             alert('请等待可用性检查完成...')
@@ -134,11 +135,13 @@ function _register(e) {
         xhr.onload = function () {
             if (xhr.status === 200) {
                 //success
+                alert('注册成功！')
             } else if (xhr.status === 422) {
                 //error
-                //alert(xhr.responseText)
+                alert(xhr.responseText)
             } else {
                 //fail
+                alert('未知错误！')
             }
             xhr.timeout = 2000;
             xhr.ontimeout = function () {
@@ -149,7 +152,7 @@ function _register(e) {
     let name = reg_inputs['name'].value
     let studentID = reg_inputs['studentID'].value
     let password = hex_md5(reg_inputs['password'].value)
-    xhr.open("POST", 'register.php', true);
+    xhr.open("POST", 'register_check.php', true);
     xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     xhr.send('name=' + name + '&studentID=' + studentID + '&password=' + password);
 }

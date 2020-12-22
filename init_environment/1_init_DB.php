@@ -1,7 +1,7 @@
 <?php
 require '../DB.php';
-$db = DB::getInstance();
-$dbConn = $db->getDBConn();
+$db = &DB::getInstance();
+$dbConn = &$db->getDBConn();
 $sql = <<<db
 CREATE TABLE `user` (
   `name` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,

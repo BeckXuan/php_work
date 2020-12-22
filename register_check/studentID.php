@@ -5,8 +5,8 @@ if (!isset($_POST['value'])) {
 }
 
 require '../DB.php';
-$db = DB::getInstance();
+$db = &DB::getInstance();
 if ($db->studentIDExists($_POST['value'])) {
     header("Status: 422 Unprocessable Entity");
-    echo "该学生ID已存在！";
+    echo "该学号已存在！";
 }

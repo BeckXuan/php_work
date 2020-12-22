@@ -1,6 +1,6 @@
 <?php
 require '../DB.php';
-$db = DB::getInstance();
+$db = &DB::getInstance();
 $db->addUser('root', '01', 'test');
 $db->addUser('Beck', '02', 'test');
 $db->addUser('test', '03', 'test');
