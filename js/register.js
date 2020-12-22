@@ -28,11 +28,9 @@ for (let key in reg_sps) {
         validate(key)
     }, false)
 }
+reg_form.addEventListener('reset', regResetAll)
+reg_form.addEventListener('submit', _register)
 eye.addEventListener('click', changeVisibility)
-
-function isEmpty(text) {
-    return text === undefined || text === "" || text === null
-}
 
 function validate(type) {
     if (timeId[type]) {
@@ -45,15 +43,20 @@ function validate(type) {
     }
     let doc_text = reg_inputs[type]
     let sp = reg_sps[type]
+    if (!doc_text.validity.valueMissing && !doc_text.validity.customError) {
+        doc_text.setCustomValidity('准备检查是否可用...')
+    }
     timeId[type] = setTimeout(() => {
         timeId[type] = null
-        let value = doc_text.value
         sp.className = ''
-        if (isEmpty(value)) {
+        if (doc_text.validity.valueMissing) {
             doc_text.className = ''
+            doc_text.setCustomValidity('')
             return
         }
+        let value = doc_text.value
         doc_text.className = 'input-check-process'
+        doc_text.setCustomValidity('检查是否可用中...')
         let xhr;
         if (XHR[type]) {
             xhr = XHR[type]
@@ -69,10 +72,12 @@ function validate(type) {
                 if (xhr.status === 200) {
                     //success
                     doc_text.className = ''
+                    doc_text.setCustomValidity('')
                 } else if (xhr.status === 422) {
                     //error
                     doc_text.className = 'input-check-error'
                     sp.className = 'span-check-error'
+                    doc_text.setCustomValidity(xhr.responseText)
                     //alert(xhr.responseText)
                 } else {
                     //fail
@@ -91,9 +96,10 @@ function validate(type) {
     }, 500)
 }
 
-function resetAll() {
-    for (let key in reg_inputs) {
+function regResetAll() {
+    for (let key in reg_sps) {
         reg_inputs[key].className = ''
+        reg_inputs[key].setCustomValidity('')
         reg_sps[key].className = ''
     }
 }
@@ -108,7 +114,14 @@ function changeVisibility() {
     }
 }
 
-function _register() {
+function _register(e) {
+    e.preventDefault()
+    for (let key in timeId) {
+        if (timeId[key] !== null) {
+            alert('请等待可用性检查完成...')
+            return
+        }
+    }
     let xhr
     if (XHR['submit']) {
         xhr = XHR['submit']
@@ -118,7 +131,25 @@ function _register() {
             alert('浏览器不支持xhr！')
             return
         }
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                //success
+            } else if (xhr.status === 422) {
+                //error
+                //alert(xhr.responseText)
+            } else {
+                //fail
+            }
+            xhr.timeout = 2000;
+            xhr.ontimeout = function () {
+                alert('请求服务器超时！')
+            }
+        }
     }
-    xhr.open("POST", 'register_check/.php', true);
-    return false;
+    let name = reg_inputs['name'].value
+    let studentID = reg_inputs['studentID'].value
+    let password = hex_md5(reg_inputs['password'].value)
+    xhr.open("POST", 'register.php', true);
+    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    xhr.send('name=' + name + '&studentID=' + studentID + '&password=' + password);
 }

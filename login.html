@@ -50,7 +50,7 @@
                 <span class="m--in">登 录</span>
             </div>
         </div>
-        <form name="register" method="post" action="login_check.php" onsubmit="return _register()">
+        <form name="register" method="post" action="">
             <div class="form sign-up">
                 <h2>立即注册</h2>
                 <label>
@@ -66,8 +66,8 @@
                     <a id="passwordEye"></a>
                     <input type="password" name="password" required/>
                 </label>
-                <button type="submit" name="type" value="register" class="submit">注 册</button>
-                <button type="reset" class="fb-btn" onclick="resetAll()"><span>重置</span></button>
+                <button type="submit" class="submit">注 册</button>
+                <button type="reset" class="fb-btn"><span>重置</span></button>
             </div>
         </form>
     </div>
@@ -80,7 +80,7 @@
     })
 </script>
 <script src="js/register.js"></script>
-
+<script src="js/md5.js"></script>
 </body>
 
 </html>
