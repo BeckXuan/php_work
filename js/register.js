@@ -1,9 +1,9 @@
-let reg_form = document.getElementsByName('register')[0]
+let reg_form = document.getElementById('register')
 let eye = document.getElementById("passwordEye")
 let reg_inputs = {
-    'name': reg_form['name'],
-    'studentID': reg_form['studentID'],
-    'password': reg_form['password']
+    'name': reg_form.name,
+    'studentID': reg_form.studentID,
+    'password': reg_form.password
 }
 let reg_sps = {
     'name': document.getElementById('sp_name'),

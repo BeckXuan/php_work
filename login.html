@@ -9,7 +9,7 @@
 </head>
 <body>
 <div class="content">
-    <form name="login" method="post" action="login_check.php">
+    <form id="login">
         <div class="form sign-in">
             <h2>欢迎回来！同学们</h2>
             <label>
@@ -22,7 +22,7 @@
             </label>
             <label>
                 <span>记住我</span>
-                <input type="checkbox" name="rem" value="1">
+                <input type="checkbox" name="rem">
             </label>
             <p class="forgot-pass"><a href="javascript:">忘记密码？</a></p>
             <button type="submit" name="type" value="login" class="submit">登 录</button>
@@ -48,7 +48,7 @@
                 <span class="m--in">登 录</span>
             </div>
         </div>
-        <form name="register" method="post" action="login_check.php">
+        <form id="register">
             <div class="form sign-up">
                 <h2>立即注册</h2>
                 <label>

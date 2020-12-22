@@ -1,12 +1,12 @@
 <?php
 session_start();
 
-if (isset($_SESSION['name']) && isset($_SESSION['studentID']) && isset($_SESSION['password'])) {
-    header('location: content.html');
+if (isset($_SESSION['studentID'])) {
+    header('location: content.php');
     return;
 }
 
-if (!isset($_POST['type'])) {
+if (!isset($_POST['studentID'], $_POST['password'])) {
     header('location: login.html');
     return;
 }
@@ -15,57 +15,35 @@ if (!isset($_POST['type'])) {
 require 'DB.php';
 
 //登录处理
-if ($_POST['type'] === 'login') {
-    $db = DB::getInstance();
-
-    //获取参数
-    $studentID = $_POST['studentID'];
-    $password = md5($_POST['password']);
+//获取参数
+$password = $_POST['password'];
+if (!preg_match("/^[a-z0-9]{32}$/", $password)) {
+    http_response_code(403);
+    return;
+}
+$studentID = $_POST['studentID'];
+$message = '';
+$db = &DB::getInstance();
+if (!$db->studentIDExists($studentID)) {
+    $message = '该学号不存在！';
+} else if (!($db->getUserPassword($studentID) === $password)) {
+    $message = '密码错误！';
+} else if (!$db->isUserAccessible($studentID)) {
+    $message = '请等待管理员审核后登录！';
+} else {
+    //写入Session、cookie，并转到内容界面
     $name = $db->getUserName($studentID);
-
-    if ($db->studentIDExists($studentID)) {
-        if ($db->getUserPassword($studentID) === $password) {
-            //写入Session、cookie，并转到内容界面
-            $_SESSION['name'] = $name;
-            $_SESSION['studentID'] = $studentID;
-            $_SESSION['password'] = $password;
-            setcookie('name', $name, time() + 3600);
-            setcookie('studentID', $studentID, time() + 3600);
-            setcookie('password', $password, time() + 3600);
-            header('location: content.html');
-        }
-        if(!isset($_POST['rem'])||$_POST['rem']!=='1'){
-            session_destroy();
-        }
+    $_SESSION['name'] = $name;
+    $_SESSION['studentID'] = $studentID;
+    if (isset($_POST['rem']) && $_POST['rem'] === '1') {
+        setcookie('name', $name, time() + 3600);
+        setcookie('studentID', $studentID, time() + 3600);
     } else {
-        echo "用户名不存在！";
+        setcookie('name', $name);
+        setcookie('studentID', $studentID);
     }
+    header('location: content.php');
+    return;
 }
-
-//注册处理
-if ($_POST['type'] === 'register') {
-    $db = DB::getInstance();
-
-    //获取参数
-    $name = $_POST['name'];
-    $studentID = $_POST['studentID'];
-    $password = $_POST['password'];
-
-    if (!($db->nameExists($name)) && !($db->studentIDExists($studentID))) {
-        if ($db->addUser($name, $studentID, $password, true)) {
-            //写入Session、cookie，并转到内容界面
-            $_SESSION['name'] = $name;
-            $_SESSION['studentID'] = $studentID;
-            $_SESSION['password'] = $password;
-            setcookie('name', $name, time() + 3600);
-            setcookie('studentID', $studentID, time() + 3600);
-            setcookie('password', $password, time() + 3600);
-            header('location: content.html');
-        } else {
-            echo '注册失败！';
-        }
-    } else {
-        echo '用户名或学号已存在！';
-    }
-}
-
+header("Status: 422 Unprocessable Entity");
+echo $message;

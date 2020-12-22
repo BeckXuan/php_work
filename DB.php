@@ -160,6 +160,11 @@ class DB
         return $this->getUserInformation($studentID, 'password', $outHTMLFilter);
     }
 
+    public function isUserAccessible($studentID)
+    {
+        return boolval($this->getUserInformation($studentID, 'admitted', false));
+    }
+
     private function setUserInformation($studentID, $field, $value)
     {
         $stmt = $this->_db->prepare("UPDATE user SET `$field`=? WHERE studentID=?");
