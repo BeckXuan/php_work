@@ -1,10 +1,17 @@
+<?php
+session_start();
+if (isset($_SESSION['studentID'], $_COOKIE['studentID']) && $_SESSION['studentID'] === $_COOKIE['studentID']) {
+    header('location: content.php');
+    return;
+}
+?>
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="utf-8">
     <title>登录注册页面</title>
     <link rel="stylesheet" href="css/style.css">
-    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon"/>
     <link rel="icon" sizes="any" href="images/favicon.ico">
 </head>
 <body>
@@ -81,3 +88,4 @@
 <script src="js/md5.js"></script>
 </body>
 </html>
+

@@ -7,7 +7,7 @@ if (isset($_SESSION['studentID'])) {
 }
 
 if (!isset($_POST['studentID'], $_POST['password'])) {
-    header('location: login.html');
+    header('location: login.php');
     return;
 }
 
@@ -42,7 +42,6 @@ if (!$db->studentIDExists($studentID)) {
         setcookie('name', $name);
         setcookie('studentID', $studentID);
     }
-    header('location: content.php');
     return;
 }
 header("Status: 422 Unprocessable Entity");

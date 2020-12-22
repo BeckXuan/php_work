@@ -1,6 +1,6 @@
 <?php
 if (!isset($_POST['name'], $_POST['studentID'], $_POST['password'])) {
-    header('location: login.html');
+    header('location: login.php');
     return;
 }
 $password = $_POST['password'];
