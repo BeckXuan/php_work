@@ -116,12 +116,6 @@ function changeVisibility() {
 
 function _register(e) {
     e.preventDefault()
-    for (let key in timeId) {
-        if (timeId[key] !== null) {
-            alert('请等待可用性检查完成...')
-            return
-        }
-    }
     let xhr
     if (XHR['submit']) {
         xhr = XHR['submit']
