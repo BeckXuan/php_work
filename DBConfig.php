@@ -2,6 +2,6 @@
 
 $host = 'localhost';
 $user = 'root';
-$password = '691781';
-$dbname = 'php_work';
+$password = '';
+$dbname = '';
 $port = 3306;
