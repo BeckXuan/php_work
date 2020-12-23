@@ -99,10 +99,6 @@ function validate(type) {
 }
 
 function regResetAll(e) {
-    if (reg_inputs['button'].disabled){
-        e.preventDefault()
-        return
-    }
     for (let key in reg_sps) {
         reg_inputs[key].className = ''
         reg_inputs[key].setCustomValidity('')
@@ -113,10 +109,10 @@ function regResetAll(e) {
 function changeVisibility() {
     eye.classList.toggle("visible")
     let input_password = reg_inputs['password']
-    if (input_password.type === 'password') {
-        input_password.type = 'text'
-    } else {
+    if (input_password.type === 'text') {
         input_password.type = 'password'
+    } else {
+        input_password.type = 'text'
     }
 }
 
@@ -137,7 +133,9 @@ function _register(e) {
         xhr.onload = function () {
             if (xhr.status === 200) {
                 //success
-                alert('注册成功！')
+                alert('注册成功！跳到登录界面！')
+                reg_form.reset()
+                document.querySelector('.content').classList.toggle('s--signup')
             } else if (xhr.status === 422) {
                 //error
                 alert(xhr.responseText)
