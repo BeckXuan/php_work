@@ -4,7 +4,8 @@ let reg_inputs = {
     'name': reg_form.name,
     'studentID': reg_form.studentID,
     'password': reg_form.password,
-    'button': reg_form['btn_reg']
+    'btn_reg': reg_form['btn_reg'],
+    'btn_rst': reg_form['btn_rst']
 }
 let reg_sps = {
     'name': document.getElementById('sp_name'),
@@ -118,9 +119,11 @@ function changeVisibility() {
 
 function _register(e) {
     e.preventDefault()
-    let button = reg_inputs['button']
-    button.disabled = true
-    button.innerText = '注 册 中...'
+    let btn_reg = reg_inputs['btn_reg']
+    let btn_rst = reg_inputs['btn_rst']
+    btn_rst.disabled = true
+    btn_reg.disabled = true
+    btn_reg.innerText = '注 册 中...'
     let xhr
     if (XHR['submit']) {
         xhr = XHR['submit']
@@ -143,14 +146,16 @@ function _register(e) {
                 //fail
                 alert('未知错误！')
             }
-            button.innerText = '注 册'
-            button.disabled = false
+            btn_reg.innerText = '注 册'
+            btn_reg.disabled = false
+            btn_rst.disabled = false
         }
         xhr.timeout = 2000;
         xhr.ontimeout = function () {
             alert('请求服务器超时！')
-            button.innerText = '注 册'
-            button.disabled = false
+            btn_reg.innerText = '注 册'
+            btn_reg.disabled = false
+            btn_rst.disabled = false
         }
     }
     let name = reg_inputs['name'].value

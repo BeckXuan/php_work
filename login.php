@@ -72,7 +72,7 @@ if (isset($_SESSION['studentID'], $_COOKIE['studentID']) && $_SESSION['studentID
                     <input type="password" name="password" required/>
                 </label>
                 <button type="submit" class="submit" id="btn_reg">注 册</button>
-                <button type="reset" class="fb-btn"><span>重置</span></button>
+                <button type="reset" class="fb-btn" id="btn_rst"><span>重置</span></button>
             </div>
         </form>
     </div>
