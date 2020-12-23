@@ -1,9 +1,9 @@
 <?php
 session_start();
-if (isset($_SESSION['studentID'], $_COOKIE['studentID']) && $_SESSION['studentID'] === $_COOKIE['studentID']) {
-    header('location: content.php');
-    return;
-}
+//if (isset($_SESSION['studentID'], $_COOKIE['studentID']) && $_SESSION['studentID'] === $_COOKIE['studentID']) {
+//    header('location: content.php');
+//    return;
+//}
 ?>
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -33,7 +33,7 @@ if (isset($_SESSION['studentID'], $_COOKIE['studentID']) && $_SESSION['studentID
             </label>
             <br/><br/>
             <button type="submit" class="submit" id="btn_log">登 录</button>
-            <button type="button" class="fb-btn" onclick="window.location.href='login.php'">使用 <span>学生</span> 帐号登录
+            <button type="button" class="fb-btn" id="btn_usr">使用 <span>学生</span> 帐号登录
             </button>
         </div>
     </form>
@@ -52,12 +52,6 @@ if (isset($_SESSION['studentID'], $_COOKIE['studentID']) && $_SESSION['studentID
         </div>
     </div>
 </div>
-
-<script type="text/javascript">
-    document.querySelector('.img__btn').addEventListener('click', function () {
-        document.querySelector('.content').classList.toggle('s--signup')
-    })
-</script>
-<script src="js/login.js"></script>
+<script src="js/login_admin.js"></script>
 </body>
 </html>
