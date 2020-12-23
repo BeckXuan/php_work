@@ -31,10 +31,9 @@ session_start();
                 <span>记住我</span>
                 <input type="checkbox" name="rem">
             </label>
-            <br/><br/>
+            <p class="forgot-pass"><a href="javascript:">忘记密码？</a></p>
             <button type="submit" class="submit" id="btn_log">登 录</button>
-            <button type="button" class="fb-btn" id="btn_usr">使用 <span>学生</span> 帐号登录
-            </button>
+            <button type="button" class="fb-btn" id="btn_usr">使用 <span>学生</span> 帐号登录</button>
         </div>
     </form>
     <div class="sub-cont">
@@ -43,11 +42,6 @@ session_start();
                 <h2>欢迎回来！</h2>
                 <br/><br/><br/>
                 <p>亲爱的管理员先生/女士！</p>
-            </div>
-            <div class="img__text m--in">
-                <h2>已有帐号？</h2>
-                <br>
-                <p>快来登录吧，好久不见了！</p>
             </div>
         </div>
     </div>
