@@ -49,9 +49,7 @@ if (isset($_SESSION['studentID'], $_COOKIE['studentID']) && $_SESSION['studentID
                 <br>
                 <p>快来登录吧，好久不见了！</p>
             </div>
-
         </div>
-
     </div>
 </div>
 
@@ -61,7 +59,5 @@ if (isset($_SESSION['studentID'], $_COOKIE['studentID']) && $_SESSION['studentID
     })
 </script>
 <script src="js/login.js"></script>
-<script src="js/register.js"></script>
-<script src="js/md5.js"></script>
 </body>
 </html>

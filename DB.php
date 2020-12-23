@@ -3,6 +3,7 @@
 class DB
 {
     private $_db;
+    private $_result_messages;
     private static $_instance;
 
     private function __construct()
@@ -55,7 +56,8 @@ class DB
         return $this->contentExists('studentID', $studentID);
     }
 
-    public function nameExists($name) {
+    public function nameExists($name)
+    {
         return $this->contentExists('name', $name);
     }
 
@@ -64,7 +66,7 @@ class DB
         if ($needMD5) {
             $password = md5($password);
         }
-        $stmt = $this->_db->prepare('INSERT INTO user(name, studentID, password, date) VALUES (?, ?, ?, CURDATE())');
+        $stmt = $this->_db->prepare('INSERT INTO `user` (`name`, `studentID`, `password`, `time`) VALUES (?, ?, ?, NOW())');
         $stmt->bind_param('sss', $name, $studentID, $password);
         $result = $stmt->execute();
         $stmt->close();
@@ -73,7 +75,7 @@ class DB
 
     public function delUser($studentID)
     {
-        $stmt = $this->_db->prepare('DELETE FROM user WHERE studentID=?');
+        $stmt = $this->_db->prepare('DELETE FROM `user` WHERE `studentID`=?');
         $stmt->bind_param('s', $studentID);
         if (!$stmt->execute()) {
             $stmt->close();
@@ -86,7 +88,7 @@ class DB
 
     private function setUserAccess($studentID, $admitted)
     {
-        $stmt = $this->_db->prepare('UPDATE user SET admitted=? WHERE studentID=?');
+        $stmt = $this->_db->prepare('UPDATE `user` SET `admitted`=? WHERE `studentID`=?');
         if ($admitted) {
             $admitted = 1;
         } else {
@@ -114,7 +116,7 @@ class DB
 
     private function getUserStudentId($field, $value)
     {
-        $stmt = $this->_db->prepare("SELECT studentID From user WHERE `$field`=? limit 1");
+        $stmt = $this->_db->prepare("SELECT `studentID` From `user` WHERE `$field`=? limit 1");
         $stmt->bind_param('s', $value);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -134,9 +136,12 @@ class DB
 
     private function getUserInformation($studentID, $field, $outHTMLFilter = true)
     {
-        $stmt = $this->_db->prepare("SELECT `$field` From user WHERE studentID=? limit 1");
+        $stmt = $this->_db->prepare("SELECT `$field` From `user` WHERE `studentID`=? limit 1");
         $stmt->bind_param('s', $studentID);
-        $stmt->execute();
+        if (!$stmt->execute()) {
+            $stmt->close();
+            return null;
+        }
         $result = $stmt->get_result();
         if (!$result->num_rows) {
             $stmt->close();
@@ -167,11 +172,11 @@ class DB
 
     private function setUserInformation($studentID, $field, $value)
     {
-        $stmt = $this->_db->prepare("UPDATE user SET `$field`=? WHERE studentID=?");
+        $stmt = $this->_db->prepare("UPDATE `user` SET `$field`=? WHERE `studentID`=?");
         $stmt->bind_param('ss', $value, $studentID);
         if (!$stmt->execute()) {
             $stmt->close();
-            return null;
+            return false;
         }
         $result = boolval($stmt->affected_rows);
         $stmt->close();
@@ -198,42 +203,186 @@ class DB
 
     /////////////////////////////////////////////////////////////////////////////////////
 
-    public function addArticle($name, $content, $studentID) {
-
+    public function addArticle($name, $content)
+    {
+        $stmt = $this->_db->prepare('INSERT INTO `article` (`name`, `content`, `time`) VALUES (?, ?, NOW())');
+        $stmt->bind_param('ss', $name, $content);
+        $result = $stmt->execute();
+        $stmt->close();
+        return $result;
     }
 
-    public function delArticle($ArticleId, $studentID) {
-
+    public function delArticle($articleId)
+    {
+        $stmt = $this->_db->prepare('DELETE FROM `article` WHERE `id`=?');
+        $stmt->bind_param('i', $articleId);
+        if (!$stmt->execute()) {
+            $stmt->close();
+            return false;
+        }
+        $result = boolval($stmt->affected_rows);
+        $stmt->close();
+        return $result;
     }
 
-    public function getArticleName($ArticleId, $outHTMLFilter) {
-
+    private function getArticleInformation($articleId, $field, $outHTMLFilter = true)
+    {
+        $stmt = $this->_db->prepare("SELECT `$field` From `article` WHERE `id`=? limit 1");
+        $stmt->bind_param('i', $articleId);
+        if (!$stmt->execute()) {
+            $stmt->close();
+            return null;
+        }
+        $result = $stmt->get_result();
+        if (!$result->num_rows) {
+            $stmt->close();
+            return null;
+        }
+        $out = $result->fetch_array()[0];
+        $stmt->close();
+        if ($outHTMLFilter) {
+            $out = htmlspecialchars($out);
+        }
+        return $out;
     }
 
-    public function getArticleContent($ArticleId, $outHTMLFilter) {
-
+    public function getArticleName($articleId, $outHTMLFilter = true)
+    {
+        return $this->getArticleInformation($articleId, 'name', $outHTMLFilter);
     }
 
-    public function setArticle($ArticleId, $newName, $newContent, $studentID) {
-        $this->setArticleName($ArticleId, $newName, $studentID);
-        $this->setArticleContent($ArticleId, $newContent, $studentID);
+    public function getArticleContent($articleId, $outHTMLFilter = true)
+    {
+        return $this->getArticleInformation($articleId, 'content', $outHTMLFilter);
     }
 
-    public function setArticleName($ArticleId, $newName, $studentID) {
-
+    public function getArticleStudentID($articleId, $outHTMLFilter = true)
+    {
+        return $this->getArticleInformation($articleId, 'studentID', $outHTMLFilter);
     }
 
-    public function setArticleContent($ArticleId, $newContent, $studentID) {
+    private function setArticleInformation($articleId, $field, $value)
+    {
+        $stmt = $this->_db->prepare("UPDATE `article` SET `$field`=? WHERE `id`=?");
+        $stmt->bind_param('si', $value, $articleId);
+        if (!$stmt->execute()) {
+            $stmt->close();
+            return false;
+        }
+        $result = boolval($stmt->affected_rows);
+        $stmt->close();
+        return $result;
+    }
 
+    public function setArticle($articleId, $newName, $newContent)
+    {
+        $this->setArticleName($articleId, $newName);
+        $this->setArticleContent($articleId, $newContent);
+    }
+
+    public function setArticleName($articleId, $newName)
+    {
+        return $this->setArticleInformation($articleId, 'name', $newName);
+    }
+
+    public function setArticleContent($articleId, $newContent)
+    {
+        return $this->setArticleInformation($articleId, 'content', $newContent);
     }
 
     /////////////////////////////////////////////////////////////////////////////////////
 
-    public function addComment($articleId, $comment, $studentID) {
-
+    public function addMessage($articleId, $message, $studentID)
+    {
+        $stmt = $this->_db->prepare('INSERT INTO `message` (`articleId`, `message`, `studentID`, `time`) VALUES (?, ?, ?, NOW())');
+        $stmt->bind_param('iss', $articleId, $message, $studentID);
+        $result = $stmt->execute();
+        $stmt->close();
+        return $result;
     }
 
-    public function delComment($articleId, $commentId, $studentID) {
+    public function delMessage($messageId)
+    {
+        $stmt = $this->_db->prepare('DELETE FROM `message` WHERE `id`=?');
+        $stmt->bind_param('i', $articleId, $messageId);
+        if (!$stmt->execute()) {
+            $stmt->close();
+            return false;
+        }
+        $result = boolval($stmt->affected_rows);
+        $stmt->close();
+        return $result;
+    }
 
+    public function initMessagesInfoByArticleId($articleId)
+    {
+        if ($this->_result_messages) {
+            $this->_result_messages->close();
+            $this->_result_messages = null;
+        }
+        $stmt = $this->_db->prepare("SELECT * From `message` WHERE `articleId`=? ORDER BY `id` ASC");
+        $stmt->bind_param('i', $articleId);
+        if (!$stmt->execute()) {
+            $stmt->close();
+            return false;
+        }
+        $this->_result_messages = $stmt->get_result();
+        $stmt->close();
+        return $this->_result_messages->num_rows;
+    }
+
+    public function getNextMessage($outHTMLFilter = true)
+    {
+        if (!$this->_result_messages) {
+            return null;
+        }
+        if ($row = $this->_result_messages->fetch_assoc()) {
+            return new Message($row);
+        }
+        $this->_result_messages->close();
+        $this->_result_messages = null;
+    }
+
+    public function setMessage($messageId, $newMessage)
+    {
+        $stmt = $this->_db->prepare('UPDATE `article` SET `message`=? WHERE `id`=?');
+        $stmt->bind_param('si', $newMessage, $messageId);
+        if (!$stmt->execute()) {
+            $stmt->close();
+            return false;
+        }
+        $result = boolval($stmt->affected_rows);
+        $stmt->close();
+        return $result;
+    }
+}
+
+class Message
+{
+    private $array_message;
+
+    public function __construct($array_message)
+    {
+        $this->array_message = $array_message;
+    }
+
+    private function getInformation($field, $outHTMLFilter = true) {
+        $value = $this->array_message[$field];
+        if ($outHTMLFilter) {
+            $value = htmlspecialchars($value);
+        }
+        return $value;
+    }
+
+    public function getMessage($outHTMLFilter = true) {
+        return $this->getInformation('message', $outHTMLFilter);
+    }
+
+    public function getStudentID($outHTMLFilter = true) {
+        return $this->getInformation('studentID', $outHTMLFilter);
+    }
+
+    public function getTime($outHTMLFilter = true) {
+        return $this->getInformation('time', $outHTMLFilter);
     }
 }
