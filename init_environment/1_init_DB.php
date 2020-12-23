@@ -15,4 +15,17 @@ CREATE TABLE `user` (
 db;
 $dbConn->query($sql);
 echo $dbConn->error;
+
+$sql = <<<db
+CREATE TABLE `article` (
+    `id` INT NOT NULL AUTO_INCREMENT ,
+    `name` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+    `content` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+    `studentID` VARCHAR(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB DEFAULT CHARSET=utf8;
+db;
+$dbConn->query($sql);
+echo $dbConn->error;
+
 echo '创建数据表命令已经执行，请查看是否有错误输出！';

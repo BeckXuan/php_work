@@ -71,6 +71,19 @@ class DB
         return $result;
     }
 
+    public function delUser($studentID)
+    {
+        $stmt = $this->_db->prepare('DELETE FROM user WHERE studentID=?');
+        $stmt->bind_param('s', $studentID);
+        if (!$stmt->execute()) {
+            $stmt->close();
+            return false;
+        }
+        $result = boolval($stmt->affected_rows);
+        $stmt->close();
+        return $result;
+    }
+
     private function setUserAccess($studentID, $admitted)
     {
         $stmt = $this->_db->prepare('UPDATE user SET admitted=? WHERE studentID=?');
@@ -97,19 +110,6 @@ class DB
     public function denyUser($studentID)
     {
         return $this->setUserAccess($studentID, 0);
-    }
-
-    public function delUser($studentID)
-    {
-        $stmt = $this->_db->prepare('DELETE FROM user WHERE studentID=?');
-        $stmt->bind_param('s', $studentID);
-        if (!$stmt->execute()) {
-            $stmt->close();
-            return false;
-        }
-        $result = boolval($stmt->affected_rows);
-        $stmt->close();
-        return $result;
     }
 
     private function getUserStudentId($field, $value)
@@ -194,5 +194,46 @@ class DB
             $newPassword = md5($newPassword);
         }
         return $this->setUserInformation($studentID, 'password', $newPassword);
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////
+
+    public function addArticle($name, $content, $studentID) {
+
+    }
+
+    public function delArticle($ArticleId, $studentID) {
+
+    }
+
+    public function getArticleName($ArticleId, $outHTMLFilter) {
+
+    }
+
+    public function getArticleContent($ArticleId, $outHTMLFilter) {
+
+    }
+
+    public function setArticle($ArticleId, $newName, $newContent, $studentID) {
+        $this->setArticleName($ArticleId, $newName, $studentID);
+        $this->setArticleContent($ArticleId, $newContent, $studentID);
+    }
+
+    public function setArticleName($ArticleId, $newName, $studentID) {
+
+    }
+
+    public function setArticleContent($ArticleId, $newContent, $studentID) {
+
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////
+
+    public function addComment($articleId, $comment, $studentID) {
+
+    }
+
+    public function delComment($articleId, $commentId, $studentID) {
+
     }
 }
