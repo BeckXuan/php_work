@@ -32,7 +32,7 @@ if (isset($_SESSION['studentID'], $_COOKIE['studentID']) && $_SESSION['studentID
                 <input type="checkbox" name="rem">
             </label>
             <p class="forgot-pass"><a href="javascript:">忘记密码？</a></p>
-            <button type="submit" name="type" value="login" class="submit">登 录</button>
+            <button type="submit" class="submit" id="btn_log">登 录</button>
             <button type="button" class="fb-btn">使用 <span>管理员</span> 帐号登录</button>
         </div>
     </form>
@@ -71,7 +71,7 @@ if (isset($_SESSION['studentID'], $_COOKIE['studentID']) && $_SESSION['studentID
                     <a id="passwordEye"></a>
                     <input type="password" name="password" required/>
                 </label>
-                <button type="submit" class="submit">注 册</button>
+                <button type="submit" class="submit" id="btn_reg">注 册</button>
                 <button type="reset" class="fb-btn"><span>重置</span></button>
             </div>
         </form>

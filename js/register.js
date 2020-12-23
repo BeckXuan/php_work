@@ -3,7 +3,8 @@ let eye = document.getElementById("passwordEye")
 let reg_inputs = {
     'name': reg_form.name,
     'studentID': reg_form.studentID,
-    'password': reg_form.password
+    'password': reg_form.password,
+    'button': reg_form['btn_reg']
 }
 let reg_sps = {
     'name': document.getElementById('sp_name'),
@@ -20,7 +21,7 @@ let XHR = {
 }
 let sending = {
     'name': false,
-    'studentID': false
+    'studentID': false,
 }
 
 for (let key in reg_sps) {
@@ -68,7 +69,6 @@ function validate(type) {
             }
             XHR[type] = xhr
             xhr.onload = function () {
-                sending[type] = false
                 if (xhr.status === 200) {
                     //success
                     doc_text.className = ''
@@ -83,10 +83,12 @@ function validate(type) {
                     //fail
                     //alert('服务器连接失败！')
                 }
+                sending[type] = false
             }
             xhr.timeout = 2000;
             xhr.ontimeout = function () {
                 alert('请求服务器超时！')
+                sending[type] = false
             }
         }
         xhr.open("POST", 'register_check/' + type + '.php', true);
@@ -96,7 +98,11 @@ function validate(type) {
     }, 500)
 }
 
-function regResetAll() {
+function regResetAll(e) {
+    if (reg_inputs['button'].disabled){
+        e.preventDefault()
+        return
+    }
     for (let key in reg_sps) {
         reg_inputs[key].className = ''
         reg_inputs[key].setCustomValidity('')
@@ -116,6 +122,9 @@ function changeVisibility() {
 
 function _register(e) {
     e.preventDefault()
+    let button = reg_inputs['button']
+    button.disabled = true
+    button.innerText = '注 册 中...'
     let xhr
     if (XHR['submit']) {
         xhr = XHR['submit']
@@ -136,10 +145,14 @@ function _register(e) {
                 //fail
                 alert('未知错误！')
             }
-            xhr.timeout = 2000;
-            xhr.ontimeout = function () {
-                alert('请求服务器超时！')
-            }
+            button.innerText = '注 册'
+            button.disabled = false
+        }
+        xhr.timeout = 2000;
+        xhr.ontimeout = function () {
+            alert('请求服务器超时！')
+            button.innerText = '注 册'
+            button.disabled = false
         }
     }
     let name = reg_inputs['name'].value
