@@ -88,4 +88,3 @@ if (isset($_SESSION['studentID'], $_COOKIE['studentID']) && $_SESSION['studentID
 <script src="js/md5.js"></script>
 </body>
 </html>
-

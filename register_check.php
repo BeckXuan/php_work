@@ -1,4 +1,5 @@
 <?php
+header("Content-type: text/html; charset=utf-8");
 if (!isset($_POST['name'], $_POST['studentID'], $_POST['password'])) {
     header('location: login.php');
     return;

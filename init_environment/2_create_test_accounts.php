@@ -1,4 +1,5 @@
 <?php
+header("Content-type: text/html; charset=utf-8");
 require '../DB.php';
 $db = &DB::getInstance();
 $db->addUser('root', '01', 'test');
