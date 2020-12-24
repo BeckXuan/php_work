@@ -1,4 +1,11 @@
-<!DOCTYPE html>
+<?php
+session_start();
+require "common.php";
+if (!isUserLegal()) {
+    jumpToLogin();
+    return;
+}
+?>
 <html lang="en">
 <head>
     <meta charset="UTF-8">

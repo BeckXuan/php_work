@@ -1,7 +1,14 @@
 <?php
-header("Content-type: text/html; charset=utf-8");
+require "common.php";
+setContentType();
+session_start();
 if (!isset($_POST['name'], $_POST['studentID'], $_POST['password'])) {
-    header('location: login.php');
+    jumpToLogin();
+    return;
+}
+if (isUserLegal()) {
+    header("Status: 422 Unprocessable Entity");
+    echo '您已登录！请退出后再尝试注册！';
     return;
 }
 $password = $_POST['password'];
@@ -11,13 +18,15 @@ if (!preg_match("/^[a-z0-9]{32}$/", $password)) {
 }
 $name = $_POST['name'];
 $studentID = $_POST['studentID'];
+$message = '';
 require "DB.php";
 $db = &DB::getInstance();
-
 if ($db->nameExists($name) || $db->studentIDExists($studentID)) {
-    header("Status: 422 Unprocessable Entity");
-    echo '用户名或学号已存在！';
+    $message = '用户名或学号已存在！';
 } else if (!$db->addUser($name, $studentID, $password, false)) {
-    header("Status: 422 Unprocessable Entity");
-    echo '注册失败！';
+    $message = '注册失败！数据库错误！';
+} else {
+    return;
 }
+header("Status: 422 Unprocessable Entity");
+echo $message;

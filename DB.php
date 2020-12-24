@@ -361,7 +361,7 @@ class DB
         return $this->_result_messages->num_rows;
     }
 
-    public function getNextMessage($outHTMLFilter = true)
+    public function getNextMessage()
     {
         if (!$this->_result_messages) {
             return null;

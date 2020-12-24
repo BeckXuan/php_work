@@ -1,7 +1,8 @@
 <?php
 session_start();
-if (isset($_SESSION['studentID'], $_COOKIE['studentID']) && $_SESSION['studentID'] === $_COOKIE['studentID']) {
-    header('location: content.php');
+require "common.php";
+if (isUserLegal()) {
+    jumpToIndex();
     return;
 }
 ?>

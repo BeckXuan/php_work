@@ -1,9 +1,9 @@
 let reg_form = document.getElementById('register')
 let eye = document.getElementById("passwordEye")
 let reg_inputs = {
-    'name': reg_form.name,
-    'studentID': reg_form.studentID,
-    'password': reg_form.password,
+    'name': reg_form['name'],
+    'studentID': reg_form['studentID'],
+    'password': reg_form['password'],
     'btn_reg': reg_form['btn_reg'],
     'btn_rst': reg_form['btn_rst']
 }
@@ -99,7 +99,7 @@ function validate(type) {
     }, 500)
 }
 
-function regResetAll(e) {
+function regResetAll() {
     for (let key in reg_sps) {
         reg_inputs[key].className = ''
         reg_inputs[key].setCustomValidity('')

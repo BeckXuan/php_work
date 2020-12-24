@@ -1,3 +1,11 @@
+<?php
+session_start();
+require "common.php";
+if (!isAdminLegal()) {
+    jumpToAdminLogin();
+    return;
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -68,10 +76,10 @@
         <div class="flex flex-shrink-0 items-center ml-auto">
             <button class="inline-flex items-center p-2 hover:bg-gray-100 focus:bg-gray-100 rounded-lg">
                 <span class="sr-only">User Menu</span>
-                <div class="hidden md:flex md:flex-col md:items-end md:leading-tight">
+                <span class="hidden md:flex md:flex-col md:items-end md:leading-tight">
                     <span class="font-semibold">冲天小火箭</span>
                     <span class="text-sm text-gray-600">管理员</span>
-                </div>
+                </span>
                 <svg aria-hidden="true" viewBox="0 0 20 20" fill="currentColor"
                      class="hidden sm:block h-6 w-6 text-gray-300">
                     <path fill-rule="evenodd"

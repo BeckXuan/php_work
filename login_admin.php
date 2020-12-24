@@ -1,9 +1,10 @@
 <?php
 session_start();
-//if (isset($_SESSION['studentID'], $_COOKIE['studentID']) && $_SESSION['studentID'] === $_COOKIE['studentID']) {
-//    header('location: content.php');
-//    return;
-//}
+require "common.php";
+if (isAdminLegal()) {
+    jumpToAdminIndex();
+    return;
+}
 ?>
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -21,7 +22,7 @@ session_start();
             <h2>管理员登录</h2>
             <label>
                 <span>管理员账号</span>
-                <input type="text" name="studentID" required/>
+                <input type="text" name="account" required/>
             </label>
             <label>
                 <span>密码</span>
@@ -47,5 +48,6 @@ session_start();
     </div>
 </div>
 <script src="js/login_admin.js"></script>
+<script src="js/md5.js"></script>
 </body>
 </html>

@@ -31,7 +31,7 @@ function _login(e) {
             if (xhr.status === 200) {
                 //success
                 alert('登陆成功！')
-                window.location.href = 'content.php'
+                window.location.href = 'index.php'
             } else if (xhr.status === 422) {
                 //error
                 alert(xhr.responseText)

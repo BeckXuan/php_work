@@ -1,19 +1,15 @@
 <?php
-header("Content-type: text/html; charset=utf-8");
+require "common.php";
+setContentType();
 session_start();
-
-if (isset($_SESSION['studentID'])) {
-    header('location: content.php');
+if (isUserLegal()) {
+    jumpToIndex();
     return;
 }
-
 if (!isset($_POST['studentID'], $_POST['password'])) {
-    header('location: login.php');
+    jumpToLogin();
     return;
 }
-
-//引入DB.php
-require 'DB.php';
 
 //登录处理
 //获取参数
@@ -24,6 +20,8 @@ if (!preg_match("/^[a-z0-9]{32}$/", $password)) {
 }
 $studentID = $_POST['studentID'];
 $message = '';
+//引入DB.php
+require 'DB.php';
 $db = &DB::getInstance();
 if (!$db->studentIDExists($studentID)) {
     $message = '该学号不存在！';
@@ -43,6 +41,7 @@ if (!$db->studentIDExists($studentID)) {
         setcookie('name', $name);
         setcookie('studentID', $studentID);
     }
+    jumpToIndex();
     return;
 }
 header("Status: 422 Unprocessable Entity");
