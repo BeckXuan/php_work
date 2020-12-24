@@ -41,12 +41,24 @@ class DB
         return $this->_db->error;
     }
 
+    private function getNrOfRows($tableName) {
+        $result = $this->_db->query("SELECT COUNT(*) FROM `$tableName`");
+        if (!$result) {
+            return 0;
+        }
+        $out = $result->fetch_array()[0];
+        $result->close();
+        return $out;
+    }
+
     private function contentExists($field, $value)
     {
-        $stmt = $this->_db->prepare("select name from user where `$field`=? limit 1");
+        $stmt = $this->_db->prepare("SELECT `name` FROM `user` WHERE `$field`=? LIMIT 1");
         $stmt->bind_param('s', $value);
         $stmt->execute();
-        $existed = boolval($stmt->get_result()->num_rows);
+        $result = $stmt->get_result();
+        $existed = boolval($result->num_rows);
+        $result->close();
         $stmt->close();
         return $existed;
     }
@@ -114,17 +126,23 @@ class DB
         return $this->setUserAccess($studentID, 0);
     }
 
+    public function getNrOfUsers() {
+        return $this->getNrOfRows('user');
+    }
+
     private function getUserStudentId($field, $value)
     {
-        $stmt = $this->_db->prepare("SELECT `studentID` From `user` WHERE `$field`=? limit 1");
+        $stmt = $this->_db->prepare("SELECT `studentID` FROM `user` WHERE `$field`=? limit 1");
         $stmt->bind_param('s', $value);
         $stmt->execute();
         $result = $stmt->get_result();
         if (!$result->num_rows) {
+            $result->close();
             $stmt->close();
             return null;
         }
         $out = $result->fetch_array()[0];
+        $result->close();
         $stmt->close();
         return $out;
     }
@@ -136,7 +154,7 @@ class DB
 
     private function getUserInformation($studentID, $field, $outHTMLFilter = true)
     {
-        $stmt = $this->_db->prepare("SELECT `$field` From `user` WHERE `studentID`=? limit 1");
+        $stmt = $this->_db->prepare("SELECT `$field` FROM `user` WHERE `studentID`=? limit 1");
         $stmt->bind_param('s', $studentID);
         if (!$stmt->execute()) {
             $stmt->close();
@@ -144,10 +162,12 @@ class DB
         }
         $result = $stmt->get_result();
         if (!$result->num_rows) {
+            $result->close();
             $stmt->close();
             return null;
         }
         $out = $result->fetch_array()[0];
+        $result->close();
         $stmt->close();
         if ($outHTMLFilter) {
             $out = htmlspecialchars($out);
@@ -225,9 +245,13 @@ class DB
         return $result;
     }
 
+    function getNrOfArticles() {
+        return $this->getNrOfRows('article');
+    }
+
     private function getArticleInformation($articleId, $field, $outHTMLFilter = true)
     {
-        $stmt = $this->_db->prepare("SELECT `$field` From `article` WHERE `id`=? limit 1");
+        $stmt = $this->_db->prepare("SELECT `$field` FROM `article` WHERE `id`=? limit 1");
         $stmt->bind_param('i', $articleId);
         if (!$stmt->execute()) {
             $stmt->close();
@@ -235,10 +259,12 @@ class DB
         }
         $result = $stmt->get_result();
         if (!$result->num_rows) {
+            $result->close();
             $stmt->close();
             return null;
         }
         $out = $result->fetch_array()[0];
+        $result->close();
         $stmt->close();
         if ($outHTMLFilter) {
             $out = htmlspecialchars($out);
@@ -314,13 +340,17 @@ class DB
         return $result;
     }
 
+    public function getNrOfMessages() {
+        return $this->getNrOfRows('message');
+    }
+
     public function initMessagesInfoByArticleId($articleId)
     {
         if ($this->_result_messages) {
             $this->_result_messages->close();
             $this->_result_messages = null;
         }
-        $stmt = $this->_db->prepare("SELECT * From `message` WHERE `articleId`=? ORDER BY `id` ASC");
+        $stmt = $this->_db->prepare("SELECT * FROM `message` WHERE `articleId`=? ORDER BY `id` ASC");
         $stmt->bind_param('i', $articleId);
         if (!$stmt->execute()) {
             $stmt->close();
