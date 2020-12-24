@@ -1,12 +1,13 @@
 <?php
-require "common.php";
+require "../common.php";
 setContentType();
 if (!isset($_POST['value'])) {
     http_response_code(403);
     return;
 }
+
 $db = &DB::getInstance();
-if ($db->studentIDExists($_POST['value'])) {
+if ($db->nameExists($_POST['value'])) {
     header("Status: 422 Unprocessable Entity");
-    echo "该学号已存在！";
+    echo "该用户名已存在！";
 }

@@ -92,7 +92,7 @@ function validate(type) {
                 sending[type] = false
             }
         }
-        xhr.open("POST", 'register_check/' + type + '.php', true);
+        xhr.open("POST", 'check/' + type + '.php', true);
         xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
         xhr.send('value=' + value);
         sending[type] = true
