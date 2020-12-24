@@ -7,7 +7,7 @@ let btn_usr = log_form['btn_usr']
 let XHR = null
 log_form.addEventListener('submit', _login)
 btn_usr.addEventListener('click', () => {
-    window.location.href = 'login.php'
+    window.location.href = '../login.php'
 })
 
 function _login(e) {
@@ -31,7 +31,7 @@ function _login(e) {
             if (xhr.status === 200) {
                 //success
                 alert('登陆成功！')
-                window.location.href = 'index_admin.php'
+                window.location.href = 'index.php'
             } else if (xhr.status === 422) {
                 //error
                 alert(xhr.responseText)
@@ -49,7 +49,7 @@ function _login(e) {
             btn_log.disabled = false
         }
     }
-    xhr.open("POST", 'admin_check.php', true);
+    xhr.open("POST", '../check/admin.php', true);
     xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     xhr.send('account=' + account + '&password=' + password + '&rem=' + rem);
 }

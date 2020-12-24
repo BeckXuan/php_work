@@ -1,8 +1,8 @@
 <?php
 session_start();
-require "common.php";
+require "../common.php";
 if (isAdminLegal()) {
-    jumpToAdminIndex();
+    header('location: admin.php');
     return;
 }
 ?>
@@ -11,9 +11,9 @@ if (isAdminLegal()) {
 <head>
     <meta charset="utf-8">
     <title>管理员登录</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon"/>
-    <link rel="icon" sizes="any" href="images/favicon.ico">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="shortcut icon" href="../images/favicon.ico" type="image/x-icon"/>
+    <link rel="icon" sizes="any" href="../images/favicon.ico">
 </head>
 <body>
 <div class="content">
@@ -47,7 +47,7 @@ if (isAdminLegal()) {
         </div>
     </div>
 </div>
-<script src="js/login_admin.js"></script>
-<script src="js/md5.js"></script>
+<script src="../js/login_admin.js"></script>
+<script src="../js/md5.js"></script>
 </body>
 </html>

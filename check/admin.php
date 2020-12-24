@@ -1,13 +1,13 @@
 <?php
-require "common.php";
+require "../common.php";
 setContentType();
 session_start();
 if (isAdminLegal()) {
-    jumpToAdminIndex();
+    header('location: ../admin/index.php');
     return;
 }
 if (!isset($_POST['account'], $_POST['password'])) {
-    jumpToAdminLogin();
+    header('location: ../admin/login.php');
     return;
 }
 $password = $_POST['password'];
@@ -17,9 +17,8 @@ if (!preg_match("/^[a-z0-9]{32}$/", $password)) {
 }
 $account = $_POST['account'];
 $message = '';
-require 'DB.php';
 $db = &DB::getInstance();
-require "admin_config.php";
+require "../config/admin.php";
 /* @noinspection PhpUndefinedVariableInspection */
 if ($adminAccount !== $account || $adminPassword !== $password) {
     $message = '账号或密码错误！';
@@ -29,13 +28,12 @@ if ($adminAccount !== $account || $adminPassword !== $password) {
     $_SESSION['adminName'] = $name;
     $_SESSION['adminAccount'] = $account;
     if (isset($_POST['rem']) && $_POST['rem'] === '1') {
-        setcookie('adminName', $name, time() + 3600);
-        setcookie('adminAccount', $account, time() + 3600);
+        setcookie('adminName', $name, time() + 3600, '/', '', false, true);
+        setcookie('adminAccount', $account, time() + 3600, '/', '', false, true);
     } else {
-        setcookie('adminName', $name);
-        setcookie('adminAccount', $account);
+        setcookie('adminName', $name, 0, '/', '', false, true);
+        setcookie('adminAccount', $account, 0, '/', '', false, true);
     }
-    jumpToAdminIndex();
     return;
 }
 header("Status: 422 Unprocessable Entity");

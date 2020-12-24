@@ -1,6 +1,6 @@
 <?php
-header("Content-type: text/html; charset=utf-8");
-require '../DB.php';
+require "../common.php";
+setContentType();
 $db = &DB::getInstance();
 $db->addUser('root', '01', 'test');
 $db->addUser('Beck', '02', 'test');

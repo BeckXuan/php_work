@@ -1,13 +1,13 @@
 <?php
-require "common.php";
+require "../common.php";
 setContentType();
 session_start();
 if (isUserLegal()) {
-    jumpToIndex();
+    header('location: ../index.php');
     return;
 }
 if (!isset($_POST['studentID'], $_POST['password'])) {
-    jumpToLogin();
+    header('location: ../login.php');
     return;
 }
 
@@ -20,8 +20,6 @@ if (!preg_match("/^[a-z0-9]{32}$/", $password)) {
 }
 $studentID = $_POST['studentID'];
 $message = '';
-//引入DB.php
-require 'DB.php';
 $db = &DB::getInstance();
 if (!$db->studentIDExists($studentID)) {
     $message = '该学号不存在！';
@@ -35,13 +33,12 @@ if (!$db->studentIDExists($studentID)) {
     $_SESSION['name'] = $name;
     $_SESSION['studentID'] = $studentID;
     if (isset($_POST['rem']) && $_POST['rem'] === '1') {
-        setcookie('name', $name, time() + 3600);
-        setcookie('studentID', $studentID, time() + 3600);
+        setcookie('name', $name, time() + 3600, '/', '', false, true);
+        setcookie('studentID', $studentID, time() + 3600, '/', '', false, true);
     } else {
-        setcookie('name', $name);
-        setcookie('studentID', $studentID);
+        setcookie('name', $name, 0, '/', '', false, true);
+        setcookie('studentID', $studentID, 0, '/', '', false, true);
     }
-    jumpToIndex();
     return;
 }
 header("Status: 422 Unprocessable Entity");

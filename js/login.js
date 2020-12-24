@@ -7,7 +7,7 @@ let btn_admin = log_form['btn_admin']
 let XHR_log = null
 log_form.addEventListener('submit', _login)
 btn_admin.addEventListener('click', () => {
-    window.location.href = 'login_admin.php'
+    window.location.href = 'admin/login.php'
 })
 
 function _login(e) {
@@ -37,7 +37,7 @@ function _login(e) {
                 alert(xhr.responseText)
             } else {
                 //fail
-                alert('未知错误！')
+                alert(xhr.status + '未知错误！')
             }
             btn_log.innerText = '登 录'
             btn_log.disabled = false
@@ -49,7 +49,7 @@ function _login(e) {
             btn_log.disabled = false
         }
     }
-    xhr.open("POST", 'login_check.php', true);
+    xhr.open("POST", 'check/login.php', true);
     xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     xhr.send('studentID=' + studentID + '&password=' + password + '&rem=' + rem);
 }

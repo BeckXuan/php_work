@@ -8,7 +8,7 @@ class DB
 
     private function __construct()
     {
-        require "DBConfig.php";
+        require "config/DB.php";
         /* @noinspection PhpUndefinedVariableInspection */
         $this->_db = new mysqli($host, $user, $password, $dbname, $port);
         $error = $this->_db->connect_error;

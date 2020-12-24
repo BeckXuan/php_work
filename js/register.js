@@ -161,7 +161,7 @@ function _register(e) {
     let name = reg_inputs['name'].value
     let studentID = reg_inputs['studentID'].value
     let password = hex_md5(reg_inputs['password'].value)
-    xhr.open("POST", 'register_check.php', true);
+    xhr.open("POST", 'check/register.php', true);
     xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     xhr.send('name=' + name + '&studentID=' + studentID + '&password=' + password);
 }

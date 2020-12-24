@@ -1,12 +1,12 @@
 <?php
 session_start();
 require "common.php";
-if (!isUserLegal()) {
-    jumpToLogin();
+if (!isUserLegal() && !isAdminLegal()) {
+    header('location: login.php');
     return;
 }
 ?>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>

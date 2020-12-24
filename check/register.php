@@ -1,9 +1,9 @@
 <?php
-require "common.php";
+require "../common.php";
 setContentType();
 session_start();
 if (!isset($_POST['name'], $_POST['studentID'], $_POST['password'])) {
-    jumpToLogin();
+    header('location: ../login.php');
     return;
 }
 if (isUserLegal()) {
@@ -19,7 +19,6 @@ if (!preg_match("/^[a-z0-9]{32}$/", $password)) {
 $name = $_POST['name'];
 $studentID = $_POST['studentID'];
 $message = '';
-require "DB.php";
 $db = &DB::getInstance();
 if ($db->nameExists($name) || $db->studentIDExists($studentID)) {
     $message = '用户名或学号已存在！';

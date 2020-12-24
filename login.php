@@ -1,8 +1,8 @@
 <?php
 session_start();
 require "common.php";
-if (isUserLegal()) {
-    jumpToIndex();
+if (isUserLegal() || isAdminLegal()) {
+    header('location: index.php');
     return;
 }
 ?>

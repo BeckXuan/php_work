@@ -1,5 +1,7 @@
 <?php
 
+require_once "DB.php";
+
 function isUserLegal() {
     return isset($_SESSION['studentID'], $_COOKIE['studentID'], $_COOKIE['name'])
         && $_SESSION['studentID'] === $_COOKIE['studentID']
@@ -15,20 +17,4 @@ function isAdminLegal()
 
 function setContentType() {
     header("Content-type: text/html; charset=utf-8");
-}
-
-function jumpToLogin() {
-    header('location: login.php');
-}
-
-function jumpToAdminLogin() {
-    header('location: login_admin.php');
-}
-
-function jumpToIndex() {
-    header('location: index.php');
-}
-
-function jumpToAdminIndex() {
-    header('location: index_admin.php');
 }

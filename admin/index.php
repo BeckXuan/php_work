@@ -1,8 +1,8 @@
 <?php
 session_start();
-require "common.php";
+require "../common.php";
 if (!isAdminLegal()) {
-    jumpToAdminLogin();
+    header('location: login.php');
     return;
 }
 ?>
@@ -12,7 +12,7 @@ if (!isAdminLegal()) {
     <meta charset="UTF-8">
     <title>CodePen - Online Courses Dashboard</title>
 
-    <link rel='stylesheet' href='css/tailwind-experimental.min.css'>
+    <link rel='stylesheet' href='../css/tailwind-experimental.min.css'>
 
 </head>
 
