@@ -39,9 +39,9 @@ session_start();
     <div class="sub-cont">
         <div class="img">
             <div class="img__text m--up">
-                <h2>欢迎回来！</h2>
+                <h2>欢迎使用</h2>
                 <br/><br/><br/>
-                <p>亲爱的管理员先生/女士！</p>
+                <h2>后台管理系统</h2>
             </div>
         </div>
     </div>
