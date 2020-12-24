@@ -57,7 +57,7 @@ class DB
         $stmt->bind_param('s', $value);
         $stmt->execute();
         $result = $stmt->get_result();
-        $existed = boolval($result->num_rows);
+        $existed = $result->num_rows > 0;
         $result->close();
         $stmt->close();
         return $existed;
@@ -93,7 +93,7 @@ class DB
             $stmt->close();
             return false;
         }
-        $result = boolval($stmt->affected_rows);
+        $result = $stmt->affected_rows > 0;
         $stmt->close();
         return $result;
     }
@@ -111,7 +111,7 @@ class DB
             $stmt->close();
             return false;
         }
-        $result = boolval($stmt->affected_rows);
+        $result = $stmt->affected_rows > 0;
         $stmt->close();
         return $result;
     }
@@ -187,7 +187,7 @@ class DB
 
     public function isUserAccessible($studentID)
     {
-        return boolval($this->getUserInformation($studentID, 'admitted', false));
+        return $this->getUserInformation($studentID, 'admitted', false) == true;
     }
 
     private function setUserInformation($studentID, $field, $value)
@@ -198,7 +198,7 @@ class DB
             $stmt->close();
             return false;
         }
-        $result = boolval($stmt->affected_rows);
+        $result = $stmt->affected_rows > 0;
         $stmt->close();
         return $result;
     }
@@ -240,7 +240,7 @@ class DB
             $stmt->close();
             return false;
         }
-        $result = boolval($stmt->affected_rows);
+        $result = $stmt->affected_rows > 0;
         $stmt->close();
         return $result;
     }
@@ -295,7 +295,7 @@ class DB
             $stmt->close();
             return false;
         }
-        $result = boolval($stmt->affected_rows);
+        $result = $stmt->affected_rows > 0;
         $stmt->close();
         return $result;
     }
@@ -335,7 +335,7 @@ class DB
             $stmt->close();
             return false;
         }
-        $result = boolval($stmt->affected_rows);
+        $result = $stmt->affected_rows > 0;
         $stmt->close();
         return $result;
     }
@@ -381,7 +381,7 @@ class DB
             $stmt->close();
             return false;
         }
-        $result = boolval($stmt->affected_rows);
+        $result = $stmt->affected_rows > 0;
         $stmt->close();
         return $result;
     }
