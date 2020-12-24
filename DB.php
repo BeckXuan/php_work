@@ -371,6 +371,7 @@ class DB
         }
         $this->_result_messages->close();
         $this->_result_messages = null;
+        return null;
     }
 
     public function setMessage($messageId, $newMessage)
