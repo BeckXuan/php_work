@@ -51,8 +51,8 @@ $db->initArticleInformation(0, 5, true);
                         <img src="images/new-jiantou.jpg">
                     </div>
                     <div class="bottom">
-                        <h3>23</h3>
-                        <span>2018.03</span>
+                        <h3><?= substr($article->getTime(), 9, 2) ?></h3>
+                        <span><?= substr($article->getTime(), 0, 7) ?></span>
 
                     </div>
                 </a>
@@ -71,8 +71,8 @@ $db->initArticleInformation(0, 5, true);
                         <img src="images/new-jiantou.jpg">
                     </div>
                     <div class="bottom">
-                        <h3>21</h3>
-                        <span>2018.03</span>
+                        <h3><?= substr($article->getTime(), 9, 2) ?></h3>
+                        <span><?= substr($article->getTime(), 0, 7) ?></span>
 
                     </div>
                 </a>
@@ -83,11 +83,14 @@ $db->initArticleInformation(0, 5, true);
                      $id < 6;
                      $id++) {
                     $article = $db->getNextArticle();
+                    $time = $article->getTime();
+                    $year_month=substr($article->getTime(), 0, 7);
+                    $day=substr($article->getTime(), 9, 2);
                     echo <<<html
                     <a href="article_show.php?id={$article->getId()}">
                         <div class="left">
-                            <h3>27</h3>
-                            <span>2017.05</span>
+                            <h3>{$day}</h3>
+                            <span>{$year_month}</span>
                         </div>
                         <div class="right">
                             <h5>
