@@ -1,10 +1,10 @@
 <?php
 session_start();
 require "../common.php";
-if (!isAdminLegal()) {
-    header('location: login.php');
-    return;
-}
+//if (!isAdminLegal()) {
+//    header('location: login.php');
+//    return;
+//}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -177,9 +177,5 @@ if (!isAdminLegal()) {
 </div>
 
 </body>
-<script>
-    document.querySelector('.img__btn').addEventListener('click', function() {
-        document.querySelector('.content').classList.toggle('s--signup')
-    })
-</script>
+<script></script>
 </html>

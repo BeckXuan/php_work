@@ -99,13 +99,14 @@ class DB
         return $out;
     }
 
-    private function initTableInformation($table, &$result, $orderBy, $start, $counter)
+    private function initTableInformation($table, &$result, $orderBy, $start, $counter, $descending = false)
     {
         if ($result) {
             $result->close();
             $result = null;
         }
-        $stmt = $this->_db->prepare("SELECT * FROM `$table` ORDER BY `$orderBy` ASC LIMIT ?,?");
+        $order = $descending ? 'DESC' : 'ASC';
+        $stmt = $this->_db->prepare("SELECT * FROM `$table` ORDER BY `$orderBy` $order LIMIT ?,?");
         $stmt->bind_param('ii', $start, $counter);
         if (!$stmt->execute()) {
             $stmt->close();
@@ -306,9 +307,9 @@ class DB
         return $this->getNrOfRows('article');
     }
 
-    public function initArticleInformation($start, $counter)
+    public function initArticleInformation($start, $counter, $descending = false)
     {
-        return $this->initTableInformation('article', $this->_result_articles, 'id', $start, $counter);
+        return $this->initTableInformation('article', $this->_result_articles, 'id', $start, $counter, $descending);
     }
 
     public function getNextArticle()
@@ -391,9 +392,9 @@ class DB
         return $this->getMessageInformation($messageId, 'time', $outHTMLFilter);
     }
 
-    public function initMessagesInformation($start, $counter)
+    public function initMessagesInformation($start, $counter, $descending = false)
     {
-        return $this->initTableInformation('message', $this->_result_messages, 'id', $start, $counter);
+        return $this->initTableInformation('message', $this->_result_messages, 'id', $start, $counter, $descending);
     }
 
     public function initMessagesInfoByArticleId($articleId)
