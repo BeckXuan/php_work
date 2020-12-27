@@ -282,10 +282,6 @@ class DB
         return $this->getArticleInformation($articleId, 'content', $outHTMLFilter);
     }
 
-    public function getArticleStudentID($articleId, $outHTMLFilter = true)
-    {
-        return $this->getArticleInformation($articleId, 'studentID', $outHTMLFilter);
-    }
 
     private function setArticleInformation($articleId, $field, $value)
     {
@@ -374,10 +370,10 @@ class DB
         return null;
     }
 
-    public function setMessage($messageId, $newMessage)
+    private function setMessageInformation($messageId, $field, $value)
     {
-        $stmt = $this->_db->prepare('UPDATE `article` SET `message`=? WHERE `id`=?');
-        $stmt->bind_param('si', $newMessage, $messageId);
+        $stmt = $this->_db->prepare("UPDATE `article` SET `$field`=? WHERE `id`=?");
+        $stmt->bind_param('si', $value, $messageId);
         if (!$stmt->execute()) {
             $stmt->close();
             return false;
@@ -385,6 +381,16 @@ class DB
         $result = $stmt->affected_rows > 0;
         $stmt->close();
         return $result;
+    }
+
+    public function setMessageContent($messageId, $newMessage)
+    {
+        return $this->setMessageInformation($messageId, 'message', $newMessage);
+    }
+
+    public function setMessageStudentID($messageId, $newStudentID)
+    {
+        return $this->setMessageInformation($messageId, 'studentID', $newStudentID);
     }
 }
 

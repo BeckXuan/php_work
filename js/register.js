@@ -138,7 +138,7 @@ function _register(e) {
                 //success
                 alert('注册成功！跳到登录界面！')
                 reg_form.reset()
-                document.querySelector('.content').classList.toggle('s--signup')
+                document.querySelector('.content').classList.remove('s--signup')
             } else if (xhr.status === 422) {
                 //error
                 alert(xhr.responseText)

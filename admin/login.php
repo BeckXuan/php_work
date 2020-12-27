@@ -2,7 +2,7 @@
 session_start();
 require "../common.php";
 if (isAdminLegal()) {
-    header('location: admin.php');
+    header('location: index.php');
     return;
 }
 ?>
