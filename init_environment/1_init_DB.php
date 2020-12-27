@@ -19,7 +19,7 @@ echo $dbConn->error . '<br/>';
 $sql = <<<sql
 CREATE TABLE `article` (
     `id` INT NOT NULL AUTO_INCREMENT,
-    `name` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+    `title` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
     `content` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
     `time` DATETIME NOT NULL,
     PRIMARY KEY (`id`)

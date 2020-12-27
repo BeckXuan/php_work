@@ -2,9 +2,11 @@
 
 class DB
 {
-    private $_db;
-    private $_result_messages;
     private static $_instance;
+    private $_db;
+    private $_result_users;
+    private $_result_articles;
+    private $_result_messages;
 
     private function __construct()
     {
@@ -41,7 +43,8 @@ class DB
         return $this->_db->error;
     }
 
-    private function getNrOfRows($tableName) {
+    private function getNrOfRows($tableName)
+    {
         $result = $this->_db->query("SELECT COUNT(*) FROM `$tableName`");
         if (!$result) {
             return 0;
@@ -71,6 +74,73 @@ class DB
     public function nameExists($name)
     {
         return $this->contentExists('name', $name);
+    }
+
+    private function getTableInformation($table, $idName, $idType, $id, $field, $outHTMLFilter = true)
+    {
+        $stmt = $this->_db->prepare("SELECT `$field` FROM `$table` WHERE `$idName`=? limit 1");
+        $stmt->bind_param($idType, $id);
+        if (!$stmt->execute()) {
+            $stmt->close();
+            return null;
+        }
+        $result = $stmt->get_result();
+        if (!$result->num_rows) {
+            $result->close();
+            $stmt->close();
+            return null;
+        }
+        $out = $result->fetch_array()[0];
+        $result->close();
+        $stmt->close();
+        if ($outHTMLFilter) {
+            $out = htmlspecialchars($out);
+        }
+        return $out;
+    }
+
+    private function initTableInformation($table, &$result, $orderBy, $start, $counter)
+    {
+        if ($result) {
+            $result->close();
+            $result = null;
+        }
+        $stmt = $this->_db->prepare("SELECT * FROM `$table` ORDER BY `$orderBy` ASC LIMIT ?,?");
+        $stmt->bind_param('ii', $start, $counter);
+        if (!$stmt->execute()) {
+            $stmt->close();
+            return 0;
+        }
+        $result = $stmt->get_result();
+        $stmt->close();
+        return $result->num_rows;
+    }
+
+    public function getNextRow(&$result) //, $container)
+    {
+        if (!$result) {
+            return null;
+        }
+        if ($row = $result->fetch_assoc()) {
+            //return new $container($row);
+            return $row;
+        }
+        $result->close();
+        $result = null;
+        return null;
+    }
+
+    private function setTableInformation($table, $idName, $idType, $id, $field, $value)
+    {
+        $stmt = $this->_db->prepare("UPDATE `$table` SET `$field`=? WHERE `$idName`=?");
+        $stmt->bind_param('s' . $idType, $value, $id);
+        if (!$stmt->execute()) {
+            $stmt->close();
+            return false;
+        }
+        $result = $stmt->affected_rows > 0;
+        $stmt->close();
+        return $result;
     }
 
     public function addUser($name, $studentID, $password, $needMD5 = true)
@@ -126,7 +196,8 @@ class DB
         return $this->setUserAccess($studentID, 0);
     }
 
-    public function getNrOfUsers() {
+    public function getNrOfUsers()
+    {
         return $this->getNrOfRows('user');
     }
 
@@ -152,27 +223,23 @@ class DB
         return $this->getUserStudentId('name', $name);
     }
 
+    public function initUserInformation($start, $counter)
+    {
+        return $this->initTableInformation('user', $this->_result_users, 'studentID', $start, $counter);
+    }
+
+    public function getNextUser()
+    {
+        // return $this->getNextRow($this->_result_users, 'User');
+        if ($row = $this->getNextRow($this->_result_users)) {
+            return new User($row);
+        }
+        return null;
+    }
+
     private function getUserInformation($studentID, $field, $outHTMLFilter = true)
     {
-        $stmt = $this->_db->prepare("SELECT `$field` FROM `user` WHERE `studentID`=? limit 1");
-        $stmt->bind_param('s', $studentID);
-        if (!$stmt->execute()) {
-            $stmt->close();
-            return null;
-        }
-        $result = $stmt->get_result();
-        if (!$result->num_rows) {
-            $result->close();
-            $stmt->close();
-            return null;
-        }
-        $out = $result->fetch_array()[0];
-        $result->close();
-        $stmt->close();
-        if ($outHTMLFilter) {
-            $out = htmlspecialchars($out);
-        }
-        return $out;
+        return $this->getTableInformation('user', 'studentID', 's', $studentID, $field, $outHTMLFilter);
     }
 
     public function getUserName($studentID, $outHTMLFilter = true)
@@ -192,15 +259,7 @@ class DB
 
     private function setUserInformation($studentID, $field, $value)
     {
-        $stmt = $this->_db->prepare("UPDATE `user` SET `$field`=? WHERE `studentID`=?");
-        $stmt->bind_param('ss', $value, $studentID);
-        if (!$stmt->execute()) {
-            $stmt->close();
-            return false;
-        }
-        $result = $stmt->affected_rows > 0;
-        $stmt->close();
-        return $result;
+        return $this->setTableInformation('user', 'studentID', 's', $studentID, $field, $value);
     }
 
     public function setUserStudentID($studentID, $newStudentID)
@@ -245,36 +304,33 @@ class DB
         return $result;
     }
 
-    function getNrOfArticles() {
+    function getNrOfArticles()
+    {
         return $this->getNrOfRows('article');
+    }
+
+    public function initArticleInformation($start, $counter)
+    {
+        return $this->initTableInformation('article', $this->_result_articles, 'id', $start, $counter);
+    }
+
+    public function getNextArticle()
+    {
+        // return $this->getNextRow($this->_result_articles, 'Article');
+        if ($row = $this->getNextRow($this->_result_articles)) {
+            return new Article($row);
+        }
+        return null;
     }
 
     private function getArticleInformation($articleId, $field, $outHTMLFilter = true)
     {
-        $stmt = $this->_db->prepare("SELECT `$field` FROM `article` WHERE `id`=? limit 1");
-        $stmt->bind_param('i', $articleId);
-        if (!$stmt->execute()) {
-            $stmt->close();
-            return null;
-        }
-        $result = $stmt->get_result();
-        if (!$result->num_rows) {
-            $result->close();
-            $stmt->close();
-            return null;
-        }
-        $out = $result->fetch_array()[0];
-        $result->close();
-        $stmt->close();
-        if ($outHTMLFilter) {
-            $out = htmlspecialchars($out);
-        }
-        return $out;
+        return $this->getTableInformation('article', 'id', 's', $articleId, $field, $outHTMLFilter);
     }
 
-    public function getArticleName($articleId, $outHTMLFilter = true)
+    public function getArticleTitle($articleId, $outHTMLFilter = true)
     {
-        return $this->getArticleInformation($articleId, 'name', $outHTMLFilter);
+        return $this->getArticleInformation($articleId, 'title', $outHTMLFilter);
     }
 
     public function getArticleContent($articleId, $outHTMLFilter = true)
@@ -282,29 +338,14 @@ class DB
         return $this->getArticleInformation($articleId, 'content', $outHTMLFilter);
     }
 
-
     private function setArticleInformation($articleId, $field, $value)
     {
-        $stmt = $this->_db->prepare("UPDATE `article` SET `$field`=? WHERE `id`=?");
-        $stmt->bind_param('si', $value, $articleId);
-        if (!$stmt->execute()) {
-            $stmt->close();
-            return false;
-        }
-        $result = $stmt->affected_rows > 0;
-        $stmt->close();
-        return $result;
+        return $this->setTableInformation('article', 'id', 'i', $articleId, $field, $value);
     }
 
-    public function setArticle($articleId, $newName, $newContent)
+    public function setArticleTitle($articleId, $newName)
     {
-        $this->setArticleName($articleId, $newName);
-        $this->setArticleContent($articleId, $newContent);
-    }
-
-    public function setArticleName($articleId, $newName)
-    {
-        return $this->setArticleInformation($articleId, 'name', $newName);
+        return $this->setArticleInformation($articleId, 'title', $newName);
     }
 
     public function setArticleContent($articleId, $newContent)
@@ -336,8 +377,34 @@ class DB
         return $result;
     }
 
-    public function getNrOfMessages() {
+    public function getNrOfMessages()
+    {
         return $this->getNrOfRows('message');
+    }
+
+    private function getMessageInformation($messageId, $field, $outHTMLFilter = true)
+    {
+        return $this->getTableInformation('message', 'id', 'i', $messageId, $field, $outHTMLFilter);
+    }
+
+    public function getMessageContent($messageId, $outHTMLFilter = true)
+    {
+        return $this->getMessageInformation($messageId, 'message', $outHTMLFilter);
+    }
+
+    public function getMessageStudentID($messageId, $outHTMLFilter = true)
+    {
+        return $this->getMessageInformation($messageId, 'studentID', $outHTMLFilter);
+    }
+
+    public function getMessageTime($messageId, $outHTMLFilter = true)
+    {
+        return $this->getMessageInformation($messageId, 'time', $outHTMLFilter);
+    }
+
+    public function initMessagesInformation($start, $counter)
+    {
+        return $this->initTableInformation('message', $this->_result_messages, 'id', $start, $counter);
     }
 
     public function initMessagesInfoByArticleId($articleId)
@@ -359,28 +426,16 @@ class DB
 
     public function getNextMessage()
     {
-        if (!$this->_result_messages) {
-            return null;
-        }
-        if ($row = $this->_result_messages->fetch_assoc()) {
+        // return $this->getNextRow($this->_result_messages, 'Message');
+        if ($row = $this->getNextRow($this->_result_messages)) {
             return new Message($row);
         }
-        $this->_result_messages->close();
-        $this->_result_messages = null;
         return null;
     }
 
     private function setMessageInformation($messageId, $field, $value)
     {
-        $stmt = $this->_db->prepare("UPDATE `article` SET `$field`=? WHERE `id`=?");
-        $stmt->bind_param('si', $value, $messageId);
-        if (!$stmt->execute()) {
-            $stmt->close();
-            return false;
-        }
-        $result = $stmt->affected_rows > 0;
-        $stmt->close();
-        return $result;
+        return $this->setTableInformation('message', 'id', 'i', $messageId, $field, $value);
     }
 
     public function setMessageContent($messageId, $newMessage)
@@ -394,32 +449,129 @@ class DB
     }
 }
 
-class Message
+class User
 {
-    private $array_message;
+    private $array;
 
-    public function __construct($array_message)
+    public function __construct($array)
     {
-        $this->array_message = $array_message;
+        $this->array = $array;
     }
 
-    private function getInformation($field, $outHTMLFilter = true) {
-        $value = $this->array_message[$field];
+    private function getInformation($field, $outHTMLFilter = true)
+    {
+        $value = $this->array[$field];
         if ($outHTMLFilter) {
             $value = htmlspecialchars($value);
         }
         return $value;
     }
 
-    public function getMessage($outHTMLFilter = true) {
-        return $this->getInformation('message', $outHTMLFilter);
+    public function getName($outHTMLFilter = true)
+    {
+        return $this->getInformation('name', $outHTMLFilter);
     }
 
-    public function getStudentID($outHTMLFilter = true) {
+    public function getStudentID($outHTMLFilter = true)
+    {
         return $this->getInformation('studentID', $outHTMLFilter);
     }
 
-    public function getTime($outHTMLFilter = true) {
+    public function getPassword($outHTMLFilter = true)
+    {
+        return $this->getInformation('password', $outHTMLFilter);
+    }
+
+    public function getTime($outHTMLFilter = true)
+    {
+        return $this->getInformation('time', $outHTMLFilter);
+    }
+
+    public function getAdmitted()
+    {
+        return $this->getInformation('admitted', false) == true;
+    }
+}
+
+class Article
+{
+    private $array;
+
+    public function __construct($array)
+    {
+        $this->array = $array;
+    }
+
+    private function getInformation($field, $outHTMLFilter = true)
+    {
+        $value = $this->array[$field];
+        if ($outHTMLFilter) {
+            $value = htmlspecialchars($value);
+        }
+        return $value;
+    }
+
+    public function getId($outHTMLFilter = true)
+    {
+        return $this->getInformation('id', $outHTMLFilter);
+    }
+
+    public function getTitle($outHTMLFilter = true)
+    {
+        return $this->getInformation('title', $outHTMLFilter);
+    }
+
+    public function getContent($outHTMLFilter = true)
+    {
+        return $this->getInformation('content', $outHTMLFilter);
+    }
+
+    public function getTime($outHTMLFilter = true)
+    {
+        return $this->getInformation('time', $outHTMLFilter);
+    }
+}
+
+class Message
+{
+    private $array;
+
+    public function __construct($array)
+    {
+        $this->array = $array;
+    }
+
+    private function getInformation($field, $outHTMLFilter = true)
+    {
+        $value = $this->array[$field];
+        if ($outHTMLFilter) {
+            $value = htmlspecialchars($value);
+        }
+        return $value;
+    }
+
+    public function getId($outHTMLFilter = true)
+    {
+        return $this->getInformation('id', $outHTMLFilter);
+    }
+
+    public function getArticleId($outHTMLFilter = true)
+    {
+        return $this->getInformation('articleId', $outHTMLFilter);
+    }
+
+    public function getMessage($outHTMLFilter = true)
+    {
+        return $this->getInformation('message', $outHTMLFilter);
+    }
+
+    public function getStudentID($outHTMLFilter = true)
+    {
+        return $this->getInformation('studentID', $outHTMLFilter);
+    }
+
+    public function getTime($outHTMLFilter = true)
+    {
         return $this->getInformation('time', $outHTMLFilter);
     }
 }
