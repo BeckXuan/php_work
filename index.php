@@ -13,7 +13,7 @@ function getNextArticleParam(&$href, &$title, &$content, &$year_month, &$day)
     if ($article = $db->getNextArticle()) {
         $href = 'article_show.php?id=' . $article->getId();
         $title = $article->getTitle();
-        $content = $article->getContent();
+        $content = substr($article->getContent(),0,20);
         $time = strtotime($article->getTime());
         $year_month = date('Y-m', $time);
         $day = date('d', $time);

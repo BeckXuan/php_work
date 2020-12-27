@@ -7,7 +7,7 @@ require "common.php";
 //}
 
 $db = DB::getInstance();
-$db->initArticleInformation(0, -1, true);
+$db->initArticleInformation(0, 11, true);
 ?>
 <html lang="zh-CN">
 <head>
@@ -26,14 +26,14 @@ $db->initArticleInformation(0, -1, true);
         while ($article = $db->getNextArticle()) {
             $href = 'article_show.php?id=' . $article->getId();
             $title = $article->getTitle();
-            $content = $article->getContent();
+            $content = substr($article->getContent(),0,20);
             $time = strtotime($article->getTime());
             $year_month = date('Y-m', $time);
             $day = date('d', $time);
             $class = $class === 'odd' ? 'even' : 'odd';
             echo <<<html
         <div class="newContentBox {$class}">
-            <a href="#">
+            <a href="{$href}">
                 <div class="time">
                     <p class="day">{$day}</p>
                     <p class="ym">{$year_month}</p>
