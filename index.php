@@ -69,6 +69,7 @@ function getNextArticleParam(&$href, &$title, &$content, &$year_month, &$day)
                         <span>{$year_month}</span>
                     </div>
                 </a>
+
 html;
                 } ?>
             <li class="three">
@@ -88,6 +89,7 @@ html;
                         <img src="images/new-arrow.jpg" alt="arrow"/>
                     </div>
                 </a>
+
 html;
                 } ?>
             </li>

@@ -46,6 +46,7 @@ $db->initArticleInformation(0, -1, true);
                 </div>
             </a>
         </div>
+
 html;
         } ?>
     </div>
