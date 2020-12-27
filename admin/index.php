@@ -1,6 +1,5 @@
 <?php
 require "../common.php";
-setSessionSavePath();
 session_start();
 //if (!isAdminLegal()) {
 //    header('location: login.php');

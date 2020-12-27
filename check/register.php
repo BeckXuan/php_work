@@ -1,7 +1,6 @@
 <?php
 require "../common.php";
 setContentType();
-setSessionSavePath();
 session_start();
 if (!isset($_POST['name'], $_POST['studentID'], $_POST['password'])) {
     header('location: ../login.php');

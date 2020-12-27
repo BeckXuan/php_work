@@ -2,15 +2,6 @@
 
 require_once "DB.php";
 
-function setSessionSavePath()
-{
-    $dir = 'runtime/session';
-    if (!is_dir($dir)) {
-        mkdir($dir, 777, true);
-    }
-    session_save_path(dirname(__FILE__) . '/' . $dir);
-}
-
 function isUserLegal()
 {
     return isset($_SESSION['studentID'], $_COOKIE['studentID'], $_COOKIE['name'])
