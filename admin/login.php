@@ -11,7 +11,7 @@ if (isAdminLegal()) {
 <head>
     <meta charset="utf-8">
     <title>管理员登录</title>
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/login.css">
     <link rel="shortcut icon" href="../images/favicon.ico" type="image/x-icon"/>
     <link rel="icon" sizes="any" href="../images/favicon.ico">
 </head>
