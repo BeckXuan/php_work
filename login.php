@@ -1,6 +1,7 @@
 <?php
-session_start();
 require "common.php";
+setSessionSavePath();
+session_start();
 if (isUserLegal() || isAdminLegal()) {
     header('location: index.php');
     return;

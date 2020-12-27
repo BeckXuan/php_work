@@ -1,6 +1,7 @@
 <?php
-session_start();
 require "common.php";
+setSessionSavePath();
+session_start();
 //if (!isUserLegal() && !isAdminLegal()) {
 //    header('location: login.php');
 //    return;
@@ -13,16 +14,16 @@ function getNextArticleParam(&$href, &$title, &$content, &$year_month, &$day)
     if ($article = $db->getNextArticle()) {
         $href = 'article_show.php?id=' . $article->getId();
         $title = $article->getTitle();
-        $content = substr($article->getContent(),0,20);
+        $content = substr($article->getContent(), 0, 20);
         $time = strtotime($article->getTime());
         $year_month = date('Y-m', $time);
         $day = date('d', $time);
     } else {
-        $href = '#';
-        $title = '/';
-        $content = '/';
-        $year_month = 'null';
-        $day = 'null';
+        $href = 'javascript:void(0);';
+        $title = 'null';
+        $content = 'null';
+        $year_month = '/';
+        $day = '/';
     }
 }
 
@@ -53,7 +54,7 @@ function getNextArticleParam(&$href, &$title, &$content, &$year_month, &$day)
                 </a>
             </li>
             <li class="two">
-<?php for ($i = 0; $i < 2; $i++) {
+                <?php for ($i = 0; $i < 2; $i++) {
                     getNextArticleParam($href, $title, $content, $year_month, $day);
                     echo <<<html
                 <a href="{$href}">
@@ -73,7 +74,7 @@ function getNextArticleParam(&$href, &$title, &$content, &$year_month, &$day)
 html;
                 } ?>
             <li class="three">
-<?php for ($i = 0; $i < 3; $i++) {
+                <?php for ($i = 0; $i < 3; $i++) {
                     getNextArticleParam($href, $title, $content, $year_month, $day);
                     echo <<< html
                 <a href="{$href}">

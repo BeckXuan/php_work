@@ -1,13 +1,14 @@
 <?php
-session_start();
 require "common.php";
+setSessionSavePath();
+session_start();
 //if (!isUserLegal() && !isAdminLegal()) {
 //    header('location: login.php');
 //    return;
 //}
 
 $db = DB::getInstance();
-$db->initArticleInformation(0, 11, true);
+$db->initArticleInformation(0, 10, true);
 ?>
 <html lang="zh-CN">
 <head>
@@ -21,12 +22,12 @@ $db->initArticleInformation(0, 11, true);
         <a href="#" target="_self">全部文章</a>
     </div>
     <div class="newsCenterPanel_inner">
-<?php
+        <?php
         $class = '';
         while ($article = $db->getNextArticle()) {
             $href = 'article_show.php?id=' . $article->getId();
             $title = $article->getTitle();
-            $content = substr($article->getContent(),0,20);
+            $content = substr($article->getContent(), 0, 20);
             $time = strtotime($article->getTime());
             $year_month = date('Y-m', $time);
             $day = date('d', $time);

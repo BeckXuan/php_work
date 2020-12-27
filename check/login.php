@@ -1,6 +1,7 @@
 <?php
 require "../common.php";
 setContentType();
+setSessionSavePath();
 session_start();
 if (isUserLegal()) {
     header('location: ../index.php');

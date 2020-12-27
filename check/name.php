@@ -1,6 +1,8 @@
 <?php
 require "../common.php";
 setContentType();
+setSessionSavePath();
+session_start();
 if (!isset($_POST['value'])) {
     http_response_code(403);
     return;

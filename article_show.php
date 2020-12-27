@@ -1,14 +1,21 @@
 <?php
+require('common.php');
+setSessionSavePath();
+session_start();
+//if (!isUserLegal() && !isAdminLegal()) {
+//    header('location: login.php');
+//    return;
+//}
 if (!isset($_GET['id'])) {
     //header('location: articles.php');
-    header(('location: index.php'));
+    header('location: index.php');
     return;
 }
 
-require('common.php');
+
 $id = $_GET['id'];
 $db = DB::getInstance();
-$db->initMessagesInfoByArticleId($id);
+$db->initMessageInfoByArticleId($id);
 
 ?>
 
@@ -58,7 +65,7 @@ $db->initMessagesInfoByArticleId($id);
     <div id="message">
         <?php
         while ($message = $db->getNextMessage()) {
-            echo '<p>'.$db->getUserName($message->getStudentID()).' : '.$message->getMessage().'</p>';
+            echo '<p>' . $db->getUserName($message->getStudentID()) . ' : ' . $message->getMessage() . '</p>';
         }
         ?>
     </div>

@@ -114,7 +114,7 @@ a {
 }
 
 .icon-news {
-    background: url(/images/icon.png) no-repeat;
+    background: url(../images/icon.png) no-repeat;
     width: 15px;
     height: 15px;
     display: inline-block;

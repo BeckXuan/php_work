@@ -392,12 +392,12 @@ class DB
         return $this->getMessageInformation($messageId, 'time', $outHTMLFilter);
     }
 
-    public function initMessagesInformation($start, $counter, $descending = false)
+    public function initMessageInformation($start, $counter, $descending = false)
     {
         return $this->initTableInformation('message', $this->_result_messages, 'id', $start, $counter, $descending);
     }
 
-    public function initMessagesInfoByArticleId($articleId)
+    public function initMessageInfoByArticleId($articleId)
     {
         if ($this->_result_messages) {
             $this->_result_messages->close();
