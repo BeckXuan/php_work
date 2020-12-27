@@ -7,9 +7,26 @@ require "common.php";
 //}
 $db =& DB::getInstance();
 $db->initArticleInformation(0, 5, true);
+function getNextArticleParam(&$href, &$title, &$content, &$year_month, &$day)
+{
+    global $db;
+    if ($article = $db->getNextArticle()) {
+        $href = 'article_show.php?id=' . $article->getId();
+        $title = $article->getTitle();
+        $content = $article->getContent();
+        $time = strtotime($article->getTime());
+        $year_month = date('Y-m', $time);
+        $day = date('d', $time);
+    } else {
+        $href = '#';
+        $title = '/';
+        $content = '/';
+        $year_month = 'null';
+        $day = 'null';
+    }
+}
 
 ?>
-<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -27,7 +44,7 @@ $db->initArticleInformation(0, 5, true);
         <ul>
             <li class="one">
                 <a href="articles.php">
-                    <img src="images/new-cont.jpg"/>
+                    <img src="images/new-cont.jpg" alt="arrow"/>
                     <div class="news-title">
                         <h5>查看更多文章</h5>
                         <p>More articles</p>
@@ -36,82 +53,43 @@ $db->initArticleInformation(0, 5, true);
                 </a>
             </li>
             <li class="two">
-                <?php $article = $db->getNextArticle(); ?>
-                <a href="article_show.php?id=<?= $article->getId() ?>">
-                    <div class="top">
-
-                        <h5>
-                            <?= $article->getTitle() ?>
-                        </h5>
-                        <div class="p">
-                            <p>
-                                <?= $article->getContent() ?>
-                            </p>
-                        </div>
-                        <img src="images/new-jiantou.jpg">
-                    </div>
-                    <div class="bottom">
-                        <h3><?= substr($article->getTime(), 9, 2) ?></h3>
-                        <span><?= substr($article->getTime(), 0, 7) ?></span>
-
-                    </div>
-                </a>
-                <?php $article = $db->getNextArticle(); ?>
-                <a href="article_show.php?id=<?= $article->getId() ?>">
-                    <div class="top">
-
-                        <h5>
-                            <?= $article->getTitle() ?>
-                        </h5>
-                        <div class="p">
-                            <p>
-                                <?= $article->getContent() ?>
-                            </p>
-                        </div>
-                        <img src="images/new-jiantou.jpg">
-                    </div>
-                    <div class="bottom">
-                        <h3><?= substr($article->getTime(), 9, 2) ?></h3>
-                        <span><?= substr($article->getTime(), 0, 7) ?></span>
-
-                    </div>
-                </a>
-            </li>
-            <li class="three">
-                <?php
-                for ($id = 3;
-                     $id < 6;
-                     $id++) {
-                    $article = $db->getNextArticle();
-                    $time = $article->getTime();
-                    $year_month=substr($article->getTime(), 0, 7);
-                    $day=substr($article->getTime(), 9, 2);
+<?php for ($i = 0; $i < 2; $i++) {
+                    getNextArticleParam($href, $title, $content, $year_month, $day);
                     echo <<<html
-                    <a href="article_show.php?id={$article->getId()}">
-                        <div class="left">
-                            <h3>{$day}</h3>
-                            <span>{$year_month}</span>
+                <a href="{$href}">
+                    <div class="top">
+                        <h5>{$title}</h5>
+                        <div class="p">
+                            <p>{$content}</p>
                         </div>
-                        <div class="right">
-                            <h5>
-
-                    {$article->getTitle()}
-           
-                            </h5>
-                            <div class="p">
-                                <p>
-
-                    {$article->getContent()}
-            
-                                </p>
-                            </div>
-                            <img src="images/new-jiantou.jpg"/>
-                        </div>
-                    </a>
-                   
+                        <img src="images/new-arrow.jpg" alt="arrow"/>
+                    </div>
+                    <div class="bottom">
+                        <h3>{$day}</h3>
+                        <span>{$year_month}</span>
+                    </div>
+                </a>
 html;
-                }
-                ?>
+                } ?>
+            <li class="three">
+<?php for ($i = 0; $i < 3; $i++) {
+                    getNextArticleParam($href, $title, $content, $year_month, $day);
+                    echo <<< html
+                <a href="{$href}">
+                    <div class="left">
+                        <h3>{$day}</h3>
+                        <span>{$year_month}</span>
+                    </div>
+                    <div class="right">
+                        <h5>{$title}</h5>
+                        <div class="p">
+                            <p>{$content}</p>
+                        </div>
+                        <img src="images/new-arrow.jpg" alt="arrow"/>
+                    </div>
+                </a>
+html;
+                } ?>
             </li>
         </ul>
     </div>
