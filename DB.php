@@ -143,6 +143,19 @@ class DB
         return $result;
     }
 
+    private function delTableRow($table, $idName, $idType, $id)
+    {
+        $stmt = $this->_db->prepare("DELETE FROM `$table` WHERE `$idName`=?");
+        $stmt->bind_param($idType, $id);
+        if (!$stmt->execute()) {
+            $stmt->close();
+            return false;
+        }
+        $result = $stmt->affected_rows > 0;
+        $stmt->close();
+        return $result;
+    }
+
     public function addUser($name, $studentID, $password, $needMD5 = true)
     {
         if ($needMD5) {
@@ -157,15 +170,7 @@ class DB
 
     public function delUser($studentID)
     {
-        $stmt = $this->_db->prepare('DELETE FROM `user` WHERE `studentID`=?');
-        $stmt->bind_param('s', $studentID);
-        if (!$stmt->execute()) {
-            $stmt->close();
-            return false;
-        }
-        $result = $stmt->affected_rows > 0;
-        $stmt->close();
-        return $result;
+        return $this->delTableRow('user', 'studentID', 's', $studentID);
     }
 
     private function setUserAccess($studentID, $admitted)
@@ -282,10 +287,10 @@ class DB
 
     /////////////////////////////////////////////////////////////////////////////////////
 
-    public function addArticle($name, $content)
+    public function addArticle($title, $content)
     {
-        $stmt = $this->_db->prepare('INSERT INTO `article` (`name`, `content`, `time`) VALUES (?, ?, NOW())');
-        $stmt->bind_param('ss', $name, $content);
+        $stmt = $this->_db->prepare('INSERT INTO `article` (`title`, `content`, `time`) VALUES (?, ?, NOW())');
+        $stmt->bind_param('ss', $title, $content);
         $result = $stmt->execute();
         $stmt->close();
         return $result;
@@ -293,15 +298,7 @@ class DB
 
     public function delArticle($articleId)
     {
-        $stmt = $this->_db->prepare('DELETE FROM `article` WHERE `id`=?');
-        $stmt->bind_param('i', $articleId);
-        if (!$stmt->execute()) {
-            $stmt->close();
-            return false;
-        }
-        $result = $stmt->affected_rows > 0;
-        $stmt->close();
-        return $result;
+        return $this->delTableRow('article', 'id', 'i', $articleId);
     }
 
     function getNrOfArticles()
@@ -366,15 +363,7 @@ class DB
 
     public function delMessage($messageId)
     {
-        $stmt = $this->_db->prepare('DELETE FROM `message` WHERE `id`=?');
-        $stmt->bind_param('i', $articleId, $messageId);
-        if (!$stmt->execute()) {
-            $stmt->close();
-            return false;
-        }
-        $result = $stmt->affected_rows > 0;
-        $stmt->close();
-        return $result;
+        return $this->delTableRow('message', 'id', 'i', $messageId);
     }
 
     public function getNrOfMessages()
