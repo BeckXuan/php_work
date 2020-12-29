@@ -43,20 +43,20 @@ class DB
         return $this->_db->error;
     }
 
-    private function getNrOfRows($tableName)
+    private function getNrOfRows($tableName, $addition = '')
     {
-        $result = $this->_db->query("SELECT COUNT(*) FROM `$tableName`");
+        $result = $this->_db->query("SELECT COUNT(*) FROM `$tableName` $addition");
         if (!$result) {
-            return 0;
+            return -1;
         }
         $out = $result->fetch_array()[0];
         $result->close();
         return $out;
     }
 
-    private function contentExists($field, $value)
+    private function userContentExists($field, $value)
     {
-        $stmt = $this->_db->prepare("SELECT `name` FROM `user` WHERE `$field`=? LIMIT 1");
+        $stmt = $this->_db->prepare("SELECT 1 FROM `user` WHERE `$field`=? LIMIT 1");
         $stmt->bind_param('s', $value);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -68,12 +68,12 @@ class DB
 
     public function studentIDExists($studentID)
     {
-        return $this->contentExists('studentID', $studentID);
+        return $this->userContentExists('studentID', $studentID);
     }
 
     public function nameExists($name)
     {
-        return $this->contentExists('name', $name);
+        return $this->userContentExists('name', $name);
     }
 
     private function getTableInformation($table, $idName, $idType, $id, $field, $outHTMLFilter = true)
@@ -99,14 +99,14 @@ class DB
         return $out;
     }
 
-    private function initTableInformation($table, &$result, $orderBy, $start, $counter, $descending = false)
+    private function initTableInformation($table, &$result, $orderBy, $start, $counter, $descending = false, $addition = '')
     {
         if ($result) {
             $result->close();
             $result = null;
         }
         $order = $descending ? 'DESC' : 'ASC';
-        $stmt = $this->_db->prepare("SELECT * FROM `$table` ORDER BY `$orderBy` $order LIMIT ?,?");
+        $stmt = $this->_db->prepare("SELECT * FROM `$table` $addition ORDER BY `$orderBy` $order LIMIT ?,?");
         $stmt->bind_param('ii', $start, $counter);
         if (!$stmt->execute()) {
             $stmt->close();
@@ -177,11 +177,6 @@ class DB
     private function setUserAccess($studentID, $admitted)
     {
         $stmt = $this->_db->prepare('UPDATE `user` SET `admitted`=? WHERE `studentID`=?');
-        if ($admitted) {
-            $admitted = 1;
-        } else {
-            $admitted = 0;
-        }
         $stmt->bind_param('is', $admitted, $studentID);
         if (!$stmt->execute()) {
             $stmt->close();
@@ -199,12 +194,27 @@ class DB
 
     public function denyUser($studentID)
     {
+        return $this->setUserAccess($studentID, -1);
+    }
+
+    public function noAuditUser($studentID)
+    {
         return $this->setUserAccess($studentID, 0);
     }
 
     public function getNrOfUsers()
     {
         return $this->getNrOfRows('user');
+    }
+
+    public function getNrOfAdmittedUsers()
+    {
+        return $this->getNrOfRows('user', 'WHERE `admitted`=1');
+    }
+
+    public function getNrOfUnauditedUsers()
+    {
+        return $this->getNrOfRows('user', 'WHERE `admitted`=0');
     }
 
     private function getUserStudentId($field, $value)
@@ -234,6 +244,24 @@ class DB
         return $this->initTableInformation('user', $this->_result_users, 'studentID', $start, $counter);
     }
 
+    public function initAdmittedUserInfo($start, $counter, $orderedByTime = false, $descending = false)
+    {
+        $orderedBy = $orderedByTime ? 'time' : 'studentID';
+        return $this->initTableInformation('user', $this->_result_users, $orderedBy, $start, $counter, $descending, 'WHERE `admitted`=1');
+    }
+
+    public function initNoAuditedUserInfo($start, $counter, $orderedByTime = true, $descending = true)
+    {
+        $orderedBy = $orderedByTime ? 'time' : 'studentID';
+        return $this->initTableInformation('user', $this->_result_users, $orderedBy, $start, $counter, $descending, 'WHERE `admitted`=0');
+    }
+
+    public function initDeniedUserInfo($start, $counter, $orderedByTime = true, $descending = true)
+    {
+        $orderedBy = $orderedByTime ? 'time' : 'studentID';
+        return $this->initTableInformation('user', $this->_result_users, $orderedBy, $start, $counter, $descending, 'WHERE `admitted`=-1');
+    }
+
     public function getNextUser()
     {
         // return $this->getNextRow($this->_result_users, 'User');
@@ -258,9 +286,14 @@ class DB
         return $this->getUserInformation($studentID, 'password', $outHTMLFilter);
     }
 
-    public function isUserAccessible($studentID)
+    public function isUserAdmitted($studentID)
     {
-        return $this->getUserInformation($studentID, 'admitted', false) == true;
+        return $this->getUserInformation($studentID, 'admitted', false) === 1;
+    }
+
+    public function isUserAudited($studentID)
+    {
+        return $this->getUserInformation($studentID, 'admitted', false) !== 0;
     }
 
     private function setUserInformation($studentID, $field, $value)
@@ -477,9 +510,14 @@ class User
         return $this->getInformation('time', $outHTMLFilter);
     }
 
-    public function getAdmitted()
+    public function isAdmitted()
     {
-        return $this->getInformation('admitted', false) == true;
+        return $this->getInformation('admitted', false) === 1;
+    }
+
+    public function isAudited()
+    {
+        return $this->getInformation('admitted', false) !== 0;
     }
 }
 

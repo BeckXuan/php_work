@@ -10,6 +10,7 @@ $db->addUser('null', '05', 'test');
 $db->admitUser('01');
 $db->admitUser('02');
 $db->admitUser('03');
+$db->denyUser('05');
 echo '创建测试用户命令已执行完成...<br/>';
 
 $db->addArticle('testArticle1', 'testContent1');

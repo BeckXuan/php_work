@@ -63,9 +63,12 @@ function validate(type) {
         if (XHR[type]) {
             xhr = XHR[type]
         } else {
-            xhr = new XMLHttpRequest();
-            if (!xhr) {
-                alert('浏览器不支持xhr！')
+            if (window.XMLHttpRequest) {
+                xhr = new XMLHttpRequest();
+            } else if (window.ActiveXObject) {
+                xhr = new ActiveXObject("Microsoft.XMLHTTP");
+            } else {
+                alert('浏览器不支持XMLHttpRequest！')
                 return
             }
             XHR[type] = xhr

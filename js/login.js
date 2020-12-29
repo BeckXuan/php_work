@@ -4,7 +4,7 @@ let input_password = log_form.password
 let input_rem = log_form['rem']
 let btn_log = log_form['btn_log']
 let btn_admin = log_form['btn_admin']
-let XHR_log = null
+let xhr = null
 log_form.addEventListener('submit', _login)
 btn_admin.addEventListener('click', () => {
     window.location.href = 'admin/login.php'
@@ -17,16 +17,15 @@ function _login(e) {
     let studentID = input_studentID.value
     let password = hex_md5(input_password.value)
     let rem = input_rem.checked ? 1 : 0
-    let xhr
-    if (XHR_log) {
-        xhr = XHR_log
-    } else {
-        xhr = new XMLHttpRequest();
-        if (!xhr) {
-            alert('浏览器不支持xhr！')
+    if (!xhr) {
+        if (window.XMLHttpRequest) {
+            xhr = new XMLHttpRequest();
+        } else if (window.ActiveXObject) {
+            xhr = new ActiveXObject("Microsoft.XMLHTTP");
+        } else {
+            alert('浏览器不支持XMLHttpRequest！')
             return
         }
-        XHR_log = xhr
         xhr.onload = function () {
             if (xhr.status === 200) {
                 //success

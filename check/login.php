@@ -25,8 +25,10 @@ if (!$db->studentIDExists($studentID)) {
     $message = '该学号不存在！';
 } else if (!($db->getUserPassword($studentID) === $password)) {
     $message = '密码错误！';
-} else if (!$db->isUserAccessible($studentID)) {
+} else if (!$db->isUserAudited($studentID)) {
     $message = '请等待管理员审核后登录！';
+} else if (!$db->isUserAdmitted($studentID)) {
+    $message = '该学号已被管理员禁止登录！';
 } else {
     //写入Session、cookie，并转到内容界面
     $name = $db->getUserName($studentID);
