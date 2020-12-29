@@ -2,7 +2,7 @@
 require "../common.php";
 setContentType();
 session_start();
-if (isUserLegal()) {
+if (isUserLegal() || isAdminLegal()) {
     header('location: ../index.php');
     return;
 }

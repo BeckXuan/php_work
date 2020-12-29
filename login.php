@@ -1,10 +1,10 @@
 <?php
 require "common.php";
 session_start();
-if (isUserLegal() || isAdminLegal()) {
-    header('location: index.php');
-    return;
-}
+//if (isUserLegal() || isAdminLegal()) {
+//    header('location: index.php');
+//    return;
+//}
 ?>
 <!DOCTYPE html>
 <html lang="zh-CN">

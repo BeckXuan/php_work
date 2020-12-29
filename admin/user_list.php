@@ -21,6 +21,7 @@ $db->initUserInformation(0, 10);
     <script src="assets/js/jquery.dataTables.min.js"></script>
     <script src="assets/js/jquery.dataTables.bootstrap.js"></script>
     <script src="assets/layer/layer.js"></script>
+    <script src="../js/md5.js"></script>
     <title>用户列表</title>
 </head>
 <body>
@@ -69,7 +70,7 @@ $db->initUserInformation(0, 10);
                         <td class="td-manage">
                             <a onClick="member_{$callback}(this,'{$studentID}')" href="javascript:" title="{$title}"
                                class="btn btn-xs {$class_a}"><i class="icon-ok bigger-120"></i></a>
-                            <a title="编辑" onclick="member_edit('550')" href="javascript:"
+                            <a title="编辑" onclick="member_edit('{$studentID}')" href="javascript:"
                                class="btn btn-xs btn-info"><i class="icon-edit bigger-120"></i></a>
                             <a title="删除" href="javascript:" onclick="member_del(this,'{$studentID}')"
                                class="btn btn-xs btn-warning"><i class="icon-trash  bigger-120"></i></a>
@@ -85,7 +86,7 @@ tr;
     </div>
 </div>
 <!--添加用户图层-->
-<div class="add_menber" id="add_menber_style" style="display:none">
+<div class="add_menber" id="menber_style" style="display:none">
     <ul class="page-content">
         <li><label class="label_name">用&nbsp;&nbsp;户 &nbsp;名：</label><span class="add_name"><input value="" name="name"
                                                                                                    type="text"
@@ -95,11 +96,16 @@ tr;
                         name="studentID" type="text"
                         class="text_add"/></span>
         </li>
+        <li><label class="label_name">密&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;码：</label><span class="add_name"><input
+                        name="password" type="password"
+                        class="text_add"/></span>
+        </li>
         <li>
             <label class="label_name">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：</label><span class="add_name">
-            <label><input name="form-field-radio1" type="radio" checked="checked" class="ace"><span
-                        class="lbl">启用</span></label>&nbsp;&nbsp;&nbsp;
-            <label><input name="form-field-radio1" type="radio" class="ace"><span class="lbl">停用</span></label></span>
+            <label><input name="form-field-radio1" type="radio" checked="checked" class="ace" value="1"><span
+                        class="lbl">启用</span></label>
+            <label><input name="form-field-radio2" type="radio" class="ace" value="0"><span
+                        class="lbl">停用</span></label></span>
         </li>
     </ul>
 </div>
@@ -127,29 +133,41 @@ tr;
             title: '添加用户',
             shadeClose: true, //点击遮罩关闭层
             area: ['280px', ''],
-            content: $('#add_menber_style'),
+            content: $('#menber_style'),
             btn: ['提交', '取消'],
             yes: function (index) {
-                let flag = false
-                $(".add_menber input[type$='text']").each(function (n) {
-                    if ($(this).val() === "") {
-                        layer.alert("所填信息不能为空！", {
-                            title: '提示框',
-                            icon: 0
-                        });
-                        flag = true
-                        return false;
-                    }
-                });
-                if (flag) {
+                let input_name = $("#menber_style input[name$='name']")
+                let input_studentID = $("#menber_style input[name$='studentID']")
+                let input_password = $("#menber_style input[name$='password']")
+                let name = input_name.val()
+                let studentID = input_studentID.val()
+                let password = hex_md5(input_password.val())
+                let admitted = $("#menber_style input[type='radio']:checked").val();
+                if (name === '' || studentID === '' || password === '') {
+                    layer.alert("所填信息不能为空！", {
+                        title: '提示框',
+                        icon: 0,
+                    });
                     return false;
                 }
-
-                layer.alert('添加成功！', {
-                    title: '提示框',
-                    icon: 1,
-                });
-                layer.close(index);
+                _request('../check/register.php', 'name=' + name + '&studentID=' + studentID + '&password=' + password, () => {
+                    layer.close(index);
+                    input_name.val('')
+                    input_studentID.val('')
+                    input_password.val('')
+                    $("#menber_style input[type='radio']:first").attr('checked', 'checked');
+                    if (admitted) {
+                        _request('operate/admitUser.php', 'value=' + studentID, () => {
+                            layer.alert('添加并启用成功！', {title: '提示框', icon: 1})
+                        }, (xhr) => {
+                            layer.alert('添加成功但启用失败！' + xhr.responseText, {title: '提示框', icon: 2})
+                        })
+                    } else {
+                        layer.alert('添加成功！', {title: '提示框', icon: 1})
+                    }
+                }, (xhr) => {
+                    layer.alert('添加失败！' + xhr.responseText, {title: '提示框', icon: 2})
+                })
             }
         });
     });
@@ -159,10 +177,14 @@ tr;
         layer.confirm('确认要停用吗？', function (index) {
             let _obj = $(obj)
             let tr = _obj.parents("tr")
-            tr.find(".td-manage").prepend('<a style="text-decoration:none" class="btn btn-xs " onClick="member_start(this, ' + id + ')" href="javascript:;" title="启用"><i class="icon-ok bigger-120"></i></a>');
+            tr.find(".td-manage").prepend('<a style="text-decoration:none" class="btn btn-xs " onClick="member_start(this, \'' + id + '\')" href="javascript:;" title="启用"><i class="icon-ok bigger-120"></i></a>');
             tr.find(".td-status").html('<span class="label label-defaunt radius">已停用</span>');
             _obj.remove();
-            layer.msg('已停用!', {icon: 5, time: 1000});
+            _request('operate/denyUser.php', 'value=' + id, () => {
+                layer.msg('已停用!', {icon: 1, time: 2000});
+            }, (xhr) => {
+                layer.msg('停用失败！' + xhr.responseText, {icon: 2, time: 3000})
+            })
         });
     }
 
@@ -171,42 +193,58 @@ tr;
         layer.confirm('确认要启用吗？', function (index) {
             let _obj = $(obj)
             let tr = _obj.parents("tr")
-            tr.find(".td-manage").prepend('<a style="text-decoration:none" class="btn btn-xs btn-success" onClick="member_stop(this, ' + id + ')" href="javascript:;" title="停用"><i class="icon-ok bigger-120"></i></a>');
+            tr.find(".td-manage").prepend('<a style="text-decoration:none" class="btn btn-xs btn-success" onClick="member_stop(this, \'' + id + '\')" href="javascript:;" title="停用"><i class="icon-ok bigger-120"></i></a>');
             tr.find(".td-status").html('<span class="label label-success radius">已启用</span>');
             _obj.remove();
-            layer.msg('已启用!', {icon: 6, time: 1000});
-        });
+            _request('operate/admitUser.php', 'value=' + id, () => {
+                layer.msg('已启用!', {icon: 1, time: 2000})
+            }, (xhr) => {
+                layer.msg('启用失败！' + xhr.responseText, {icon: 2, time: 3000})
+            })
+        })
     }
 
     /*用户-编辑*/
     function member_edit(id) {
+        let input_name = $("#menber_style input[name$='name']")
+        let input_studentID = $("#menber_style input[name$='studentID']")
+        let input_password = $("#menber_style input[name$='password']")
+        input_name.val('')
+        input_studentID.val('')
+        input_password.val('')
         layer.open({
             type: 1,
-            title: '修改用户信息',
+            title: '修改信息(留空不修改)',
             shadeClose: true, //点击遮罩关闭层
             area: ['280px', ''],
-            content: $('#add_menber_style'),
+            content: $('#menber_style'),
             btn: ['提交', '取消'],
             yes: function (index) {
-                let flag = false;
-                $(".add_menber input[type$='text']").each(function (n) {
-                    if ($(this).val() === "") {
-                        layer.alert("所填信息不能为空！", {
-                            title: '提示框',
-                            icon: 0,
-                        });
-                        flag = true;
-                        return false;
-                    }
-                });
-                if (flag) {
+                let name = input_name.val()
+                let studentID = input_studentID.val()
+                let password = input_password.val()
+                let admitted = $("#menber_style input[type='radio']:checked").val();
+                if (name === '' && studentID === '' && password === '') {
+                    layer.alert("未修改任何信息！", {
+                        title: '提示框',
+                        icon: 0,
+                    });
+                    layer.close(index);
                     return false;
                 }
-                layer.alert('添加成功！', {
-                    title: '提示框',
-                    icon: 1,
-                });
-                layer.close(index);
+                password = password !== '' ? hex_md5(password) : ''
+                _request('operate/modifyUser.php', 'originID=' + id + '&name=' + name + '&studentID=' + studentID + '&password=' + password + '&admitted=' + admitted, () => {
+                    layer.alert('修改成功！', {
+                        title: '提示框',
+                        icon: 1,
+                    });
+                    layer.close(index);
+                }, (xhr) => {
+                    layer.alert('错误！' + xhr.responseText, {
+                        title: '提示框',
+                        icon: 2,
+                    });
+                })
             }
         });
     }
@@ -214,10 +252,44 @@ tr;
     /*用户-删除*/
     function member_del(obj, id) {
         layer.confirm('确认要删除吗？', function () {
-            let xhr = new XMLHttpRequest()
-
-            $(obj).parents("tr").remove()
-            layer.msg('已删除!', {icon: 1, time: 2000})
-        });
+            _request('operate/delUser.php', 'value=' + id, () => {
+                $(obj).parents("tr").remove()
+                layer.msg('已删除!', {icon: 1, time: 2000})
+            }, (xhr) => {
+                layer.msg('删除失败！' + xhr.responseText, {icon: 2, time: 3000})
+            })
+        })
     }
+
+    function _request(url, data, success, error) {
+        let xhr = new XMLHttpRequest()
+        if (window.XMLHttpRequest) {
+            xhr = new XMLHttpRequest();
+        } else if (window.ActiveXObject) {
+            xhr = new ActiveXObject("Microsoft.XMLHTTP");
+        } else {
+            alert('浏览器不支持XMLHttpRequest！')
+            return
+        }
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                //success
+                success(xhr)
+            } else if (xhr.status === 422) {
+                //error
+                error(xhr)
+            } else {
+                //fail
+                layer.msg('未知错误！', {icon: 2, time: 3000})
+            }
+        }
+        xhr.timeout = 2000;
+        xhr.ontimeout = function () {
+            layer.msg('请求服务器超时！', {icon: 2, time: 3000})
+        }
+        xhr.open("POST", url, true)
+        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded')
+        xhr.send(data)
+    }
+
 </script>
