@@ -1775,21 +1775,21 @@ body {
 }
 
 /*****************************添加用户样式属性************************/
-.add_menber {
+.add_member {
 }
 
-.add_menber li {
+.add_member li {
     margin: 10 px0;
     height: 40px;
     line-height: 40px;
     width: 50%
 }
 
-.add_menber li.adderss {
+.add_member li.adderss {
     width: 100%
 }
 
-.add_menber li .label_name,
+.add_member li .label_name,
 .member_content li .label_name {
     width: 80px;
     text-align: right;
@@ -1797,13 +1797,13 @@ body {
     line-height: 30px;
 }
 
-.add_menber li .add_name {
+.add_member li .add_name {
     float: left;
     margin-left: 10px;
     line-height: 30px;
 }
 
-.add_menber li .add_name .lbl {
+.add_member li .add_name .lbl {
     top: -5px;
     left: 10px;
 }
