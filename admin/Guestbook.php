@@ -1,3 +1,11 @@
+<?php
+
+require "../common.php";
+$db = DB::getInstance();
+$db->initMessageInformation(0, 99999);
+?>
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -26,18 +34,7 @@
 <body>
 <div class="margin clearfix">
     <div class="Guestbook_style">
-        <div class="search_style">
-            <div class="title_names">搜索查询</div>
-            <ul class="search_content clearfix">
-                <li><label class="l_f">留言</label><input name="" type="text" class="text_add" placeholder="输入留言信息"
-                                                        style=" width:250px"></li>
-                <li><label class="l_f">时间</label><input class="inline laydate-icon" id="start"
-                                                        style=" margin-left:10px;"></li>
-                <li style="width:90px;">
-                    <button type="button" class="btn_search"><i class="icon-search"></i>查询</button>
-                </li>
-            </ul>
-        </div>
+
         <div class="border clearfix">
        <span class="l_f">
         <a href="javascript:ovid()" class="btn btn-danger"><i class="fa fa-trash"></i>&nbsp;批量删除</a>
@@ -47,6 +44,7 @@
             <span class="r_f">共：<b>2334</b>条</span>
         </div>
         <!--留言列表-->
+
         <div class="Guestbook_list">
             <table class="table table-striped table-bordered table-hover" id="sample-table">
                 <thead>
@@ -61,14 +59,18 @@
                 </tr>
                 </thead>
                 <tbody>
+
+                <?php
+                while ($message = $db->getNextMessage()) {
+                    echo <<<html
                 <tr>
                     <td><label><input type="checkbox" class="ace"><span class="lbl"></span></label></td>
-                    <td>1</td>
+                    <td>{$message->getId()}</td>
                     <td><u style="cursor:pointer" class="text-primary"
-                           onclick="member_show('张小泉','member-show.html','1031','500','400')">张小泉</u></td>
+                           onclick="member_show('张小泉','member-show.html','1031','500','400')">{$db->getUserName($message->getStudentID())}</u></td>
                     <td class="text-l">
-                        <a href="javascript:;" onclick="Guestbook_iew('12')">“第二届中国无锡水蜜桃开摘节”同时开幕，为期三个月的蜜桃季全面启动。值此京东“618品质狂欢节”之际，中国特产无锡馆限量上线618份8只装精品水蜜桃，61.8元全国包邮限时抢购。为了保证水蜜桃从枝头到达您的手中依旧鲜甜如初，京东采用递送升级服务，从下单到包装全程冷链运输。</a>
-                    <td>2016-6-11 11:11:42</td>
+                        <a href="javascript:;" onclick="Guestbook_iew('12')">{$message->getMessage()}</a>
+                    <td>{$message->getTime()}</td>
                     <td class="td-status"><span class="label label-success radius">已浏览</span></td>
                     <td class="td-manage">
                         <a onClick="member_stop(this,'10001')" href="javascript:;" title="已浏览"
@@ -79,6 +81,9 @@
                                 class="fa fa-trash  bigger-120"></i></a>
                     </td>
                 </tr>
+html;
+                }
+                ?>
                 </tbody>
             </table>
         </div>
@@ -98,7 +103,7 @@
         <div class="form-group"><label class="col-sm-2 control-label no-padding-right" for="form-field-1">是否回复 </label>
             <div class="col-sm-9">
                 <label><input name="checkbox" type="checkbox" class="ace" id="checkbox"><span
-                        class="lbl"> 回复</span></label>
+                            class="lbl"> 回复</span></label>
                 <div class="Reply_style">
                     <textarea name="权限描述" class="form-control" id="form_textarea" placeholder=""
                               onkeyup="checkLength(this);"></textarea>
@@ -108,6 +113,7 @@
         </div>
     </div>
 </div>
+
 </body>
 </html>
 <script type="text/javascript">
