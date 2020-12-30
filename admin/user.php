@@ -50,7 +50,7 @@ $db->initUserInformation(0, 100);
                     </tr>
                     </thead>
                     <tbody>
-                    <?php
+<?php
                     while ($user = $db->getNextUser()) {
                         $studentID = $user->getStudentID();
                         $name = $user->getName();
@@ -145,7 +145,6 @@ tr;
             content: $('#member_style'),
             btn: ['提交', '取消'],
             yes: function (index) {
-
                 let name = input_name.val()
                 let studentID = input_studentID.val()
                 let password = hex_md5(input_password.val())

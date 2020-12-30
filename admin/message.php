@@ -38,25 +38,45 @@ $db->initMessageInformation(0, 100);
                 <tr>
                     <th width="25px"><label><input type="checkbox" class="ace"><span class="lbl"></span></label></th>
                     <th width="120px">学号</th>
-                    <th width="120px">用户名</th>
+                    <th width="150px">用户名</th>
+                    <th width="120px">文章ID</th>
                     <th width="200px">文章标题</th>
+                    <th width="120">留言ID</th>
                     <th width="">留言内容</th>
                     <th width="200px">时间</th>
-                    <th width="250">操作</th>
+                    <th width="200px">操作</th>
                 </tr>
                 </thead>
                 <tbody>
+                <?php
+                while ($message = $db->getNextMessage()) {
+                    $studentID = $message->getStudentID();
+                    $studentName = $db->getUserName($studentID);
+                    if ($studentName === null) {
+                        $studentName = '(该学生已被删除)';
+                    }
+                    $articleId = $message->getArticleId();
+                    $articleName = $db->getArticleTitle($articleId);
+                    if ($articleName === null) {
+                        $articleName = '(该文章已被删除)';
+                    }
+                    $messageId = $message->getId();
+                    $messageContent = $message->getMessage();
+                    $time = $message->getTime();
+                    echo <<< tr
                 <tr>
                     <td><label><input type="checkbox" class="ace"><span class="lbl"></span></label></td>
-                    <td>1</td>
-                    <td>张小泉</td>
+                    <td>{$studentID}</td>
+                    <td>{$studentName}</td>
+                    <td class="text-l">{$articleId}</td>
                     <td class="text-l">
-                        <a href="javascript:void(0)" onclick="Guestbook_iew('12')">这是文章标题</a>
+                        <a href="javascript:void(0)" onclick="article_view(this)">{$articleName}</a>
                     </td>
+                    <td>{$messageId}</td>
                     <td class="text-l">
-                        <a href="javascript:void(0)" onclick="Guestbook_iew('12')">“第二届中国无锡水蜜桃开摘节”同时开幕，为期三个月的蜜桃季全面启动。值此京东“618品质狂欢节”之际，中国特产无锡馆限量上线618份8只装精品水蜜桃，61.8元全国包邮限时抢购。为了保证水蜜桃从枝头到达您的手中依旧鲜甜如初，京东采用递送升级服务，从下单到包装全程冷链运输。</a>
+                        <a href="javascript:void(0)" onclick="message_view(this)">{$messageContent}</a>
                     </td>
-                    <td>2016-6-11 11:11:42</td>
+                    <td>{$time}</td>
                     <td class="td-manage">
                         <a title="编辑" onclick="member_edit(this)" href="javascript:"
                            class="btn btn-xs btn-info"><i class="icon-edit bigger-120"></i></a>
@@ -65,13 +85,17 @@ $db->initMessageInformation(0, 100);
                                     class="icon-trash bigger-120"></i></a>
                     </td>
                 </tr>
+tr;
+
+                } ?>
                 </tbody>
             </table>
         </div>
     </div>
 </div>
+
 <!--留言详细-->
-<div id="Guestbook" style="display:none">
+<div id="message" style="display:none">
     <div class="content_style">
         <div class="form-group"><span class="col-sm-2 control-label no-padding-right">留言用户 </span>
             <div class="col-sm-9">胡海天堂</div>
@@ -90,23 +114,34 @@ $db->initMessageInformation(0, 100);
 </body>
 </html>
 <script type="text/javascript">
+    function article_view(obj) {
+
+    }
+
     /*留言查看*/
-    function Guestbook_iew() {
+    function message_view(obj) {
         layer.open({
             type: 1,
             title: '反馈信息',
             shadeClose: false,
             area: ['600px', ''],
-            content: $('#Guestbook'),
+            content: $('#message'),
             btn: ['确定', '取消'],
         });
     }
 
     /*留言-删除*/
     function member_del(obj) {
+        let _obj = $(obj)
+        let id = _obj.parent("td").siblings().eq(5).text()
         layer.confirm('确认要删除吗？', function () {
-            $(obj).parents("tr").remove();
-            layer.msg('已删除!', {icon: 1, time: 1000});
+            _request('operate/delMessage.php', 'value=' + id, () => {
+                _obj.parents("tr").remove();
+                layer.msg('已删除!', {icon: 1, time: 1000});
+            }, (xhr) => {
+                layer.msg('删除失败！' + xhr.responseText, {icon: 2, time: 3000});
+            })
+
         });
     }
 
@@ -116,7 +151,7 @@ $db->initMessageInformation(0, 100);
             "bStateSave": true,//状态保存
             "aoColumnDefs": [
                 //{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                {"orderable": false, "aTargets": [0, 6]}// 制定列不参与排序
+                {"orderable": false, "aTargets": [0, 8]}// 制定列不参与排序
             ]
         });
         $('table th input:checkbox').on('click', function () {
@@ -128,4 +163,39 @@ $db->initMessageInformation(0, 100);
                 });
         });
     })
+
+    function _request(url, data, success, error) {
+        let xhr = new XMLHttpRequest()
+        if (window.XMLHttpRequest) {
+            xhr = new XMLHttpRequest();
+        } else if (window.ActiveXObject) {
+            xhr = new ActiveXObject("Microsoft.XMLHTTP");
+        } else {
+            alert('浏览器不支持XMLHttpRequest！')
+            return
+        }
+        xhr.onload = function () {
+            let status = xhr.status
+            if (status === 200) {
+                //success
+                success(xhr)
+            } else if (status === 422) {
+                //error
+                error(xhr)
+            } else if (status === 401) {
+                //Unauthorized
+                window.location.href = 'login.php'
+            } else {
+                //fail
+                layer.msg(status + '未知错误！', {icon: 2, time: 3000})
+            }
+        }
+        xhr.timeout = 2000;
+        xhr.ontimeout = function () {
+            layer.msg('请求服务器超时！', {icon: 2, time: 3000})
+        }
+        xhr.open("POST", url, true)
+        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded')
+        xhr.send(data)
+    }
 </script>

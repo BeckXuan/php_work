@@ -93,7 +93,7 @@ session_start();
         <div class="navbar-header pull-left">
             <a href="#" class="navbar-brand">
                 <small>
-                    <img src="images/logo.png">
+                    <img src="images/logo.png" alt="网站后台管理系统">
                 </small>
             </a>
         </div>

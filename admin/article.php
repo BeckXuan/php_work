@@ -24,7 +24,7 @@ $db->initArticleInformation(0, 100);
 </head>
 <body>
 <div class="margin clearfix">
-    <div class="Guestbook_style">
+    <div class="article_style">
         <div class="border clearfix">
        <span class="l_f">
         <a href="javascript:void(0)" class="btn btn-danger"><i class="fa fa-trash"></i>&nbsp;批量删除</a>
@@ -32,7 +32,7 @@ $db->initArticleInformation(0, 100);
             <span class="r_f">共：<b>2334</b>条</span>
         </div>
         <!--文章列表-->
-        <div class="Guestbook_list">
+        <div class="article_list">
             <table class="table table-striped table-bordered table-hover" id="sample-table">
                 <thead>
                 <tr>
@@ -41,40 +41,54 @@ $db->initArticleInformation(0, 100);
                     <th width="200px">文章标题</th>
                     <th width="">文章内容</th>
                     <th width="200px">时间</th>
-                    <th width="250px">操作</th>
+                    <th width="200px">操作</th>
                 </tr>
                 </thead>
                 <tbody>
+                <?php
+                while ($article = $db->getNextArticle()) {
+                    $id = $article->getId();
+                    $title = $article->getTitle();
+                    $content = $article->getContent();
+                    $time = $article->getTime();
+                    echo <<< tr
                 <tr>
                     <td><label><input type="checkbox" class="ace"><span class="lbl"></span></label></td>
-                    <td>1</td>
+                    <td>{$id}</td>
                     <td class="text-l">
-                        <a href="javascript:void(0)" onclick="Guestbook_iew('12')">这是文章标题</a>
+                        <a href="javascript:void(0)" onclick="article_view(this)">{$title}</a>
                     </td>
                     <td class="text-l">
-                        <a href="javascript:void(0)" onclick="Guestbook_iew('12')">“第二届中国无锡水蜜桃开摘节”同时开幕，为期三个月的蜜桃季全面启动。值此京东“618品质狂欢节”之际，中国特产无锡馆限量上线618份8只装精品水蜜桃，61.8元全国包邮限时抢购。为了保证水蜜桃从枝头到达您的手中依旧鲜甜如初，京东采用递送升级服务，从下单到包装全程冷链运输。</a>
+                        <a href="javascript:void(0)" onclick="article_view(this)">{$content}</a>
                     </td>
-                    <td>2016-6-11 11:11:42</td>
+                    <td>{$time}</td>
                     <td class="td-manage">
-                        <a title="编辑" onclick="member_edit(this)" href="javascript:"
+                        <a title="编辑" onclick="article_edit(this)" href="javascript:"
                            class="btn btn-xs btn-info"><i class="icon-edit bigger-120"></i></a>
-                        <a href="javascript:;" onclick="member_del(this,'1')" title="删除" class="btn btn-xs btn-warning"><i
+                        <a href="javascript:" onclick="member_del(this)" title="删除" class="btn btn-xs btn-warning"><i
                                     class="icon-trash bigger-120"></i></a>
                     </td>
                 </tr>
+
+tr;
+                } ?>
                 </tbody>
             </table>
         </div>
     </div>
 </div>
+
 <!--详细-->
-<div id="Guestbook" style="display:none">
+<div id="article" style="display:none">
     <div class="content_style">
-        <div class="form-group"><label class="col-sm-2 control-label no-padding-right">文章ID </label>
+        <div class="form-group"><label class="col-sm-2 control-label no-padding-right">文章&nbsp;&nbsp;&nbsp;ID </label>
             <div class="col-sm-9">1</div>
         </div>
         <div class="form-group"><label class="col-sm-2 control-label no-padding-right">文章标题 </label>
             <div class="col-sm-9">这是文章标题</div>
+        </div>
+        <div class="form-group"><label class="col-sm-2 control-label no-padding-right">添加时间 </label>
+            <div class="col-sm-9">这是添加时间</div>
         </div>
         <div class="form-group"><label class="col-sm-2 control-label no-padding-right">文章内容 </label>
             <div class="col-sm-9">
@@ -85,29 +99,6 @@ $db->initArticleInformation(0, 100);
 </div>
 </body>
 </html>
-<script type="text/javascript">
-    /*文章-删除*/
-    function member_del(obj, id) {
-        layer.confirm('确认要删除吗？', function (index) {
-            $(obj).parents("tr").remove();
-            layer.msg('已删除!', {icon: 1, time: 1000});
-        });
-    }
-
-    /*文章查看*/
-    function Guestbook_iew(id) {
-        layer.open({
-                type: 1,
-                title: '文章信息',
-                shadeClose: false,
-                area: ['600px', ''],
-                content: $('#Guestbook'),
-                btn: ['确定'],
-            }
-        )
-    }
-
-</script>
 <script type="text/javascript">
     jQuery(function ($) {
         $('#sample-table').dataTable({
@@ -125,7 +116,75 @@ $db->initArticleInformation(0, 100);
                     this.checked = that.checked;
                     $(this).closest('tr').toggleClass('selected');
                 });
-
         });
     })
+
+    /*文章-删除*/
+    function member_del(obj) {
+        let _obj = $(obj)
+        let id = _obj.parent("td").siblings().eq(1).text()
+        layer.confirm('确认要删除吗？', function (index) {
+            _request('operate/delArticle.php', 'value=' + id, () => {
+                $(obj).parents("tr").remove();
+                layer.msg('已删除！', {icon: 1, time: 2000});
+            }, (xhr) => {
+                layer.msg('删除失败！' + xhr.responseText, {icon: 2, time: 3000});
+            })
+        });
+    }
+
+    /*文章查看*/
+    function article_view(obj) {
+        let id = $(obj).parent("td").siblings().eq(1).text()
+        layer.open({
+                type: 1,
+                title: '文章信息',
+                shadeClose: false,
+                area: ['600px', ''],
+                content: $('#article'),
+                btn: ['确定'],
+            }
+        )
+    }
+
+    /*文章编辑*/
+    function article_edit(obj) {
+        let id = $(obj).parent("td").siblings().eq(1).text()
+
+    }
+
+    function _request(url, data, success, error) {
+        let xhr = new XMLHttpRequest()
+        if (window.XMLHttpRequest) {
+            xhr = new XMLHttpRequest();
+        } else if (window.ActiveXObject) {
+            xhr = new ActiveXObject("Microsoft.XMLHTTP");
+        } else {
+            alert('浏览器不支持XMLHttpRequest！')
+            return
+        }
+        xhr.onload = function () {
+            let status = xhr.status
+            if (status === 200) {
+                //success
+                success(xhr)
+            } else if (status === 422) {
+                //error
+                error(xhr)
+            } else if (status === 401) {
+                //Unauthorized
+                window.location.href = 'login.php'
+            } else {
+                //fail
+                layer.msg(status + '未知错误！', {icon: 2, time: 3000})
+            }
+        }
+        xhr.timeout = 2000;
+        xhr.ontimeout = function () {
+            layer.msg('请求服务器超时！', {icon: 2, time: 3000})
+        }
+        xhr.open("POST", url, true)
+        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded')
+        xhr.send(data)
+    }
 </script>

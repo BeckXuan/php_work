@@ -321,6 +321,18 @@ class DB
 
     /////////////////////////////////////////////////////////////////////////////////////
 
+    public function articleExists($articleId)
+    {
+        $stmt = $this->_db->prepare("SELECT 1 FROM `article` WHERE `id`=? LIMIT 1");
+        $stmt->bind_param('i', $articleId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $existed = $result->num_rows > 0;
+        $result->close();
+        $stmt->close();
+        return $existed;
+    }
+
     public function addArticle($title, $content)
     {
         $stmt = $this->_db->prepare('INSERT INTO `article` (`title`, `content`, `time`) VALUES (?, ?, NOW())');
@@ -385,6 +397,18 @@ class DB
     }
 
     /////////////////////////////////////////////////////////////////////////////////////
+
+    public function messageExists($messageId)
+    {
+        $stmt = $this->_db->prepare("SELECT 1 FROM `message` WHERE `id`=? LIMIT 1");
+        $stmt->bind_param('i', $messageId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $existed = $result->num_rows > 0;
+        $result->close();
+        $stmt->close();
+        return $existed;
+    }
 
     public function addMessage($articleId, $message, $studentID)
     {

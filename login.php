@@ -6,7 +6,6 @@ session_start();
 //    return;
 //}
 ?>
-<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="utf-8">
