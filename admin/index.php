@@ -78,7 +78,7 @@ session_start();
             $('#Exit_system').on('click', function () {
                 layer.confirm('是否确定退出系统？', {
                         btn: ['是', '否'],//按钮
-                        icon: 2,
+                        icon: 0,
                     },
                     function () {
                         location.href = "../logout.php";
@@ -109,54 +109,6 @@ session_start();
                         <li><a href="javascript:void(0)" id="Exit_system"><i class="icon-off"></i>退出</a></li>
                     </ul>
                 </li>
-                <li class="purple">
-                    <a data-toggle="dropdown" class="dropdown-toggle" href="#"><i class="icon-bell-alt"></i><span
-                                class="badge badge-important">8</span></a>
-                    <ul class="pull-right dropdown-navbar navbar-pink dropdown-menu dropdown-caret dropdown-close">
-                        <li class="dropdown-header"><i class="icon-warning-sign"></i>8条通知</li>
-                        <li>
-                            <a href="#">
-                                <div class="clearfix">
-											<span class="pull-left">
-												<i class="btn btn-xs no-hover btn-pink icon-comment"></i>
-												新闻评论
-											</span>
-                                    <span class="pull-right badge badge-info">+12</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <div class="clearfix">
-											<span class="pull-left">
-												<i class="btn btn-xs no-hover btn-success icon-shopping-cart"></i>
-												新订单
-											</span>
-                                    <span class="pull-right badge badge-success">+8</span>
-                                </div>
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="#">
-                                <div class="clearfix">
-											<span class="pull-left">
-												<i class="btn btn-xs no-hover btn-info icon-twitter"></i>
-												粉丝
-											</span>
-                                    <span class="pull-right badge badge-info">+11</span>
-                                </div>
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="#">
-                                查看所有通知
-                                <i class="icon-arrow-right"></i>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
             </ul>
         </div>
     </div>
@@ -185,17 +137,17 @@ session_start();
                     <a href="#" class="dropdown-toggle"><i class="icon-user"></i><span class="menu-text"> 会员管理 </span><b
                                 class="arrow icon-angle-down"></b></a>
                     <ul class="submenu">
-                        <li class="home"><a href="javascript:void(0)" name="user_list.php" title="会员列表"
+                        <li class="home"><a href="javascript:void(0)" name="user.php" title="会员列表"
                                             class="iframeurl"><i class="icon-double-angle-right"></i>会员列表</a></li>
                     </ul>
                 </li>
                 <li><a href="#" class="dropdown-toggle"><i class="icon-edit"></i><span class="menu-text"> 消息管理 </span><b
                                 class="arrow icon-angle-down"></b></a>
                     <ul class="submenu">
-                        <li class="home"><a href="javascript:void(0)" name="Guestbook.html" title="留言列表"
+                        <li class="home"><a href="javascript:void(0)" name="article.php" title="文章列表"
+                                            class="iframeurl"><i class="icon-double-angle-right"></i>文章列表</a></li>
+                        <li class="home"><a href="javascript:void(0)" name="message.php" title="留言列表"
                                             class="iframeurl"><i class="icon-double-angle-right"></i>留言列表</a></li>
-                        <li class="home"><a href="javascript:void(0)" name="Feedback.html" title="意见反馈"
-                                            class="iframeurl"><i class="icon-double-angle-right"></i>意见反馈</a></li>
                     </ul>
                 </li>
                 <li><a href="#" class="dropdown-toggle"><i class="icon-edit"></i><span class="menu-text"> 文章管理 </span><b
@@ -205,17 +157,6 @@ session_start();
                                             class="iframeurl"><i class="icon-double-angle-right"></i>文章列表</a></li>
                         <li class="home"><a href="javascript:void(0)" name="Feedback.html" title="分类分类"
                                             class="iframeurl"><i class="icon-double-angle-right"></i>分类分类</a></li>
-                    </ul>
-                </li>
-                <li><a href="#" class="dropdown-toggle"><i class="icon-group"></i><span class="menu-text"> 管理员管理 </span><b
-                                class="arrow icon-angle-down"></b></a>
-                    <ul class="submenu">
-                        <li class="home"><a href="javascript:void(0)" name="admin_Competence.html" title="权限管理"
-                                            class="iframeurl"><i class="icon-double-angle-right"></i>权限管理</a></li>
-                        <li class="home"><a href="javascript:void(0)" name="administrator.html" title="管理员列表"
-                                            class="iframeurl"><i class="icon-double-angle-right"></i>管理员列表</a></li>
-                        <li class="home"><a href="javascript:void(0)" name="admin_info.html" title="个人信息"
-                                            class="iframeurl"><i class="icon-double-angle-right"></i>个人信息</a></li>
                     </ul>
                 </li>
             </ul>

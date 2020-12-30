@@ -1,5 +1,6 @@
 <?php
 require "../../common.php";
+setContentType();
 session_start();
 if (!isAdminLegal()) {
     http_response_code(401);

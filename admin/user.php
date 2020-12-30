@@ -6,11 +6,12 @@ session_start();
 //    return;
 //}
 $db = &DB::getInstance();
-$db->initUserInformation(0, 10);
+$db->initUserInformation(0, 100);
 ?>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8"/>
+    <title>用户列表</title>
     <link href="assets/css/bootstrap.min.css" rel="stylesheet"/>
     <link rel="stylesheet" href="css/style.css"/>
     <link rel="stylesheet" href="assets/css/ace.min.css"/>
@@ -22,7 +23,6 @@ $db->initUserInformation(0, 10);
     <script src="assets/js/jquery.dataTables.bootstrap.js"></script>
     <script src="assets/layer/layer.js"></script>
     <script src="../js/md5.js"></script>
-    <title>用户列表</title>
 </head>
 <body>
 <div class="page-content clearfix">
@@ -40,12 +40,13 @@ $db->initUserInformation(0, 10);
                 <table class="table table-striped table-bordered table-hover" id="sample-table">
                     <thead>
                     <tr>
-                        <th width="25"><label><input type="checkbox" class="ace"><span class="lbl"></span></label></th>
-                        <th width="100">学号</th>
-                        <th width="100">用户名</th>
-                        <th width="180">注册时间</th>
-                        <th width="70">状态</th>
-                        <th width="250">操作</th>
+                        <th width="25px"><label><input type="checkbox" class="ace"><span class="lbl"></span></label>
+                        </th>
+                        <th width="120px">学号</th>
+                        <th width="120px">用户名</th>
+                        <th width="180px">注册时间</th>
+                        <th width="70px">状态</th>
+                        <th width="250px">操作</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -116,6 +117,7 @@ tr;
         $('#sample-table').dataTable({
             "aaSorting": [[1, "asc"]],//默认第几个排序
             "bStateSave": true,//状态保存
+            "aoColumnDefs": [{"orderable": false, "aTargets": [0, 4, 5]}]
         })
         $('table th input:checkbox').on('click', function () {
             let that = this;
