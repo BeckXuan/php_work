@@ -2,7 +2,7 @@
 require "../../common.php";
 session_start();
 if (!isAdminLegal()) {
-    header("Status: 422 Unprocessable Entity");
+    http_response_code(401);
     return;
 }
 

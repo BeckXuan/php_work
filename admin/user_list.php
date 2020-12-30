@@ -68,11 +68,11 @@ $db->initUserInformation(0, 10);
                         <td>{$time}</td>
                         <td class="td-status"><span class="label {$class_s} radius">{$status}</span></td>
                         <td class="td-manage">
-                            <a onClick="member_{$callback}(this,'{$studentID}')" href="javascript:" title="{$title}"
+                            <a onClick="member_{$callback}(this)" href="javascript:" title="{$title}"
                                class="btn btn-xs {$class_a}"><i class="icon-ok bigger-120"></i></a>
-                            <a title="编辑" onclick="member_edit('{$studentID}')" href="javascript:"
+                            <a title="编辑" onclick="member_edit(this)" href="javascript:"
                                class="btn btn-xs btn-info"><i class="icon-edit bigger-120"></i></a>
-                            <a title="删除" href="javascript:" onclick="member_del(this,'{$studentID}')"
+                            <a title="删除" href="javascript:" onclick="member_del(this)"
                                class="btn btn-xs btn-warning"><i class="icon-trash  bigger-120"></i></a>
                         </td>
                     </tr>
@@ -88,23 +88,23 @@ tr;
 <!--添加用户图层-->
 <div class="add_menber" id="menber_style" style="display:none">
     <ul class="page-content">
-        <li><label class="label_name">用&nbsp;&nbsp;户 &nbsp;名：</label><span class="add_name"><input value="" name="name"
-                                                                                                   type="text"
-                                                                                                   class="text_add"/></span>
+        <li><label class="label_name">用&nbsp;&nbsp;户 &nbsp;名：<span class="add_name"><input value="" name="name"
+                                                                                           type="text"
+                                                                                           class="text_add"/></span></label>
         </li>
-        <li><label class="label_name">学&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：</label><span class="add_name"><input
-                        name="studentID" type="text"
-                        class="text_add"/></span>
+        <li><label class="label_name">学&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：<span class="add_name"><input
+                            name="studentID" type="text"
+                            class="text_add"/></span></label>
         </li>
-        <li><label class="label_name">密&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;码：</label><span class="add_name"><input
-                        name="password" type="password"
-                        class="text_add"/></span>
+        <li><label class="label_name">密&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;码：<span class="add_name"><input
+                            name="password" type="password"
+                            class="text_add"/></span></label>
         </li>
         <li>
             <label class="label_name">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：</label><span class="add_name">
-            <label><input name="form-field-radio1" type="radio" checked="checked" class="ace" value="1"><span
+            <label><input name="form-field-radio" type="radio" checked="checked" class="ace" value="1"><span
                         class="lbl">启用</span></label>
-            <label><input name="form-field-radio2" type="radio" class="ace" value="0"><span
+            <label><input name="form-field-radio" type="radio" class="ace" value="-1"><span
                         class="lbl">停用</span></label></span>
         </li>
     </ul>
@@ -113,7 +113,7 @@ tr;
 </html>
 <script>
     jQuery(function ($) {
-        let oTable1 = $('#sample-table').dataTable({
+        $('#sample-table').dataTable({
             "aaSorting": [[1, "asc"]],//默认第几个排序
             "bStateSave": true,//状态保存
         })
@@ -128,6 +128,13 @@ tr;
     })
     /*用户-添加*/
     $('#member_add').on('click', function () {
+        let input_name = $("#menber_style input[name$='name']")
+        let input_studentID = $("#menber_style input[name$='studentID']")
+        let input_password = $("#menber_style input[name$='password']")
+        input_name.val('')
+        input_studentID.val('')
+        input_password.val('')
+        $("#menber_style input[type='radio']:first").attr('checked', 'checked');
         layer.open({
             type: 1,
             title: '添加用户',
@@ -136,9 +143,7 @@ tr;
             content: $('#menber_style'),
             btn: ['提交', '取消'],
             yes: function (index) {
-                let input_name = $("#menber_style input[name$='name']")
-                let input_studentID = $("#menber_style input[name$='studentID']")
-                let input_password = $("#menber_style input[name$='password']")
+
                 let name = input_name.val()
                 let studentID = input_studentID.val()
                 let password = hex_md5(input_password.val())
@@ -155,7 +160,6 @@ tr;
                     input_name.val('')
                     input_studentID.val('')
                     input_password.val('')
-                    $("#menber_style input[type='radio']:first").attr('checked', 'checked');
                     if (admitted) {
                         _request('operate/admitUser.php', 'value=' + studentID, () => {
                             layer.alert('添加并启用成功！', {title: '提示框', icon: 1})
@@ -173,15 +177,16 @@ tr;
     });
 
     /*用户-停用*/
-    function member_stop(obj, id) {
-        layer.confirm('确认要停用吗？', function (index) {
+    function member_stop(obj) {
+        layer.confirm('确认要停用吗？', function () {
             let _obj = $(obj)
             let tr = _obj.parents("tr")
-            tr.find(".td-manage").prepend('<a style="text-decoration:none" class="btn btn-xs " onClick="member_start(this, \'' + id + '\')" href="javascript:;" title="启用"><i class="icon-ok bigger-120"></i></a>');
-            tr.find(".td-status").html('<span class="label label-defaunt radius">已停用</span>');
-            _obj.remove();
+            let id = tr.children('td').eq(1).text()
             _request('operate/denyUser.php', 'value=' + id, () => {
                 layer.msg('已停用!', {icon: 1, time: 2000});
+                tr.find(".td-manage").prepend('<a style="text-decoration:none" class="btn btn-xs " onClick="member_start(this)" href="javascript:;" title="启用"><i class="icon-ok bigger-120"></i></a>');
+                tr.find(".td-status").html('<span class="label label-defaunt radius">已停用</span>');
+                _obj.remove();
             }, (xhr) => {
                 layer.msg('停用失败！' + xhr.responseText, {icon: 2, time: 3000})
             })
@@ -189,15 +194,16 @@ tr;
     }
 
     /*用户-启用*/
-    function member_start(obj, id) {
-        layer.confirm('确认要启用吗？', function (index) {
+    function member_start(obj) {
+        layer.confirm('确认要启用吗？', function () {
             let _obj = $(obj)
             let tr = _obj.parents("tr")
-            tr.find(".td-manage").prepend('<a style="text-decoration:none" class="btn btn-xs btn-success" onClick="member_stop(this, \'' + id + '\')" href="javascript:;" title="停用"><i class="icon-ok bigger-120"></i></a>');
-            tr.find(".td-status").html('<span class="label label-success radius">已启用</span>');
-            _obj.remove();
+            let id = tr.children('td').eq(1).text()
             _request('operate/admitUser.php', 'value=' + id, () => {
                 layer.msg('已启用!', {icon: 1, time: 2000})
+                tr.find(".td-manage").prepend('<a style="text-decoration:none" class="btn btn-xs btn-success" onClick="member_stop(this)" href="javascript:;" title="停用"><i class="icon-ok bigger-120"></i></a>');
+                tr.find(".td-status").html('<span class="label label-success radius">已启用</span>');
+                _obj.remove();
             }, (xhr) => {
                 layer.msg('启用失败！' + xhr.responseText, {icon: 2, time: 3000})
             })
@@ -205,12 +211,29 @@ tr;
     }
 
     /*用户-编辑*/
-    function member_edit(id) {
+    function member_edit(obj) {
+        let _obj = $(obj)
         let input_name = $("#menber_style input[name$='name']")
         let input_studentID = $("#menber_style input[name$='studentID']")
         let input_password = $("#menber_style input[name$='password']")
-        input_name.val('')
-        input_studentID.val('')
+        let td = _obj.parent('td').siblings('td')
+        let td_ID = td.eq(1)
+        let td_name = td.eq(2)
+        let originID = td_ID.text()
+        let originName = td_name.text()
+        let td_status = td.siblings('.td-status')
+        let td_manage = td.parent('tr').find('.td-manage')
+        let status = td_status.text()
+        let originAdmitted = 0
+        if (status === '已启用') {
+            originAdmitted = '1'
+            $("#menber_style input[type='radio']:first").attr('checked', 'checked');
+        } else if (status === '已停用') {
+            originAdmitted = '-1'
+            $("#menber_style input[type='radio']:last").attr('checked', 'checked');
+        }
+        input_name.val(originName)
+        input_studentID.val(originID)
         input_password.val('')
         layer.open({
             type: 1,
@@ -224,7 +247,7 @@ tr;
                 let studentID = input_studentID.val()
                 let password = input_password.val()
                 let admitted = $("#menber_style input[type='radio']:checked").val();
-                if (name === '' && studentID === '' && password === '') {
+                if ((name === '' || originName === name) && (studentID === '' || originID === studentID) && password === '' && originAdmitted === admitted) {
                     layer.alert("未修改任何信息！", {
                         title: '提示框',
                         icon: 0,
@@ -232,13 +255,39 @@ tr;
                     layer.close(index);
                     return false;
                 }
-                password = password !== '' ? hex_md5(password) : ''
-                _request('operate/modifyUser.php', 'originID=' + id + '&name=' + name + '&studentID=' + studentID + '&password=' + password + '&admitted=' + admitted, () => {
+                if (name === '' || originName === name) {
+                    name = ''
+                }
+                if (studentID === '' || originID === studentID) {
+                    studentID = ''
+                }
+                if (password !== '') {
+                    password = hex_md5(password)
+                }
+                if (originAdmitted === admitted) {
+                    admitted = ''
+                }
+                _request('operate/modifyUser.php', 'originID=' + originID + '&name=' + name + '&studentID=' + studentID + '&password=' + password + '&admitted=' + admitted, () => {
                     layer.alert('修改成功！', {
                         title: '提示框',
                         icon: 1,
                     });
                     layer.close(index);
+                    if (name !== '') {
+                        td.eq(2).text(name)
+                    }
+                    if (studentID !== '') {
+                        td.eq(1).text(studentID)
+                    }
+                    if (admitted === '1') {
+                        td_manage.children('a').eq(0).remove()
+                        td_manage.prepend('<a style="text-decoration:none" class="btn btn-xs btn-success" onClick="member_stop(this)" href="javascript:;" title="停用"><i class="icon-ok bigger-120"></i></a>');
+                        td_status.html('<span class="label label-success radius">已启用</span>');
+                    } else if (admitted === '-1') {
+                        td_manage.children('a').eq(0).remove()
+                        td_manage.prepend('<a style="text-decoration:none" class="btn btn-xs " onClick="member_start(this)" href="javascript:;" title="启用"><i class="icon-ok bigger-120"></i></a>');
+                        td_status.html('<span class="label label-defaunt radius">已停用</span>');
+                    }
                 }, (xhr) => {
                     layer.alert('错误！' + xhr.responseText, {
                         title: '提示框',
@@ -250,8 +299,9 @@ tr;
     }
 
     /*用户-删除*/
-    function member_del(obj, id) {
+    function member_del(obj) {
         layer.confirm('确认要删除吗？', function () {
+            let id = tr.children('td').eq(1).text()
             _request('operate/delUser.php', 'value=' + id, () => {
                 $(obj).parents("tr").remove()
                 layer.msg('已删除!', {icon: 1, time: 2000})
@@ -272,15 +322,19 @@ tr;
             return
         }
         xhr.onload = function () {
-            if (xhr.status === 200) {
+            let status = xhr.status
+            if (status === 200) {
                 //success
                 success(xhr)
-            } else if (xhr.status === 422) {
+            } else if (status === 422) {
                 //error
                 error(xhr)
+            } else if (status === 401) {
+                //Unauthorized
+                window.location.href = 'login.php'
             } else {
                 //fail
-                layer.msg('未知错误！', {icon: 2, time: 3000})
+                layer.msg(status + '未知错误！', {icon: 2, time: 3000})
             }
         }
         xhr.timeout = 2000;
