@@ -14,7 +14,11 @@ $db = &DB::getInstance();
 $message = $_POST['message'];
 $articleId = $_POST['articleId'];
 $studentID = $_POST['studentID'];
-if (!$db->addMessage($articleId, $message, $studentID)){
+if ($message === "") {
+    header('location: page.php?id='.$articleId);
+    return;
+}
+if (!$db->addMessage($articleId, $message, $studentID)) {
     header("Status: 422 Unprocessable Entity");
     echo '留言失败！';
 }
