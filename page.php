@@ -1,11 +1,18 @@
 <?php
 require "common.php";
-
+//session_start();
+//if (!isAdminLegal()) {
+//    header('location: login.php');
+//    return;
+//}
 
 if (!isset($_GET['id'])) {
     header('location: index.php');
     return;
 }
+
+//$studentID=$_SESSION['studentID'];
+
 $db =& DB::getInstance();
 $db->initMessageInformation(0, 9999);
 $id = $_GET['id'];
@@ -16,29 +23,9 @@ $id = $_GET['id'];
 <html>
 <head>
     <meta charset="UTF-8">
-    <meta name='TTUNION_verify' content='b846c3c2b85efabc496d2a2b8399cd62'>
-    <meta name="sogou_site_verification" content="gI1bINaJcL"/>
-    <meta name="360-site-verification" content="37ae9186443cc6e270d8a52943cd3c5a"/>
-    <meta name="baidu_union_verify" content="99203948fbfbb64534dbe0f030cbe817">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="apple-touch-fullscreen" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE;chrome=1">
-    <meta name="format-detection" content="telephone=no">
-    <meta name="keywords" content="一点车 -  让您多懂一点车,一点车，让您多懂一点车的常识，在这里，您会看到汽车相关的知识，汽车日常保养，汽车多用小知识，汽车简单维修以及清洗保养等等。">
-    <meta name="description" content="一点车 -  让您多懂一点车,一点车，让您多懂一点车的常识，在这里，您会看到汽车相关的知识，汽车日常保养，汽车多用小知识，汽车简单维修以及清洗保养等等。。">
-    <meta name="author" content="AUI, a-ui.com">
-    <meta name="baidu-site-verification" content="ZVPGgtpUfW"/>
-    <title>公告栏-- 一点车 - 让您多懂一点车</title>
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
-    <link href="iTunesArtwork@2x.png" sizes="114x114" rel="apple-touch-icon-precomposed">
+    <title></title>
     <link type="text/css" rel="stylesheet" href="css/core.css">
-    <link type="text/css" rel="stylesheet" href="css/icon.css">
     <link type="text/css" rel="stylesheet" href="css/home.css">
-
-
 </head>
 <body>
 
@@ -53,14 +40,9 @@ $id = $_GET['id'];
             </div>
             <div class="ydc-column">
                 <div class="ydc-column-user">
-                    <div class="ydc-user-photo">
-                        <a href="javascript:;">
-                            <img src="images/icon/photo.png" title="" about="" alt="">
-                        </a>
-                    </div>
                     <div class="ydc-user-info">
                         <div class="ydc-user-info-name">
-                            <a href="javascript:;">一点车</a>
+                            <?= 'studentID' ?>
                         </div>
                         <div class="ydc-user-info-func ydc-flex">
                             <span class="ydc-tag">新手期</span>
@@ -109,6 +91,11 @@ html;
                 </div>
             </div>
 
+        </div>
+    </div>
+    <div class="ydc-footer">
+        <div>
+            <p></p>
         </div>
     </div>
 </section>
