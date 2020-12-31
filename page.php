@@ -103,8 +103,8 @@ html;
                 <div>
                     <form>
                         <p>评论：</p>
-                        <textarea style="width: 100%;height: 100px;"></textarea>
-                        <button type="submit">提交</button>
+                        <textarea style="width: 100%;height: 100px;margin: 1% auto"></textarea>
+                        <button type="submit" class="ydc-reg-form-button" style="float: right;">提交</button>
                     </form>
                 </div>
             </div>
