@@ -29,12 +29,11 @@ if ($adminAccount !== $account || $adminPassword !== $password) {
     $_SESSION['account'] = $account;
     $_SESSION['studentID'] = '0';
     if (isset($_POST['rem']) && $_POST['rem'] === '1') {
-        setcookie('adminName', $name, time() + 3600, '/', '', false, true);
-        setcookie('adminAccount', $account, time() + 3600, '/', '', false, true);
+        setcookie('name', $name, time() + 3600, '/', '', false, true);
+        setcookie('account', $account, time() + 3600, '/', '', false, true);
     } else {
         setcookie('name', $name, 0, '/', '', false, true);
         setcookie('account', $account, 0, '/', '', false, true);
-        setcookie('studentID', '0', 0, '/', '', false, true);
     }
     return;
 }

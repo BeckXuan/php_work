@@ -78,7 +78,7 @@ $db->initMessageInformation(0, 100);
                     $time = $message->getTime();
                     echo <<< tr
                 <tr>
-                    <td><label><input type="checkbox" class="ace"><span class="lbl"></span></label></td>
+                    <td></td>
                     <td>{$studentID}</td>
                     <td>{$studentName}</td>
                     <td class="text-l">{$articleId}</td>
@@ -136,6 +136,12 @@ tr;
                 //{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
                 {"orderable": false, "aTargets": [0, 8]}, // 制定列不参与排序
                 {
+                    "targets": 0,
+                    "render": function () {
+                        return '<label><input type="checkbox" class="ace"><span class="lbl"></span></label>'
+                    }
+                },
+                {
                     "targets": 8,
                     "render": function () {
                         return '<a title="编辑" onclick="article_edit(this)" href="javascript:" class="btn btn-xs btn-info"><i class="icon-edit bigger-120"></i></a> <a href="javascript:" onclick="member_del(this)" title="删除" class="btn btn-xs btn-warning"><i class="icon-trash bigger-120"></i></a>'
@@ -144,11 +150,10 @@ tr;
             ]
         });
         $('table th input:checkbox').on('click', function () {
-            let that = this;
+            let checked = $(this).prop("checked");
             $(this).closest('table').find('tr > td:first-child input:checkbox')
                 .each(function () {
-                    this.checked = that.checked;
-                    $(this).closest('tr').toggleClass('selected');
+                    $(this).prop("checked", checked);
                 });
         });
     })
@@ -183,7 +188,8 @@ tr;
         let id = _obj.parent("td").siblings().eq(5).text()
         layer.confirm('确认要删除吗？', function () {
             _request('operate/delMessage.php', 'value=' + id, () => {
-                _obj.parents("tr").remove();
+                //_obj.parents("tr").remove();
+                $('#sample-table').DataTable().row(_obj.parents("tr")).remove().draw()
                 layer.msg('已删除!', {icon: 1, time: 1000});
             }, (xhr) => {
                 layer.msg('删除失败！' + xhr.responseText, {icon: 2, time: 3000});

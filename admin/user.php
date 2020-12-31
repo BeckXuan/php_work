@@ -63,7 +63,7 @@ $db->initUserInformation(0, 100);
                         $status = !$user->isAudited() ? '待审核' : '已' . $title;
                         echo <<< tr
                     <tr>
-                        <td><label><input type="checkbox" class="ace"><span class="lbl"></span></label></td>
+                        <td></td>
                         <td>{$studentID}</td>
                         <td>{$name}</td>
                         <td>{$time}</td>
@@ -117,14 +117,20 @@ tr;
         $('#sample-table').dataTable({
             "aaSorting": [[1, "asc"]],//默认第几个排序
             "bStateSave": true,//状态保存
-            "aoColumnDefs": [{"orderable": false, "aTargets": [0, 4, 5]}]
+            "aoColumnDefs": [{"orderable": false, "aTargets": [0, 4, 5]},
+                {
+                    "targets": 0,
+                    "render": function () {
+                        return '<label><input type="checkbox" class="ace"><span class="lbl"></span></label>'
+                    }
+                }
+            ]
         })
         $('table th input:checkbox').on('click', function () {
-            let that = this;
+            let checked = $(this).prop("checked");
             $(this).closest('table').find('tr > td:first-child input:checkbox')
                 .each(function () {
-                    this.checked = that.checked;
-                    $(this).closest('tr').toggleClass('selected');
+                    $(this).prop("checked", checked);
                 });
         });
     })
@@ -306,7 +312,8 @@ tr;
             let _obj = $(obj)
             let id = _obj.parent("td").siblings().eq(1).text()
             _request('operate/delUser.php', 'value=' + id, () => {
-                _obj.parents("tr").remove()
+                //_obj.parents("tr").remove();
+                $('#sample-table').DataTable().row(_obj.parents("tr")).remove().draw()
                 layer.msg('已删除!', {icon: 1, time: 2000})
             }, (xhr) => {
                 layer.msg('删除失败！' + xhr.responseText, {icon: 2, time: 3000})

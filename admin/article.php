@@ -29,7 +29,7 @@ $db->initArticleInformation(0, 100);
        <span class="l_f">
         <a href="javascript:void(0)" id="article_add" class="btn btn-warning"><i class="icon-plus"></i>&nbsp;添加文章</a>
        </span>
-            <span class="r_f">共：<b><?= $db->getNrOfArticles() ?></b>条</span>
+            <span class="r_f">原始共：<b><?= $db->getNrOfArticles() ?></b>条</span>
         </div>
         <!--文章列表-->
         <div class="article_list">
@@ -67,7 +67,7 @@ $db->initArticleInformation(0, 100);
                     }
                     echo <<< tr
                 <tr>
-                    <td><label><input type="checkbox" class="ace"><span class="lbl"></span></label></td>
+                    <td></td>
                     <td>{$id}</td>
                     <td>
                         <a href="javascript:void(0)" onclick="article_view(this)" title="{$title}">{$subTitle}</a>
@@ -114,6 +114,12 @@ tr;
             "aoColumnDefs": [
                 {"orderable": false, "aTargets": [0, 5]},// 制定列不参与排序
                 {
+                    "targets": 0,
+                    "render": function () {
+                        return '<label><input type="checkbox" class="ace"><span class="lbl"></span></label>'
+                    }
+                },
+                {
                     "targets": 5,
                     "render": function () {
                         return '<a title="编辑" onclick="article_edit(this)" href="javascript:" class="btn btn-xs btn-info"><i class="icon-edit bigger-120"></i></a> <a href="javascript:" onclick="member_del(this)" title="删除" class="btn btn-xs btn-warning"><i class="icon-trash bigger-120"></i></a>'
@@ -122,11 +128,10 @@ tr;
             ]
         });
         $('table th input:checkbox').on('click', function () {
-            let that = this;
+            let checked = $(this).prop("checked");
             $(this).closest('table').find('tr > td:first-child input:checkbox')
                 .each(function () {
-                    this.checked = that.checked;
-                    $(this).closest('tr').toggleClass('selected');
+                    $(this).prop("checked", checked);
                 });
         });
     })
@@ -135,9 +140,10 @@ tr;
     function member_del(obj) {
         let _obj = $(obj)
         let id = _obj.parent("td").siblings().eq(1).text()
-        layer.confirm('确认要删除吗？', function (index) {
+        layer.confirm('确认要删除吗？', function () {
             _request('operate/delArticle.php', 'value=' + id, () => {
-                $(obj).parents("tr").remove();
+                //_obj.parents("tr").remove();
+                $('#sample-table').DataTable().row(_obj.parents("tr")).remove().draw()
                 layer.msg('已删除！', {icon: 1, time: 2000});
             }, (xhr) => {
                 layer.msg('删除失败！' + xhr.responseText, {icon: 2, time: 3000});
