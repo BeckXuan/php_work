@@ -1,8 +1,8 @@
 <?php
 require "common.php";
-//session_start();
-//if (!isAdminLegal()) {
-//    header('location: login.php');
+session_start();
+//if (isUserLegal() || isAdminLegal()) {
+//    header('location: index.php');
 //    return;
 //}
 
@@ -13,9 +13,11 @@ if (!isset($_GET['id'])) {
 
 //$studentID=$_SESSION['studentID'];
 
-$db =& DB::getInstance();
-$db->initMessageInformation(0, 9999);
 $id = $_GET['id'];
+$db = &DB::getInstance();
+$db->initMessageInfoByArticleId($id);
+$studentID=$_SESSION['studentID'];
+$name=$_SESSION['name'];
 ?>
 
 
@@ -42,12 +44,12 @@ $id = $_GET['id'];
                 <div class="ydc-column-user">
                     <div class="ydc-user-info">
                         <div class="ydc-user-info-name">
-                            <?= 'studentID' ?>
+                            <?= $name ?>
                         </div>
                         <div class="ydc-user-info-func ydc-flex">
-                            <span class="ydc-tag">新手期</span>
-                            <span class="ydc-mal"><i class="ydc-icon ydc-icon-mail fl"></i><em>12</em></span>
-                            <a href="javascript:;">退出</a>
+<!--                            <span class="ydc-tag">新手期</span>-->
+                            <span class="ydc-mal"><i class="ydc-icon ydc-icon-mail fl"></i><em><?= $studentID ?></em></span>
+                            <a href="logout.php">退出</a>
                         </div>
                     </div>
                 </div>

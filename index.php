@@ -1,12 +1,12 @@
 <?php
 require "common.php";
-//session_start();
-//if (!isAdminLegal()) {
-//    header('location: login.php');
+session_start();
+//if (isUserLegal() || isAdminLegal()) {
+//    header('location: index.php');
 //    return;
 //}
-//
-//$studentID=$_SESSION['studentID'];
+$studentID=$_SESSION['studentID'];
+$name=$_SESSION['name'];
 
 $db =& DB::getInstance();
 $db->initArticleInformation(0, 9999);
@@ -36,12 +36,12 @@ $db->initArticleInformation(0, 9999);
                 <div class="ydc-column-user">
                     <div class="ydc-user-info">
                         <div class="ydc-user-info-name">
-                            <?= 'studentID' ?>
+                            <?= $name ?>（<?= $studentID ?>）
                         </div>
                         <div class="ydc-user-info-func ydc-flex">
                             <span class="ydc-tag">账号审核中</span>
                             <span class="ydc-mal"><i class="ydc-icon ydc-icon-mail fl"></i><em>12</em></span>
-                            <a href="">退出</a>
+                            <a href="logout.php">退出</a>
                         </div>
                     </div>
                 </div>
