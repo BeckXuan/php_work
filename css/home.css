@@ -355,7 +355,7 @@
 }
 
 .ydc-pane p {
-    padding: 15px 15px 0 10px;
+    padding: 10px 2px 10px;
 }
 
 .ydc-pane h4 {
@@ -408,12 +408,13 @@
 }
 
 .ydc-page-head h3 {
-    height: 60px;
-    line-height: 60px;
-    color: #ff6565;
-    font-size: 24px;
+    height: 20px;
+    line-height: 20px;
+    color: #333;
+    font-size: 34px;
     text-align: center;
     margin: 0 auto;
+    font-weight: bolder;
 }
 
 .ydc-page-head h4 {
@@ -427,8 +428,8 @@
     font-weight: normal;
     font-size: 14px;
     color: #616161;
-    line-height: 22px;
-    padding-bottom: 10px;
+    line-height: 32px;
+    padding-top: 50px;
 }
 
 .ydc-page-aut {
@@ -1377,11 +1378,18 @@
 }
 
 .ydc-reg-form-button{
-    margin-left: 355px;
-    /* width: 83.33333333%; */
-    float: left;
+    width: 100px;
+    height: 30px;
+    border: none;
+    cursor: pointer;
+    background: #00CC66;
+    color: white;
+    border-radius: 2px;
     position: relative;
-    min-height: 1px;
+    right: 10px;
+    bottom: 5px;
+    transition: all ease 0.4s;
+    font-size: 16px;
     padding-left: 15px;
     padding-right: 15px;
 }
@@ -1493,6 +1501,7 @@
     padding:10px;
     height: 160px;
     background:#fff;
+
 }
 .ydc-reg-form-input-width{
     width: 510px;
