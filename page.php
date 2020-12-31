@@ -16,12 +16,10 @@ if (!isset($_GET['id'])) {
 $id = $_GET['id'];
 $db = &DB::getInstance();
 $db->initMessageInfoByArticleId($id);
-$studentID=$_SESSION['studentID'];
-$name=$_SESSION['name'];
+$studentID = $_SESSION['studentID'];
+$name = $_SESSION['name'];
 ?>
 
-
-<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -47,8 +45,9 @@ $name=$_SESSION['name'];
                             <?= $name ?>
                         </div>
                         <div class="ydc-user-info-func ydc-flex">
-<!--                            <span class="ydc-tag">新手期</span>-->
-                            <span class="ydc-mal"><i class="ydc-icon ydc-icon-mail fl"></i><em><?= $studentID ?></em></span>
+                            <!--                            <span class="ydc-tag">新手期</span>-->
+                            <span class="ydc-mal"><i
+                                        class="ydc-icon ydc-icon-mail fl"></i><em><?= $studentID ?></em></span>
                             <a href="logout.php">退出</a>
                         </div>
                     </div>
@@ -65,32 +64,39 @@ $name=$_SESSION['name'];
         <div class="ydc-page-content">
             <div class="ydc-page-head">
                 <h3><?= $db->getArticleTitle($id) ?></h3>
-                <p><?= $db->getArticleContent($id) ?></p>
+                <?php
+                $content = $db->getArticleContent($id);
+                $content = str_replace(' ', '&nbsp;', $content);
+                $content = str_replace("\r\n", '</p><p>', $content);
+                ?>
+                <p><?= $content ?></p>
             </div>
         </div>
     </div>
     <div style="margin: 0 17.5%">
         <div class="ydc-panes">
             <div class="ydc-pane" style="display:block;">
-                <ol class="ydc-pane-list">
-                    <?php
-                    while ($message = $db->getNextMessage()) {
-                        echo <<<html
+                <p style="font-weight: bold;font-size: large;">评论：</p>
+                <div style="border: 5px #ebebeb solid;">
+                    <ol class="ydc-pane-list">
+                        <?php
+                        while ($message = $db->getNextMessage()) {
+                            echo <<<html
                     <li>
                         {$message->getStudentID()}:{$message->getMessage()}
                         <span>{$message->getTime()}</span>
                     </li>
 html;
-                    }
-                    ?>
-                </ol>
+                        }
+                        ?>
+                    </ol>
+                </div>
                 <div>
-                    <form method="post" action="check/message.php">
-                        <p>评论：</p>
-                        <textarea style="width: 100%;height: 100px;margin: 1% auto" name="message"></textarea>
-                        <input type="hidden" name="studentID" value="<?=$studentID?>">
-                        <input type="hidden" name="articleId" value="<?=$id?>">
-                        <button type="submit" class="ydc-reg-form-button" style="float: right;">提交</button>
+                    <p></p>
+                    <form>
+                        <p style="font-weight: bold;font-size: large;">快来发表你的想法吧！</p>
+                        <textarea style="width: 100%;height: 100px;margin: 1% auto" required="required"></textarea>
+                        <button type="submit" class="ydc-reg-form-button" style="float: right;">发布评论</button>
                     </form>
                 </div>
             </div>
