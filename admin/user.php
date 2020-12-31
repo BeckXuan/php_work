@@ -27,26 +27,26 @@ $db->initUserInformation(0, 100);
 <body>
 <div class="page-content clearfix">
     <div id="Member_Ratings">
-        <div class="d_Confirm_Order_style">
+        <div class="margin clearfix">
             <div class="border clearfix">
                 <span class="l_f">
                     <a href="javascript:void(0)" id="member_add" class="btn btn-warning"><i
                                 class="icon-plus"></i>添加用户</a>
                     <a href="javascript:void(0)" class="btn btn-danger"><i class="icon-trash"></i>批量删除</a>
-                    共：<b><?= $db->getNrOfUsers() ?></b>条
+                    <span class="r_f">共：<b><?= $db->getNrOfUsers() ?></b>条</span>
                 </span>
             </div>
             <div class="table_menu_list">
                 <table class="table table-striped table-bordered table-hover" id="sample-table">
                     <thead>
                     <tr>
-                        <th width="25px"><label><input type="checkbox" class="ace"><span class="lbl"></span></label>
+                        <th><label><input type="checkbox" class="ace"><span class="lbl"></span></label>
                         </th>
-                        <th width="120px">学号</th>
-                        <th width="120px">用户名</th>
-                        <th width="180px">注册时间</th>
-                        <th width="70px">状态</th>
-                        <th width="250px">操作</th>
+                        <th>学号</th>
+                        <th>用户名</th>
+                        <th>注册时间</th>
+                        <th>状态</th>
+                        <th>操作</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -113,7 +113,7 @@ tr;
 </body>
 </html>
 <script>
-    jQuery(function ($) {
+    $(document).ready(function ($) {
         $('#sample-table').dataTable({
             "aaSorting": [[1, "asc"]],//默认第几个排序
             "bStateSave": true,//状态保存
@@ -128,6 +128,7 @@ tr;
                 });
         });
     })
+
     /*用户-添加*/
     $('#member_add').on('click', function () {
         let input_name = $("#member_style input[name$='name']")
@@ -228,10 +229,10 @@ tr;
         let originAdmitted = 0
         if (status === '已启用') {
             originAdmitted = '1'
-            $("#member_style input[type='radio']:first").attr('checked', 'checked');
+            $("#member_style input[value='1']").prop('checked', 'checked');
         } else if (status === '已停用') {
             originAdmitted = '-1'
-            $("#member_style input[type='radio']:last").attr('checked', 'checked');
+            $("#member_style input[value='-1']").prop('checked', 'checked');
         }
         input_name.val(originName)
         input_studentID.val(originID)

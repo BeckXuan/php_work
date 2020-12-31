@@ -11,7 +11,7 @@ $db->initMessageInformation(0, 100);
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8"/>
-    <title>意见反馈</title>
+    <title>留言列表</title>
     <link href="assets/css/bootstrap.min.css" rel="stylesheet"/>
     <link rel="stylesheet" href="css/style.css"/>
     <link rel="stylesheet" href="assets/css/ace.min.css"/>
@@ -25,26 +25,26 @@ $db->initMessageInformation(0, 100);
 
 <body>
 <div class="margin clearfix">
-    <div class="Feedback_style">
+    <div>
         <div class="border clearfix">
        <span class="l_f">
-           <a href="javascript:void()" class="btn btn-danger"><i class="icon-trash"></i>&nbsp;批量删除</a>
+           <a href="javascript:void(0)" id="article_add" class="btn btn-warning"><i class="icon-plus"></i>&nbsp;添加留言</a>
        </span>
-            <span class="r_f">共：<b>2334</b>条</span>
+            <span class="r_f">共：<b><?= $db->getNrOfMessages() ?></b>条</span>
         </div>
         <div class="feedback">
             <table class="table table-striped table-bordered table-hover" id="sample-table">
                 <thead>
                 <tr>
-                    <th width="25px"><label><input type="checkbox" class="ace"><span class="lbl"></span></label></th>
-                    <th width="120px">学号</th>
-                    <th width="150px">用户名</th>
-                    <th width="120px">文章ID</th>
-                    <th width="200px">文章标题</th>
-                    <th width="120">留言ID</th>
-                    <th width="">留言内容</th>
-                    <th width="200px">时间</th>
-                    <th width="200px">操作</th>
+                    <th><label><input type="checkbox" class="ace"><span class="lbl"></span></label></th>
+                    <th>学号</th>
+                    <th>用户名</th>
+                    <th>文章ID</th>
+                    <th>文章标题</th>
+                    <th>留言ID</th>
+                    <th>留言内容</th>
+                    <th>时间</th>
+                    <th>操作</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -56,12 +56,25 @@ $db->initMessageInformation(0, 100);
                         $studentName = '(该学生已被删除)';
                     }
                     $articleId = $message->getArticleId();
-                    $articleName = $db->getArticleTitle($articleId);
-                    if ($articleName === null) {
-                        $articleName = '(该文章已被删除)';
+                    $articleTitle = $db->getArticleTitle($articleId);
+                    $titleLimit = 20;
+                    $subArticleTitle = null;
+                    if ($articleTitle === null) {
+                        $subArticleTitle = $articleTitle = '(该文章已被删除)';
+                    } else if (mb_strlen($articleTitle) > $titleLimit) {
+                        $subArticleTitle = mb_substr($articleTitle, 0, $titleLimit) . '...';
+                    } else {
+                        $subArticleTitle = $articleTitle;
                     }
                     $messageId = $message->getId();
                     $messageContent = $message->getMessage();
+                    $messageLimit = 30;
+                    $subMessageContent = null;
+                    if (mb_strlen($messageContent) > $messageLimit) {
+                        $subMessageContent = mb_substr($messageContent, 0, $messageLimit);
+                    } else {
+                        $subMessageContent = $messageContent;
+                    }
                     $time = $message->getTime();
                     echo <<< tr
                 <tr>
@@ -70,23 +83,17 @@ $db->initMessageInformation(0, 100);
                     <td>{$studentName}</td>
                     <td class="text-l">{$articleId}</td>
                     <td class="text-l">
-                        <a href="javascript:void(0)" onclick="article_view(this)">{$articleName}</a>
+                        <a href="javascript:void(0)" onclick="message_view(this)" title="{$articleTitle}">{$subArticleTitle}</a>
                     </td>
                     <td>{$messageId}</td>
                     <td class="text-l">
-                        <a href="javascript:void(0)" onclick="message_view(this)">{$messageContent}</a>
+                        <a href="javascript:void(0)" onclick="message_view(this)" title="{$messageContent}">{$subMessageContent}</a>
                     </td>
                     <td>{$time}</td>
-                    <td class="td-manage">
-                        <a title="编辑" onclick="member_edit(this)" href="javascript:"
-                           class="btn btn-xs btn-info"><i class="icon-edit bigger-120"></i></a>
-                        <a href="javascript:void(0)" onclick="member_del(this)" title="删除"
-                           class="btn btn-xs btn-warning"><i
-                                    class="icon-trash bigger-120"></i></a>
-                    </td>
+                    <td class="td-manage"></td>
                 </tr>
-tr;
 
+tr;
                 } ?>
                 </tbody>
             </table>
@@ -97,16 +104,23 @@ tr;
 <!--留言详细-->
 <div id="message" style="display:none">
     <div class="content_style">
-        <div class="form-group"><span class="col-sm-2 control-label no-padding-right">留言用户 </span>
-            <div class="col-sm-9">胡海天堂</div>
-        </div>
         <div class="form-group"><span class="col-sm-2 control-label no-padding-right">用户学号 </span>
-            <div class="col-sm-9">01</div>
+            <div class="col-sm-9" id="view_ID"></div>
+        </div>
+        <div class="form-group"><span class="col-sm-2 control-label no-padding-right">留言用户 </span>
+            <div class="col-sm-9" id="view_name"></div>
+        </div>
+        <div class="form-group"><span class="col-sm-2 control-label no-padding-right">文章id </span>
+            <div class="col-sm-9" id="view_article_id"></div>
+        </div>
+        <div class="form-group"><span class="col-sm-2 control-label no-padding-right">文章标题 </span>
+            <div class="col-sm-9" id="view_article_title"></div>
         </div>
         <div class="form-group"><span class="col-sm-2 control-label no-padding-right">留言内容 </span>
-            <div class="col-sm-9">
-                三年同窗，一起沐浴了一片金色的阳光，一起度过了一千个日夜，我们共同谱写了多少友谊的篇章?愿逝去的那些闪亮的日子，都化作美好的记忆，永远留在心房。认识您，不论是生命中的一段插曲，还是永久的知已，我都会珍惜，当我疲倦或老去，不再拥有青春的时候，这段旋律会滋润我生命的每一刻。在此我只想说：有您真好!无论你身在何方，我的祝福永远在您身边!
-            </div>
+            <div class="col-sm-9" id="view_message_id"></div>
+        </div>
+        <div class="form-group"><span class="col-sm-2 control-label no-padding-right">留言内容 </span>
+            <div class="col-sm-9" id="view_message_content"></div>
         </div>
 
     </div>
@@ -114,15 +128,48 @@ tr;
 </body>
 </html>
 <script type="text/javascript">
+    $(document).ready(function () {
+        $('#sample-table').dataTable({
+            "aaSorting": [[1, "desc"]],//默认第几个排序
+            "bStateSave": true,//状态保存
+            "aoColumnDefs": [
+                //{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
+                {"orderable": false, "aTargets": [0, 8]}, // 制定列不参与排序
+                {
+                    "targets": 8,
+                    "render": function () {
+                        return '<a title="编辑" onclick="article_edit(this)" href="javascript:" class="btn btn-xs btn-info"><i class="icon-edit bigger-120"></i></a> <a href="javascript:" onclick="member_del(this)" title="删除" class="btn btn-xs btn-warning"><i class="icon-trash bigger-120"></i></a>'
+                    }
+                }
+            ]
+        });
+        $('table th input:checkbox').on('click', function () {
+            let that = this;
+            $(this).closest('table').find('tr > td:first-child input:checkbox')
+                .each(function () {
+                    this.checked = that.checked;
+                    $(this).closest('tr').toggleClass('selected');
+                });
+        });
+    })
+
+    /*文章查看*/
     function article_view(obj) {
 
     }
 
     /*留言查看*/
     function message_view(obj) {
+        let td = $(obj).parents("tr").children('td')
+        $('#view_ID').text(td.eq(1).text())
+        $('#view_name').text(td.eq(2).text())
+        $('#view_article_id').text(td.eq(3).text())
+        $('#view_article_title').text(td.eq(4).children('a').attr('title'))
+        $('#view_message_id').text(td.eq(5).text())
+        $('#view_message_content').text(td.eq(6).children('a').attr('title'))
         layer.open({
             type: 1,
-            title: '反馈信息',
+            title: '留言信息',
             shadeClose: false,
             area: ['600px', ''],
             content: $('#message'),
@@ -144,25 +191,6 @@ tr;
 
         });
     }
-
-    jQuery(function ($) {
-        $('#sample-table').dataTable({
-            "aaSorting": [[1, "desc"]],//默认第几个排序
-            "bStateSave": true,//状态保存
-            "aoColumnDefs": [
-                //{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                {"orderable": false, "aTargets": [0, 8]}// 制定列不参与排序
-            ]
-        });
-        $('table th input:checkbox').on('click', function () {
-            let that = this;
-            $(this).closest('table').find('tr > td:first-child input:checkbox')
-                .each(function () {
-                    this.checked = that.checked;
-                    $(this).closest('tr').toggleClass('selected');
-                });
-        });
-    })
 
     function _request(url, data, success, error) {
         let xhr = new XMLHttpRequest()

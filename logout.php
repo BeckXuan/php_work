@@ -12,7 +12,6 @@ function unSetCookie($cookieName)
 
 unSetCookie('name');
 unSetCookie('studentID');
-unSetCookie('adminName');
-unSetCookie('adminAccount');
+unSetCookie('account');
 
 header('location: login.php');

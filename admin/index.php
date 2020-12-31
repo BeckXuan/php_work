@@ -23,7 +23,7 @@ session_start();
     <script src="assets/js/ace.min.js"></script>
     <script src="assets/layer/layer.js" type="text/javascript"></script>
     <script type="text/javascript">
-        jQuery(document).ready(function () {
+        $(document).ready(function () {
             $("#main-container").height($(window).height() - 76);
             $("#iframe").height($(window).height() - 140);
 
@@ -102,7 +102,7 @@ session_start();
                 <li class="light-blue">
                     <a data-toggle="dropdown" href="#" class="dropdown-toggle">
                         <span class="time"><em id="time"></em></span><span
-                                class="user-info"><small>欢迎光临,</small><?= $_SESSION['adminName'] ?></span>
+                                class="user-info"><small>欢迎光临,</small><?= $_SESSION['name'] ?></span>
                         <i class="icon-caret-down"></i>
                     </a>
                     <ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
@@ -141,22 +141,18 @@ session_start();
                                             class="iframeurl"><i class="icon-double-angle-right"></i>会员列表</a></li>
                     </ul>
                 </li>
-                <li><a href="#" class="dropdown-toggle"><i class="icon-edit"></i><span class="menu-text"> 消息管理 </span><b
+                <li><a href="#" class="dropdown-toggle"><i class="icon-edit"></i><span class="menu-text"> 文章管理 </span><b
                                 class="arrow icon-angle-down"></b></a>
                     <ul class="submenu">
                         <li class="home"><a href="javascript:void(0)" name="article.php" title="文章列表"
                                             class="iframeurl"><i class="icon-double-angle-right"></i>文章列表</a></li>
-                        <li class="home"><a href="javascript:void(0)" name="message.php" title="留言列表"
-                                            class="iframeurl"><i class="icon-double-angle-right"></i>留言列表</a></li>
                     </ul>
                 </li>
-                <li><a href="#" class="dropdown-toggle"><i class="icon-edit"></i><span class="menu-text"> 文章管理 </span><b
+                <li><a href="#" class="dropdown-toggle"><i class="icon-edit"></i><span class="menu-text"> 留言管理 </span><b
                                 class="arrow icon-angle-down"></b></a>
                     <ul class="submenu">
-                        <li class="home"><a href="javascript:void(0)" name="Guestbook.html" title="文章列表"
-                                            class="iframeurl"><i class="icon-double-angle-right"></i>文章列表</a></li>
-                        <li class="home"><a href="javascript:void(0)" name="Feedback.html" title="分类分类"
-                                            class="iframeurl"><i class="icon-double-angle-right"></i>分类分类</a></li>
+                        <li class="home"><a href="javascript:void(0)" name="message.php" title="留言列表"
+                                            class="iframeurl"><i class="icon-double-angle-right"></i>留言列表</a></li>
                     </ul>
                 </li>
             </ul>

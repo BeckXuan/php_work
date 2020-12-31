@@ -11,9 +11,9 @@ function isUserLegal()
 
 function isAdminLegal()
 {
-    return isset($_SESSION['adminAccount'], $_COOKIE['adminAccount'], $_COOKIE['adminName'])
-        && $_SESSION['adminAccount'] === $_COOKIE['adminAccount']
-        && $_SESSION['adminName'] === $_COOKIE['adminName'];
+    return isset($_SESSION['account'], $_SESSION['name'], $_COOKIE['account'], $_COOKIE['name'])
+        && $_SESSION['account'] === $_COOKIE['account']
+        && $_SESSION['name'] === $_COOKIE['name'];
 }
 
 function setContentType()

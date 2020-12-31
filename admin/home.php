@@ -20,7 +20,7 @@ $db = &DB::getInstance();
     <div class="state-overview clearfix">
         <div class="col-lg-3 col-sm-6">
             <div class="panel">
-                <a href="#" title="学生数">
+                <div title="学生数量">
                     <div class="symbol green">
                         <i class="icon-user"></i>
                     </div>
@@ -28,12 +28,12 @@ $db = &DB::getInstance();
                         <h1><?= $db->getNrOfAdmittedUsers() ?></h1>
                         <p>学生数量</p>
                     </div>
-                </a>
+                </div>
             </div>
         </div>
         <div class="col-lg-3 col-sm-6">
             <div class="panel">
-                <a href="#" title="待审核">
+                <div title="待审核">
                     <div class="symbol terques">
                         <i class="icon-user"></i>
                     </div>
@@ -41,12 +41,12 @@ $db = &DB::getInstance();
                         <h1><?= $db->getNrOfUnauditedUsers() ?></h1>
                         <p>待审核</p>
                     </div>
-                </a>
+                </div>
             </div>
         </div>
         <div class="col-lg-3 col-sm-6">
             <div class="panel">
-                <a href="#" title="文章数量">
+                <div title="文章数量">
                     <div class="symbol yellow">
                         <i class="icon-book"></i>
                     </div>
@@ -54,12 +54,12 @@ $db = &DB::getInstance();
                         <h1><?= $db->getNrOfArticles() ?></h1>
                         <p>文章数量</p>
                     </div>
-                </a>
+                </div>
             </div>
         </div>
         <div class="col-lg-3 col-sm-6">
             <div class="panel">
-                <a href="#" title="留言数量">
+                <div title="留言数量">
                     <div class="symbol blue">
                         <i class="icon-comments"></i>
                     </div>
@@ -67,7 +67,7 @@ $db = &DB::getInstance();
                         <h1><?= $db->getNrOfMessages() ?></h1>
                         <p>留言数量</p>
                     </div>
-                </a>
+                </div>
             </div>
         </div>
     </div>

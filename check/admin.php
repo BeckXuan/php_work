@@ -25,14 +25,16 @@ if ($adminAccount !== $account || $adminPassword !== $password) {
 } else {
     /* @noinspection PhpUndefinedVariableInspection */
     $name = $adminName;
-    $_SESSION['adminName'] = $name;
-    $_SESSION['adminAccount'] = $account;
+    $_SESSION['name'] = $name;
+    $_SESSION['account'] = $account;
+    $_SESSION['studentID'] = '0';
     if (isset($_POST['rem']) && $_POST['rem'] === '1') {
         setcookie('adminName', $name, time() + 3600, '/', '', false, true);
         setcookie('adminAccount', $account, time() + 3600, '/', '', false, true);
     } else {
-        setcookie('adminName', $name, 0, '/', '', false, true);
-        setcookie('adminAccount', $account, 0, '/', '', false, true);
+        setcookie('name', $name, 0, '/', '', false, true);
+        setcookie('account', $account, 0, '/', '', false, true);
+        setcookie('studentID', '0', 0, '/', '', false, true);
     }
     return;
 }
