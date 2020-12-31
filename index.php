@@ -1,3 +1,12 @@
+<?php
+
+
+require "common.php";
+$db =& DB::getInstance();
+$db->initArticleInformation(0, 9999);
+?>
+
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -33,7 +42,7 @@
     <div class="ydc-entered">
         <div class="ydc-header-content ydc-flex">
             <div class="ydc-column">
-                <a href="index.html" class="ydc-column-ydc-logo">
+                <a href="index.php" class="ydc-column-ydc-logo">
                     <img src="images/icon/ydc-logo.png" title="" about="" alt="">
                 </a>
             </div>
@@ -71,13 +80,13 @@
                         <dl>
                             <a href="#">
                                 <dt>文章总数</dt>
-                                <dd>14</dd>
+                                <dd><?= $db->getNrOfArticles() ?></dd>
                             </a>
                         </dl>
                         <dl>
                             <a href="#">
                                 <dt>留言总数</dt>
-                                <dd>224</dd>
+                                <dd><?= $db->getNrOfMessages() ?></dd>
                             </a>
                         </dl>
                     </div>
@@ -94,78 +103,16 @@
                         <div class="ydc-panes">
                             <div class="ydc-pane" style="display:block;">
                                 <ol class="ydc-pane-list">
+                                    <?php
+                                    while ($article = $db->getNextArticle()) {
+                                        echo <<<html
                                     <li>
-                                        <a href="page.html" target="_blank">一点车点讯号平台关于封禁违规账号的通知（4月13日-4月20日） <i>new</i></a>
-                                        <span>2017-04-17 10:00:00</span>
-                                    </li>
-                                    <li>
-                                        <a href="page.html" target="_blank">4月特色MCN | 点讯号MCN颁发月度特色奖项：决定就是你了！</a>
-                                        <span>2017-04-17 10:00:00</span>
-                                    </li>
-                                    <li>
-                                        <a href="page.html" target="_blank">一点车点讯号平台重磅推出原创态度势力榜，丰厚现金奖励助力短视频创作！</a>
-                                        <span>2017-04-17 10:00:00</span>
-                                    </li>
-                                    <li>
-                                        <a href="page.html" target="_blank">一点车点讯号平台针对低质量违规内容加强打击力度的公告</a>
-                                        <span>2017-04-17 10:00:00</span>
-                                    </li>
-                                    <li>
-                                        <a href="page.html" target="_blank">一点车点讯号平台从重整治非正当渠道搬运视频刷取流量的行为<i>new</i></a>
-                                        <span>2017-04-17 10:00:00</span>
-                                    </li>
-                                    <li>
-                                        <a href="page.html" target="_blank">一点车点讯号平台清理违规内容，永久禁封690个账号（2月02日-2月8日）</a>
-                                        <span>2017-04-17 10:00:00</span>
-                                    </li>
-                                    <li>
-                                        <a href="page.html" target="_blank">资讯重拳整顿违规内容，持续维护内容生态健康发展</a>
-                                        <span>2017-04-17 10:00:00</span>
-                                    </li>
-                                    <li>
-                                        <a href="page.html" target="_blank">手机验证功能已上线，为增强帐号安全性，请从速验证手机信息</a>
-                                        <span>2017-04-17 10:00:00</span>
-                                    </li>
-                                    <li>
-                                        <a href="page.html" target="_blank">关于本月自媒体-公司类型账号提现日期更改的通知 <i>new</i></a>
-                                        <span>2017-04-17 10:00:00</span>
-                                    </li>
-                                    <li>
-                                        <a href="page.html" target="_blank">一点车点讯号平台关于封禁违规账号的通知（4月13日-4月20日）</a>
-                                        <span>2017-04-17 10:00:00</span>
-                                    </li>
-                                    <li>
-                                        <a href="page.html" target="_blank">一点车点讯号平台关于封禁违规账号的通知（4月13日-4月20日） <i>new</i></a>
-                                        <span>2017-04-17 10:00:00</span>
-                                    </li>
-                                    <li>
-                                        <a href="#">4月特色MCN | 点讯号MCN颁发月度特色奖项：决定就是你了！</a>
-                                        <span>2017-04-17 10:00:00</span>
-                                    </li>
-                                    <li>
-                                        <a href="#">一点车点讯号平台重磅推出原创态度势力榜，丰厚现金奖励助力短视频创作！</a>
-                                        <span>2017-04-17 10:00:00</span>
-                                    </li>
-                                    <li>
-                                        <a href="#">一点车点讯号平台针对低质量违规内容加强打击力度的公告</a>
-                                        <span>2017-04-17 10:00:00</span>
-                                    </li>
-                                    <li>
-                                        <a href="#">一点车点讯号平台从重整治非正当渠道搬运视频刷取流量的行为<i>new</i></a>
-                                        <span>2017-04-17 10:00:00</span>
-                                    </li>
-                                    <li>
-                                        <a href="#">一点车点讯号平台清理违规内容，永久禁封690个账号（2月02日-2月8日）</a>
-                                        <span>2017-04-17 10:00:00</span>
-                                    </li>
-                                    <li>
-                                        <a href="#">资讯重拳整顿违规内容，持续维护内容生态健康发展</a>
-                                        <span>2017-04-17 10:00:00</span>
-                                    </li>
-                                    <li>
-                                        <a href="#">关于本月自媒体-公司类型账号提现日期更改的通知 <i>new</i></a>
-                                        <span>2017-04-17 10:00:00</span>
-                                    </li>
+                                        <a href = "page.php?id={$article->getId()}" target = "_blank" >{$article->getTitle()}</a >
+                                        <span >{$article->getTime()}</span >
+                                    </li >
+html;
+                                    }
+                                    ?>
                                 </ol>
                                 <div class="ydc-pagination">
                                     <ol>
