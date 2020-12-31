@@ -1,8 +1,8 @@
 <?php
 require "common.php";
 session_start();
-//if (isUserLegal() || isAdminLegal()) {
-//    header('location: index.php');
+//if (!isUserLegal() && !isAdminLegal()) {
+//    header('location: login.php');
 //    return;
 //}
 
@@ -85,9 +85,11 @@ html;
                     ?>
                 </ol>
                 <div>
-                    <form>
+                    <form method="post" action="check/message.php">
                         <p>评论：</p>
-                        <textarea style="width: 100%;height: 100px;margin: 1% auto"></textarea>
+                        <textarea style="width: 100%;height: 100px;margin: 1% auto" name="message"></textarea>
+                        <input type="hidden" name="studentID" value="<?=$studentID?>">
+                        <input type="hidden" name="articleId" value="<?=$id?>">
                         <button type="submit" class="ydc-reg-form-button" style="float: right;">提交</button>
                     </form>
                 </div>

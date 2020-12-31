@@ -1,8 +1,8 @@
 <?php
 require "common.php";
 session_start();
-//if (isUserLegal() || isAdminLegal()) {
-//    header('location: index.php');
+//if (!isUserLegal() && !isAdminLegal()) {
+//    header('location: login.php');
 //    return;
 //}
 $studentID=$_SESSION['studentID'];
