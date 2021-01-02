@@ -19,16 +19,16 @@ if (!preg_match("/^[a-z0-9]{32}$/", $password)) {
     return;
 }
 $studentID = $_POST['studentID'];
-$message = '';
+$error = '';
 $db = &DB::getInstance();
 if (!$db->studentIDExists($studentID)) {
-    $message = '该学号不存在！';
+    $error = '该学号不存在！';
 } else if (!($db->getUserPassword($studentID) === $password)) {
-    $message = '密码错误！';
+    $error = '密码错误！';
 } else if (!$db->isUserAudited($studentID)) {
-    $message = '请等待管理员审核后登录！';
+    $error = '请等待管理员审核后登录！';
 } else if (!$db->isUserAdmitted($studentID)) {
-    $message = '该学号已被管理员禁止登录！';
+    $error = '该学号已被管理员禁止登录！';
 } else {
     //写入Session、cookie，并转到内容界面
     $name = $db->getUserName($studentID);
@@ -44,4 +44,4 @@ if (!$db->studentIDExists($studentID)) {
     return;
 }
 header("Status: 422 Unprocessable Entity");
-echo $message;
+echo $error;

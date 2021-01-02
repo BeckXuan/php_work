@@ -21,6 +21,8 @@ $db->initArticleInformation(0, 100);
     <script src="assets/js/jquery.dataTables.min.js"></script>
     <script src="assets/js/jquery.dataTables.bootstrap.js"></script>
     <script src="assets/layer/layer.js" type="text/javascript"></script>
+    <script src="js/common.js" type="text/javascript"></script>
+    <script src="js/article.js" type="text/javascript"></script>
 </head>
 <body>
 <div class="margin clearfix">
@@ -51,32 +53,14 @@ $db->initArticleInformation(0, 100);
                     $title = $article->getTitle();
                     $content = $article->getContent();
                     $time = $article->getTime();
-                    $titleLimit = 20;
-                    $contentLimit = 30;
-                    $subTitle = null;
-                    $subContent = null;
-                    if (mb_strlen($title) > $titleLimit) {
-                        $subTitle = mb_substr($title, 0, $titleLimit) . '...';
-                    } else {
-                        $subTitle = $title;
-                    }
-                    if (mb_strlen($content) > $contentLimit) {
-                        $subContent = mb_substr($content, 0, $contentLimit) . '...';
-                    } else {
-                        $subContent = $content;
-                    }
                     echo <<< tr
                 <tr>
                     <td></td>
                     <td>{$id}</td>
-                    <td>
-                        <a href="javascript:void(0)" onclick="article_view(this)" title="{$title}">{$subTitle}</a>
-                    </td>
-                    <td>
-                        <a href="javascript:void(0)" onclick="article_view(this)" title="{$content}">{$subContent}</a>
-                    </td>
+                    <td>{$title}</td>
+                    <td>{$content}</td>
                     <td>{$time}</td>
-                    <td class="td-manage"></td>
+                    <td></td>
                 </tr>
 
 tr;
@@ -87,7 +71,7 @@ tr;
     </div>
 </div>
 
-<!--详细-->
+<!--文章详细-->
 <div id="article" style="display:none">
     <div class="content_style">
         <div class="form-group"><label class="col-sm-2 control-label no-padding-right">文章ID </label>
@@ -104,109 +88,23 @@ tr;
         </div>
     </div>
 </div>
+
+<!--文章编辑-->
+<div id="article_edit" style="display:none">
+    <div class="content_style">
+        <div class="form-group"><label class="col-sm-2 control-label no-padding-right">文章ID </label>
+            <div class="col-sm-9" id="edit_id">这是文章ID</div>
+        </div>
+        <div class="form-group"><label class="col-sm-2 control-label no-padding-right">添加时间 </label>
+            <div class="col-sm-9" id="edit_time">这是添加时间</div>
+        </div>
+        <div class="form-group"><label class="col-sm-2 control-label no-padding-right">文章标题 </label>
+            <textarea class="col-sm-9" id="edit_title" style="height: 30px;"></textarea>
+        </div>
+        <div class="form-group"><label class="col-sm-2 control-label no-padding-right">文章内容 </label>
+            <textarea class="col-sm-9" id="edit_content" style="height: 260px;"></textarea>
+        </div>
+    </div>
+</div>
 </body>
 </html>
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#sample-table').dataTable({
-            "aaSorting": [[1, "asc"]],//默认第几个排序
-            "bStateSave": false,//状态保存
-            "aoColumnDefs": [
-                {"orderable": false, "aTargets": [0, 5]},// 制定列不参与排序
-                {
-                    "targets": 0,
-                    "render": function () {
-                        return '<label><input type="checkbox" class="ace"><span class="lbl"></span></label>'
-                    }
-                },
-                {
-                    "targets": 5,
-                    "render": function () {
-                        return '<a title="编辑" onclick="article_edit(this)" href="javascript:" class="btn btn-xs btn-info"><i class="icon-edit bigger-120"></i></a> <a href="javascript:" onclick="member_del(this)" title="删除" class="btn btn-xs btn-warning"><i class="icon-trash bigger-120"></i></a>'
-                    }
-                }
-            ]
-        });
-        $('table th input:checkbox').on('click', function () {
-            let checked = $(this).prop("checked");
-            $(this).closest('table').find('tr > td:first-child input:checkbox')
-                .each(function () {
-                    $(this).prop("checked", checked);
-                });
-        });
-    })
-
-    /*文章-删除*/
-    function member_del(obj) {
-        let _obj = $(obj)
-        let id = _obj.parent("td").siblings().eq(1).text()
-        layer.confirm('确认要删除吗？', function () {
-            _request('operate/delArticle.php', 'value=' + id, () => {
-                //_obj.parents("tr").remove();
-                $('#sample-table').DataTable().row(_obj.parents("tr")).remove().draw()
-                layer.msg('已删除！', {icon: 1, time: 2000});
-            }, (xhr) => {
-                layer.msg('删除失败！' + xhr.responseText, {icon: 2, time: 3000});
-            })
-        });
-    }
-
-    /*文章查看*/
-    function article_view(obj) {
-        let td = $(obj).parents("tr").children('td')
-        $('#view_id').text(td.eq(1).text())
-        $('#view_title').text(td.eq(2).children('a').attr('title'))
-        $('#view_content').html('<p style="text-indent:2em">' + td.eq(3).children('a').attr('title').replaceAll('\n', '</p><p style="text-indent:2em">') + '</p>')
-        $('#view_time').text(td.eq(4).text())
-        layer.open({
-                type: 1,
-                title: '文章信息',
-                shadeClose: false,
-                area: ['600px', ''],
-                content: $('#article'),
-                btn: ['确定'],
-            }
-        )
-    }
-
-    /*文章编辑*/
-    function article_edit(obj) {
-        let id = $(obj).parent("td").siblings().eq(1).text()
-
-    }
-
-    function _request(url, data, success, error) {
-        let xhr = new XMLHttpRequest()
-        if (window.XMLHttpRequest) {
-            xhr = new XMLHttpRequest();
-        } else if (window.ActiveXObject) {
-            xhr = new ActiveXObject("Microsoft.XMLHTTP");
-        } else {
-            alert('浏览器不支持XMLHttpRequest！')
-            return
-        }
-        xhr.onload = function () {
-            let status = xhr.status
-            if (status === 200) {
-                //success
-                success(xhr)
-            } else if (status === 422) {
-                //error
-                error(xhr)
-            } else if (status === 401) {
-                //Unauthorized
-                window.location.href = 'login.php'
-            } else {
-                //fail
-                layer.msg(status + '未知错误！', {icon: 2, time: 3000})
-            }
-        }
-        xhr.timeout = 2000;
-        xhr.ontimeout = function () {
-            layer.msg('请求服务器超时！', {icon: 2, time: 3000})
-        }
-        xhr.open("POST", url, true)
-        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded')
-        xhr.send(data)
-    }
-</script>

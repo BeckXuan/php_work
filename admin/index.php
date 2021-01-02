@@ -22,70 +22,7 @@ session_start();
     <script src="assets/js/bootstrap.min.js"></script>
     <script src="assets/js/ace.min.js"></script>
     <script src="assets/layer/layer.js" type="text/javascript"></script>
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $("#main-container").height($(window).height() - 76);
-            $("#iframe").height($(window).height() - 140);
-
-            $(".sidebar").height($(window).height() - 99);
-            let thisHeight = $("#nav_list").height($(window).outerHeight() - 173);
-            $(".submenu").height();
-            $("#nav_list").children(".submenu").css("height", thisHeight);
-
-            //当文档窗口发生改变时 触发
-            $(window).resize(function () {
-                $("#main-container").height($(window).height() - 76);
-                $("#iframe").height($(window).height() - 140);
-                $(".sidebar").height($(window).height() - 99);
-
-                let thisHeight = $("#nav_list").height($(window).outerHeight() - 173);
-                $(".submenu").height();
-                $("#nav_list").children(".submenu").css("height", thisHeight);
-            });
-            $(".iframeurl").click(function () {
-                let cid = $(this).attr("name");
-                let cname = $(this).attr("title");
-                $("#iframe").attr("src", cid).ready();
-                $("#Bcrumbs").attr("href", cid).ready();
-                $(".Current_page a").attr('href', cid).ready();
-                $(".Current_page").attr('name', cid);
-                $(".Current_page").html(cname).css({"color": "#333333", "cursor": "default"}).ready();
-                $("#parentIframe").html('<span class="parentIframe iframeurl"> </span>').css("display", "none").ready();
-                $("#parentIfour").html('').css("display", "none").ready();
-            });
-        });
-        $(document).ready(function () {
-            $('#nav_list').find('li.home').click(function () {
-                $('#nav_list').find('li.home').removeClass('active');
-                $(this).addClass('active');
-            });
-
-            //时间设置
-            function currentTime() {
-                let d = new Date(), str = '';
-                str += d.getFullYear() + '年';
-                str += d.getMonth() + 1 + '月';
-                str += d.getDate() + '日';
-                str += d.getHours() + '时';
-                str += d.getMinutes() + '分';
-                str += d.getSeconds() + '秒';
-                return str;
-            }
-
-            setInterval(function () {
-                $('#time').html(currentTime)
-            }, 1000);
-            $('#Exit_system').on('click', function () {
-                layer.confirm('是否确定退出系统？', {
-                        btn: ['是', '否'],//按钮
-                        icon: 0,
-                    },
-                    function () {
-                        location.href = "../logout.php";
-                    });
-            });
-        })
-    </script>
+    <script src="js/index.js" type="text/javascript"></script>
 </head>
 <body>
 <div class="navbar navbar-default" id="navbar">
@@ -134,11 +71,17 @@ session_start();
                 <li class="home"><a href="javascript:void(0)" name="home.php" class="iframeurl" title=""><i
                                 class="icon-dashboard"></i><span class="menu-text"> 系统首页 </span></a></li>
                 <li>
-                    <a href="#" class="dropdown-toggle"><i class="icon-user"></i><span class="menu-text"> 会员管理 </span><b
+                    <a href="#" class="dropdown-toggle"><i class="icon-user"></i><span class="menu-text"> 学生管理 </span><b
                                 class="arrow icon-angle-down"></b></a>
                     <ul class="submenu">
-                        <li class="home"><a href="javascript:void(0)" name="user.php" title="会员列表"
-                                            class="iframeurl"><i class="icon-double-angle-right"></i>会员列表</a></li>
+                        <li class="home"><a href="javascript:void(0)" name="user.php" title="全部学生列表"
+                                            class="iframeurl"><i class="icon-double-angle-right"></i>全部学生列表</a></li>
+                        <li class="home"><a href="javascript:void(0)" name="user.php?type=0" title="待审核学生列表"
+                                            class="iframeurl"><i class="icon-double-angle-right"></i>待审核学生列表</a></li>
+                        <li class="home"><a href="javascript:void(0)" name="user.php?type=1" title="已允许学生列表"
+                                            class="iframeurl"><i class="icon-double-angle-right"></i>已允许学生列表</a></li>
+                        <li class="home"><a href="javascript:void(0)" name="user.php?type=-1" title="已拒绝学生列表"
+                                            class="iframeurl"><i class="icon-double-angle-right"></i>已拒绝学生列表</a></li>
                     </ul>
                 </li>
                 <li><a href="#" class="dropdown-toggle"><i class="icon-edit"></i><span class="menu-text"> 文章管理 </span><b

@@ -18,14 +18,14 @@ if (!preg_match("/^[a-z0-9]{32}$/", $password)) {
 }
 $name = $_POST['name'];
 $studentID = $_POST['studentID'];
-$message = '';
+$error = '';
 $db = &DB::getInstance();
 if ($db->nameExists($name) || $db->studentIDExists($studentID)) {
-    $message = '用户名或学号已存在！';
+    $error = '用户名或学号已存在！';
 } else if (!$db->addUser($name, $studentID, $password, false)) {
-    $message = '注册失败！数据库错误！';
+    $error = '注册失败！数据库错误！';
 } else {
     return;
 }
 header("Status: 422 Unprocessable Entity");
-echo $message;
+echo $error;

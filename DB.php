@@ -414,9 +414,13 @@ class DB
     {
         $stmt = $this->_db->prepare('INSERT INTO `message` (`articleId`, `message`, `studentID`, `time`) VALUES (?, ?, ?, NOW())');
         $stmt->bind_param('iss', $articleId, $message, $studentID);
-        $result = $stmt->execute();
+        if (!$stmt->execute()) {
+            $stmt->close();
+            return false;
+        }
+        $insertId = $stmt->insert_id;
         $stmt->close();
-        return $result;
+        return $insertId;
     }
 
     public function delMessage($messageId)
@@ -493,6 +497,11 @@ class DB
     public function setMessageStudentID($messageId, $newStudentID)
     {
         return $this->setMessageInformation($messageId, 'studentID', $newStudentID);
+    }
+
+    public function setMessageArticleID($messageId, $newArticleID)
+    {
+        return $this->setMessageInformation($messageId, 'articleId', $newArticleID);
     }
 }
 

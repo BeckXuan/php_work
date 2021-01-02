@@ -8,14 +8,14 @@ if (!isAdminLegal()) {
 }
 
 $db = &DB::getInstance();
-$message = null;
+$error = null;
 $articleId = $_POST['value'];
 if (!$db->articleExists($articleId)) {
-    $message = '该文章不存在！';
+    $error = '该文章不存在！';
 } else if (!$db->delArticle($articleId)) {
-    $message = '执行失败！';
+    $error = '执行失败！';
 } else {
     return;
 }
 header("Status: 422 Unprocessable Entity");
-echo $message;
+echo $error;
