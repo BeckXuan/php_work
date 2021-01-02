@@ -11,8 +11,6 @@ if (!isset($_GET['id'])) {
     return;
 }
 
-//$studentID=$_SESSION['studentID'];
-
 $id = $_GET['id'];
 $db = &DB::getInstance();
 $db->initMessageInfoByArticleId($id);
@@ -39,9 +37,7 @@ $name = $_SESSION['name'];
                             <?= $name ?>
                         </div>
                         <div class="ydc-user-info-func ydc-flex">
-                            <!--                            <span class="ydc-tag">新手期</span>-->
-                            <span class="ydc-mal"><i
-                                        class="ydc-icon ydc-icon-mail fl"></i><em><?= $studentID ?></em></span>
+                            <span class="ydc-tag"><?= $studentID ?></span>
                             <a href="logout.php">退出</a>
                         </div>
                     </div>
@@ -85,6 +81,7 @@ html;
                         }
                         ?>
                     </ol>
+
                 </div>
                 <div>
                     <p></p>
@@ -94,7 +91,10 @@ html;
                                   required="required"></textarea>
                         <input type="hidden" name="studentID" value="<?= $studentID ?>">
                         <input type="hidden" name="articleId" value="<?= $id ?>">
-                        <button type="button" class="ydc-reg-form-button" style="float: left;background-color: grey" onclick="returnIndex()">返回主页</button>
+                        <button type="button" class="ydc-reg-form-button"
+                                style="float: left;background-color: grey;margin-left: 18px;" onclick="returnIndex()">
+                            返回主页
+                        </button>
                         <button type="submit" class="ydc-reg-form-button" style="float: right;">发布评论</button>
                     </form>
                 </div>

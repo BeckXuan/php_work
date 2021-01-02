@@ -5,8 +5,8 @@ if (!isUserLegal() && !isAdminLegal()) {
     header('location: login.php');
     return;
 }
-$studentID=$_SESSION['studentID'];
-$name=$_SESSION['name'];
+$studentID = $_SESSION['studentID'];
+$name = $_SESSION['name'];
 
 $db =& DB::getInstance();
 $db->initArticleInformation(0, 9999);
@@ -31,11 +31,10 @@ $db->initArticleInformation(0, 9999);
                 <div class="ydc-column-user">
                     <div class="ydc-user-info">
                         <div class="ydc-user-info-name">
-                            <?= $name ?>（<?= $studentID ?>）
+                            <?= $name ?>
                         </div>
                         <div class="ydc-user-info-func ydc-flex">
-                            <span class="ydc-tag">账号审核中</span>
-                            <span class="ydc-mal"><i class="ydc-icon ydc-icon-mail fl"></i><em>12</em></span>
+                            <span class="ydc-tag"><?= $studentID ?></span>
                             <a href="logout.php">退出</a>
                         </div>
                     </div>
