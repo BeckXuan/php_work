@@ -23,11 +23,10 @@ require "../config/admin.php";
 if ($adminAccount !== $account || $adminPassword !== $password) {
     $error = '账号或密码错误！';
 } else {
-    /* @noinspection PhpUndefinedVariableInspection */
-    $name = $adminName;
-    $_SESSION['name'] = $name;
+    $name = 'admin';
+    $_SESSION['name'] = 'admin';
     $_SESSION['account'] = $account;
-    $_SESSION['studentID'] = '0';
+    $_SESSION['studentID'] = 'admin';
     if (isset($_POST['rem']) && $_POST['rem'] === '1') {
         setcookie('name', $name, time() + 3600, '/', '', false, true);
         setcookie('account', $account, time() + 3600, '/', '', false, true);

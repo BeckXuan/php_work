@@ -5,7 +5,7 @@ if (!isUserLegal() && !isAdminLegal()) {
     header('location: login.php');
     return;
 }
-if (!isset($_POST['message'], $_POST['articleId'], $_POST['studentID'])) {
+if (!isset($_POST['message'], $_POST['articleId'])) {
     header('location: index.php');
     return;
 }
@@ -15,10 +15,10 @@ $message = $_POST['message'];
 $articleId = $_POST['articleId'];
 $studentID = $_POST['studentID'];
 if ($message === "") {
-    header('location: page.php?id='.$articleId);
+    header('location: page.php?id=' . $articleId);
     return;
 }
-if (!$db->addMessage($articleId, $message, $studentID)) {
+if (!$db->addMessage($articleId, $message, $_SESSION['studentID'])) {
     header("Status: 422 Unprocessable Entity");
     echo '留言失败！';
 }

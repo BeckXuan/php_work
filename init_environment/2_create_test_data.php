@@ -2,6 +2,11 @@
 require "../common.php";
 setContentType();
 $db = &DB::getInstance();
+//////////////////////   管理员预留账户   /////////////////////////
+$db->addUser('admin', 'admin', 'test');
+$db->denyUser('admin');
+////////////////////////////////////////////////////////////////
+
 $db->addUser('root', '01', 'test');
 $db->addUser('Beck', '02', 'test');
 $db->addUser('test', '03', 'test');
