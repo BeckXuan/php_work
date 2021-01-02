@@ -1,10 +1,10 @@
 <?php
 require "common.php";
 session_start();
-//if (!isUserLegal() && !isAdminLegal()) {
-//    header('location: login.php');
-//    return;
-//}
+if (!isUserLegal() && !isAdminLegal()) {
+    header('location: login.php');
+    return;
+}
 $studentID=$_SESSION['studentID'];
 $name=$_SESSION['name'];
 
@@ -27,11 +27,6 @@ $db->initArticleInformation(0, 9999);
 <header class="ydc-header">
     <div class="ydc-entered">
         <div class="ydc-header-content ydc-flex">
-            <div class="ydc-column">
-                <a href="index.php" class="ydc-column-ydc-logo">
-                    <img src="images/icon/ydc-logo.png" title="" about="" alt="">
-                </a>
-            </div>
             <div class="ydc-column">
                 <div class="ydc-column-user">
                     <div class="ydc-user-info">
@@ -94,38 +89,6 @@ html;
                                     }
                                     ?>
                                 </ol>
-                                <div class="ydc-pagination">
-                                    <ol>
-                                        <li class="ydc-previous-item">
-                                            <button class="ydc-previous-item-btn-medium ydc-disabled">
-                                                <span>上一页</span>
-                                            </button>
-                                        </li>
-                                        <li>
-                                            <button class="ydc-previous-item-btn-medium cur">1</button>
-                                        </li>
-                                        <li>
-                                            <button class="ydc-previous-item-btn-medium">2</button>
-                                        </li>
-                                        <li>
-                                            <button class="ydc-previous-item-btn-medium">3</button>
-                                        </li>
-                                        <li class="ydc-previous-item">
-                                            <button class="ydc-previous-item-btn-medium">
-                                                <span>下一页</span>
-                                            </button>
-                                        </li>
-                                        <li class="ydc-item-quick">
-                                            第
-                                            <div class="ydc-item-quick-kun"><input type="number" aria-invalid="false"
-                                                                                   class=""></div>
-                                            页
-                                            <button style="margin-left:5px;" class="ydc-previous-item-btn-medium">
-                                                <span>跳转</span>
-                                            </button>
-                                        </li>
-                                    </ol>
-                                </div>
                             </div>
                         </div>
                     </div>

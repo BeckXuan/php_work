@@ -1,10 +1,10 @@
 <?php
 require "common.php";
 session_start();
-//if (!isUserLegal() && !isAdminLegal()) {
-//    header('location: login.php');
-//    return;
-//}
+if (!isUserLegal() && !isAdminLegal()) {
+    header('location: login.php');
+    return;
+}
 
 if (!isset($_GET['id'])) {
     header('location: index.php');
@@ -33,11 +33,6 @@ $name = $_SESSION['name'];
     <div class="ydc-entered">
         <div class="ydc-header-content ydc-flex">
             <div class="ydc-column">
-                <a href="index.php" class="ydc-column-ydc-logo">
-                    <img src="images/icon/ydc-logo.png" title="" about="" alt="">
-                </a>
-            </div>
-            <div class="ydc-column">
                 <div class="ydc-column-user">
                     <div class="ydc-user-info">
                         <div class="ydc-user-info-name">
@@ -61,7 +56,7 @@ $name = $_SESSION['name'];
 <section>
     <div class="ydc-content-slide ydc-body">
         <div class="ydc-page-content">
-            <div class="ydc-page-head">
+            <div class="ydc-page-head" style="word-break: break-all;">
                 <h3><?= $db->getArticleTitle($id) ?></h3>
                 <?php
                 $content = $db->getArticleContent($id);
@@ -75,7 +70,7 @@ $name = $_SESSION['name'];
     <div style="margin: 0 17.5%">
         <div class="ydc-panes">
             <div class="ydc-pane" style="display:block;">
-                <p style="font-weight: bold;font-size: large;">共有<?=$db->getNrOfMessages()?>条评论：</p>
+                <p style="font-weight: bold;font-size: large;">共有<?= $db->getNrOfMessages() ?>条评论：</p>
                 <div style="border: 5px #ebebeb solid;">
                     <ol class="ydc-pane-list">
                         <?php
@@ -93,9 +88,13 @@ html;
                 </div>
                 <div>
                     <p></p>
-                    <form>
+                    <form action="check/message.php" method="post">
                         <p style="font-weight: bold;font-size: large;">快来发表你的想法吧！</p>
-                        <textarea style="width: 100%;height: 100px;margin: 1% auto" required="required"></textarea>
+                        <textarea name="message" style="width: 100%;height: 100px;margin: 1% auto"
+                                  required="required"></textarea>
+                        <input type="hidden" name="studentID" value="<?= $studentID ?>">
+                        <input type="hidden" name="articleId" value="<?= $id ?>">
+                        <button type="button" class="ydc-reg-form-button" style="float: left;background-color: grey" onclick="returnIndex()">返回主页</button>
                         <button type="submit" class="ydc-reg-form-button" style="float: right;">发布评论</button>
                     </form>
                 </div>
@@ -140,5 +139,10 @@ html;
     })
 </script>
 
+<script type="text/javascript">
+    function returnIndex() {
+        window.location.href = "index.php";
+    }
+</script>
 </body>
 </html>

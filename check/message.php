@@ -2,11 +2,11 @@
 require "../common.php";
 session_start();
 if (!isUserLegal() && !isAdminLegal()) {
-    header('location: login.php');
+    header('location: ../login.php');
     return;
 }
 if (!isset($_POST['message'], $_POST['articleId'])) {
-    header('location: index.php');
+    header('location: ../index.php');
     return;
 }
 
@@ -21,4 +21,7 @@ if ($message === "") {
 if ($db->addMessage($articleId, $message, $_SESSION['studentID']) === false) {
     header("Status: 422 Unprocessable Entity");
     echo '留言失败！';
+} else {
+    header("location: ../page.php?id={$articleId}");
+    return;
 }
