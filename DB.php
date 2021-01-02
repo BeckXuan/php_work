@@ -164,9 +164,13 @@ class DB
         }
         $stmt = $this->_db->prepare('INSERT INTO `user` (`name`, `studentID`, `password`, `time`) VALUES (?, ?, ?, NOW())');
         $stmt->bind_param('sss', $name, $studentID, $password);
-        $result = $stmt->execute();
+        if (!$stmt->execute()) {
+            $stmt->close();
+            return false;
+        }
+        $insertId = $stmt->insert_id;
         $stmt->close();
-        return $result;
+        return $insertId;
     }
 
     public function delUser($studentID)
@@ -286,6 +290,11 @@ class DB
         return $this->getUserInformation($studentID, 'password', $outHTMLFilter);
     }
 
+    public function getUserTime($studentID, $outHTMLFilter = true)
+    {
+        return $this->getUserInformation($studentID, 'time', $outHTMLFilter);
+    }
+
     public function isUserAdmitted($studentID)
     {
         return $this->getUserInformation($studentID, 'admitted', false) === 1;
@@ -337,9 +346,13 @@ class DB
     {
         $stmt = $this->_db->prepare('INSERT INTO `article` (`title`, `content`, `time`) VALUES (?, ?, NOW())');
         $stmt->bind_param('ss', $title, $content);
-        $result = $stmt->execute();
+        if (!$stmt->execute()) {
+            $stmt->close();
+            return false;
+        }
+        $insertId = $stmt->insert_id;
         $stmt->close();
-        return $result;
+        return $insertId;
     }
 
     public function delArticle($articleId)
@@ -379,6 +392,11 @@ class DB
     public function getArticleContent($articleId, $outHTMLFilter = true)
     {
         return $this->getArticleInformation($articleId, 'content', $outHTMLFilter);
+    }
+
+    public function getArticleTime($articleId, $outHTMLFilter = true)
+    {
+        return $this->getArticleInformation($articleId, 'time', $outHTMLFilter);
     }
 
     private function setArticleInformation($articleId, $field, $value)

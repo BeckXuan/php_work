@@ -1,10 +1,10 @@
 <?php
 require "../common.php";
 session_start();
-//if (!isAdminLegal()) {
-//    header('location: login.php');
-//    return;
-//}
+if (!isAdminLegal()) {
+    header('location: login.php');
+    return;
+}
 $db = &DB::getInstance();
 $type = isset($_GET['type']) ? $_GET['type'] : null;
 if ($type === '-1') {
@@ -71,16 +71,22 @@ if ($type === '-1') {
 //                        $callback = $admitted ? 'stop' : 'start';
 //                        $title = $admitted ? '启用' : '停用';
 //                        $status = !$user->isAudited() ? '待审核' : '已' . $title;
-                        $admitted = $user->isAdmitted() ? 'true' : 'false';
-                        $audited = $user->isAudited() ? 'true' : 'false';
+                        $status = null;
+                        if (!$user->isAudited()) {
+                            $status = 0;
+                        } else if ($user->isAdmitted()) {
+                            $status = 1;
+                        } else {
+                            $status = -1;
+                        }
                         echo <<< tr
                     <tr>
                         <td></td>
                         <td>{$studentID}</td>
                         <td>{$name}</td>
                         <td>{$time}</td>
-                        <td>{"admitted": {$admitted}, "audited": {$audited}}</td>
-                        <td>{"admitted": {$admitted}}</td>
+                        <td>{$status}</td>
+                        <td>{$status}</td>
                     </tr>
 
 tr;
@@ -92,14 +98,14 @@ tr;
     </div>
 </div>
 <!--添加用户图层-->
-<div class="add_member" id="member_style" style="display:none">
+<div id="member_edit" class="add_member" style="display:none">
     <ul class="page-content">
-        <li><label class="label_name">用&nbsp;&nbsp;户 &nbsp;名：<span class="add_name"><input value="" name="name"
-                                                                                           type="text"
-                                                                                           class="text_add"/></span></label>
-        </li>
         <li><label class="label_name">学&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：<span class="add_name"><input
                             name="studentID" type="text"
+                            class="text_add"/></span></label>
+        </li>
+        <li><label class="label_name">用&nbsp;&nbsp;户 &nbsp;名：<span class="add_name"><input
+                            name="name" type="text"
                             class="text_add"/></span></label>
         </li>
         <li><label class="label_name">密&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;码：<span class="add_name"><input
@@ -108,10 +114,12 @@ tr;
         </li>
         <li>
             <label class="label_name">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：</label><span class="add_name">
-            <label><input name="form-field-radio" type="radio" checked="checked" class="ace" value="1"><span
+            <label><input name="form-field-radio" type="radio" class="ace" value="1"><span
                         class="lbl">启用</span></label>
             <label><input name="form-field-radio" type="radio" class="ace" value="-1"><span
-                        class="lbl">停用</span></label></span>
+                        class="lbl">停用</span></label>
+            <label><input name="form-field-radio" type="radio" class="ace" value="0"><span
+                        class="lbl">待审核</span></label></span>
         </li>
     </ul>
 </div>

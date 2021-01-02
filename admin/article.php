@@ -1,10 +1,10 @@
 <?php
 require "../common.php";
 session_start();
-//if (!isAdminLegal()) {
-//    header('location: login.php');
-//    return;
-//}
+if (!isAdminLegal()) {
+    header('location: login.php');
+    return;
+}
 $db = &DB::getInstance();
 $db->initArticleInformation(0, 100);
 ?>

@@ -1,10 +1,10 @@
 ﻿<?php
 require "../common.php";
 session_start();
-//if (!isAdminLegal()) {
-//    header('location: login.php');
-//    return;
-//}
+if (!isAdminLegal()) {
+    header('location: login.php');
+    return;
+}
 //$db = &DB::getInstance();
 ?>
 <html lang="zh-CN">
@@ -84,14 +84,15 @@ session_start();
                                             class="iframeurl"><i class="icon-double-angle-right"></i>已拒绝学生列表</a></li>
                     </ul>
                 </li>
-                <li><a href="#" class="dropdown-toggle"><i class="icon-edit"></i><span class="menu-text"> 文章管理 </span><b
+                <li><a href="#" class="dropdown-toggle"><i class="icon-book"></i><span class="menu-text"> 文章管理 </span><b
                                 class="arrow icon-angle-down"></b></a>
                     <ul class="submenu">
                         <li class="home"><a href="javascript:void(0)" name="article.php" title="文章列表"
                                             class="iframeurl"><i class="icon-double-angle-right"></i>文章列表</a></li>
                     </ul>
                 </li>
-                <li><a href="#" class="dropdown-toggle"><i class="icon-edit"></i><span class="menu-text"> 留言管理 </span><b
+                <li><a href="#" class="dropdown-toggle"><i class="icon-comments"></i><span
+                                class="menu-text"> 留言管理 </span><b
                                 class="arrow icon-angle-down"></b></a>
                     <ul class="submenu">
                         <li class="home"><a href="javascript:void(0)" name="message.php" title="留言列表"

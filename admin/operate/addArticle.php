@@ -12,7 +12,11 @@ if (!isset($_POST['title'], $_POST['content'])) {
 }
 
 $db = DB::getInstance();
-if (!$db->addArticle($_POST['title'], $_POST['content'])) {
+if (($articleId = $db->addArticle($_POST['title'], $_POST['content'])) !== false) {
+    $time = $db->getArticleTime($articleId);
+    $json = json_encode(compact('articleId', 'time'));
+    echo $json;
+} else {
     header("Status: 422 Unprocessable Entity");
     echo '添加失败！';
     return;

@@ -11,7 +11,11 @@ if (!isset($_POST['originID'], $_POST['name'], $_POST['studentID'], $_POST['pass
     header("Status: 422 Unprocessable Entity");
     return;
 }
-
+$admitted = $_POST['admitted'];
+if ($admitted !== '-1' && $admitted !== '0' && $admitted !== '1') {
+    header("Status: 422 Unprocessable Entity");
+    return;
+}
 $originID = $_POST['originID'];
 $db = DB::getInstance();
 if (!$db->studentIDExists($originID)) {
@@ -23,7 +27,6 @@ $error = '';
 $name = $_POST['name'];
 $studentID = $_POST['studentID'];
 $password = $_POST['password'];
-$admitted = $_POST['admitted'];
 if ($name !== '' && $db->getUserName($originID) !== $name) {
     if ($db->nameExists($name)) {
         $error = '新用户名已被使用！';
@@ -35,17 +38,12 @@ if ($password !== '' && $db->getUserPassword($originID) !== $password && !$db->s
     $error .= '修改密码失败！';
 }
 if ($admitted !== '') {
-    $_admitted = $db->isUserAdmitted($originID);
-    if ($admitted === '1') {
-        if (!$_admitted && !$db->admitUser($originID)) {
-            $error .= '启用用户失败！';
-        }
-    } else if ($admitted === '-1') {
-        if ($_admitted && !$db->denyUser($originID)) {
-            $error .= '停用用户失败！';
-        }
-    } else {
-        $error .= '修改用户状态参数错误！';
+    if ($admitted === '1' && !$db->admitUser($originID)) {
+        $error .= '启用用户失败！';
+    } else if ($admitted === '-1' && !$db->denyUser($originID)) {
+        $error .= '停用用户失败！';
+    } else if ($admitted === '0' && !$db->noAuditUser($originID)) {
+        $error .= '改为待审核失败！';
     }
 }
 if ($studentID !== '' && $originID !== $studentID) {
