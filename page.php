@@ -37,7 +37,7 @@ $name = $_SESSION['name'];
                             <?= $name ?>
                         </div>
                         <div class="ydc-user-info-func ydc-flex">
-                            <span class="ydc-tag"><?= $studentID ?></span>
+                            <span class="ydc-tag" style="background-color: limegreen;"><?= $studentID ?></span>
                             <a href="logout.php">退出</a>
                         </div>
                     </div>
