@@ -28,7 +28,6 @@ $name = $_SESSION['name'];
     <link type="text/css" rel="stylesheet" href="css/home.css">
 </head>
 <body>
-
 <!-- head YDC begin -->
 <header class="ydc-header">
     <div class="ydc-entered">
@@ -76,7 +75,7 @@ $name = $_SESSION['name'];
     <div style="margin: 0 17.5%">
         <div class="ydc-panes">
             <div class="ydc-pane" style="display:block;">
-                <p style="font-weight: bold;font-size: large;">评论：</p>
+                <p style="font-weight: bold;font-size: large;">共有<?=$db->getNrOfMessages()?>条评论：</p>
                 <div style="border: 5px #ebebeb solid;">
                     <ol class="ydc-pane-list">
                         <?php
