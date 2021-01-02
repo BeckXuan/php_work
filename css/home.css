@@ -375,6 +375,7 @@
     height: 45px;
     line-height: 45px;
     padding: 0 20px;
+    word-break: break-all;
 }
 
 .ydc-pane-list li:hover {

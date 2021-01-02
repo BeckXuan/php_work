@@ -81,9 +81,10 @@ $name = $_SESSION['name'];
                         <?php
                         while ($message = $db->getNextMessage()) {
                             echo <<<html
-                    <li>
-                        {$message->getStudentID()}:{$message->getMessage()}
-                        <span>{$message->getTime()}</span>
+                    <li style="height: auto;">
+                        <span style="font-weight: bold; float: left; font-size: large; 
+                        color: crimson"> {$db->getUserName($message->getStudentID())}:&nbsp</span>{$message->getMessage()}
+                        <p style="color: #00CC66;margin-bottom: 2px;padding-top: 1px">{$message->getTime()}</p>
                     </li>
 html;
                         }

@@ -193,6 +193,7 @@ h2, h3 {
 textarea{
 	outline:none;
 	border: 5px #ebebeb solid;
+	padding: 5px 10px;
 }
 
 textarea:focus{
