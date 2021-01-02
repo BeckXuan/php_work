@@ -74,6 +74,7 @@ $(document).ready(function ($) {
                     input_password.val('')
                     let json = JSON.parse(xhr.responseText)
                     dt.fnAddData(['', studentID, name, json['time'], admitted, admitted, ''])
+                    dt.fnAdjustColumnSizing()
                     layer.alert('添加成功！', {title: '提示框', icon: 1})
                 }, (xhr) => {
                     layer.alert('添加失败！' + xhr.responseText, {title: '提示框', icon: 2})
@@ -91,6 +92,7 @@ function member_del(obj) {
         _request('operate/delUser.php', 'value=' + id, () => {
             //_obj.parents("tr").remove();
             _row.remove().draw()
+            dt.fnAdjustColumnSizing()
             layer.msg('已删除!', {icon: 1, time: 2000})
         }, (xhr) => {
             layer.msg('删除失败！' + xhr.responseText, {icon: 2, time: 3000})
@@ -185,12 +187,31 @@ function member_edit(obj) {
                 if (name !== '') {
                     DT.cell(_row, 2).data(name)
                 }
-                if (originAdmitted !== '') {
+                if (admitted !== '') {
                     DT.cell(_row, -2).data(admitted)
                     DT.cell(_row, -1).data(admitted)
                 }
+                dt.fnAdjustColumnSizing()
             }, (xhr) => {
-                layer.alert('错误！' + xhr.responseText, {
+                let json = JSON.parse(xhr.responseText)
+                let modified = json['modified']
+                if (modified['studentID']) {
+                    originID = studentID
+                    DT.cell(_row, 1).data(studentID)
+                }
+                if (modified['name']) {
+                    originName = name
+                    DT.cell(_row, 2).data(name)
+                }
+                if (modified['admitted']) {
+                    originAdmitted = admitted
+                    DT.cell(_row, -2).data(admitted)
+                    DT.cell(_row, -1).data(admitted)
+                }
+                if (modified['password']) {
+                    // pass
+                }
+                layer.alert('错误！' + json['error'], {
                     title: '提示框',
                     icon: 2,
                 });

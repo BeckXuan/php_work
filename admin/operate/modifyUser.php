@@ -12,7 +12,7 @@ if (!isset($_POST['originID'], $_POST['name'], $_POST['studentID'], $_POST['pass
     return;
 }
 $admitted = $_POST['admitted'];
-if ($admitted !== '-1' && $admitted !== '0' && $admitted !== '1') {
+if ($admitted !== '' && $admitted !== '-1' && $admitted !== '0' && $admitted !== '1') {
     header("Status: 422 Unprocessable Entity");
     return;
 }
@@ -27,15 +27,22 @@ $error = '';
 $name = $_POST['name'];
 $studentID = $_POST['studentID'];
 $password = $_POST['password'];
+$modified = [];
 if ($name !== '' && $db->getUserName($originID) !== $name) {
     if ($db->nameExists($name)) {
         $error = '新用户名已被使用！';
     } else if (!$db->setUserName($originID, $name)) {
         $error = '修改用户名失败！';
+    } else {
+        $modified['name'] = true;
     }
 }
-if ($password !== '' && $db->getUserPassword($originID) !== $password && !$db->setUserPassword($originID, $password, false)) {
-    $error .= '修改密码失败！';
+if ($password !== '') {
+    if ($db->getUserPassword($originID) !== $password && !$db->setUserPassword($originID, $password, false)) {
+        $error .= '修改密码失败！';
+    } else {
+        $modified['password'] = true;
+    }
 }
 if ($admitted !== '') {
     if ($admitted === '1' && !$db->admitUser($originID)) {
@@ -44,6 +51,8 @@ if ($admitted !== '') {
         $error .= '停用用户失败！';
     } else if ($admitted === '0' && !$db->noAuditUser($originID)) {
         $error .= '改为待审核失败！';
+    } else {
+        $modified['admitted'] = true;
     }
 }
 if ($studentID !== '' && $originID !== $studentID) {
@@ -51,9 +60,12 @@ if ($studentID !== '' && $originID !== $studentID) {
         $error = '新学号已被使用！';
     } else if (!$db->setUserStudentID($originID, $studentID)) {
         $error .= '修改学号失败！';
+    } else {
+        $modified['studentID'] = true;
     }
 }
 if ($error !== '') {
     header("Status: 422 Unprocessable Entity");
-    echo $error;
+    $json = json_encode(compact('error', 'modified'));
+    echo $json;
 }

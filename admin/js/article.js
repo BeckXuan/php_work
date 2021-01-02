@@ -71,6 +71,7 @@ $(document).ready(function () {
                     edit_content.val('')
                     let json = JSON.parse(xhr.responseText)
                     dt.fnAddData(['', json['articleId'], title, content, json['time'], ''])
+                    dt.fnAdjustColumnSizing()
                     layer.alert('添加成功！', {title: '提示框', icon: 1})
                 }, (xhr) => {
                     layer.alert('错误！' + xhr.responseText, {
@@ -91,6 +92,7 @@ function article_del(obj) {
         _request('operate/delArticle.php', 'value=' + id, () => {
             //_obj.parents("tr").remove();
             _row.remove().draw()
+            dt.fnAdjustColumnSizing()
             layer.msg('已删除！', {icon: 1, time: 2000});
         }, (xhr) => {
             layer.msg('删除失败！' + xhr.responseText, {icon: 2, time: 3000});
@@ -163,6 +165,7 @@ function article_edit(obj) {
                 if (content !== '') {
                     DT.cell(_row, 3).data(content)
                 }
+                dt.fnAdjustColumnSizing()
             }, (xhr) => {
                 layer.alert('错误！' + xhr.responseText, {
                     title: '提示框',

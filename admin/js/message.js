@@ -102,6 +102,7 @@ $(document).ready(function () {
                     let jsonData = xhr.responseText
                     let json = JSON.parse(jsonData)
                     dt.fnAddData(['', ID, jsonData, articleId, jsonData, json['messageId'], message, json['time'], ''])
+                    dt.fnAdjustColumnSizing()
                     layer.alert('添加成功！', {title: '提示框', icon: 1})
                 }, (xhr) => {
                     layer.alert('错误！' + xhr.responseText, {
@@ -142,6 +143,7 @@ function member_del(obj) {
         _request('operate/delMessage.php', 'value=' + id, () => {
             //_obj.parents("tr").remove();
             _row.remove().draw()
+            dt.fnAdjustColumnSizing()
             layer.msg('已删除!', {icon: 1, time: 1000});
         }, (xhr) => {
             layer.msg('删除失败！' + xhr.responseText, {icon: 2, time: 3000});
@@ -214,7 +216,7 @@ function message_edit(obj) {
                 if (message !== '') {
                     DT.cell(_row, 6).data(message)
                 }
-                DT.draw()
+                dt.fnAdjustColumnSizing()
             }, (xhr) => {
                 layer.alert('错误！' + xhr.responseText, {
                     title: '提示框',
