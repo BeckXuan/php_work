@@ -456,6 +456,24 @@ class DB
         return $this->getNrOfRows('message');
     }
 
+    public function getNrOfMessagesByArticleId($articleId)
+    {
+        $stmt = $this->_db->prepare("SELECT COUNT(*) FROM `message` WHERE `articleId`=?");
+        $stmt->bind_param('s', $articleId);
+        if (!$stmt->execute()) {
+            $stmt->close();
+            return -1;
+        }
+        $result = $stmt->get_result();
+        if (!$result) {
+            return -1;
+        }
+        $out = $result->fetch_array()[0];
+        $result->close();
+        $stmt->close();
+        return $out;
+    }
+
     private function getMessageInformation($messageId, $field, $outHTMLFilter = true)
     {
         return $this->getTableInformation('message', 'id', 'i', $messageId, $field, $outHTMLFilter);

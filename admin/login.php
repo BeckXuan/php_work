@@ -14,6 +14,7 @@ if (isAdminLegal()) {
     <link rel="stylesheet" href="../css/login.css">
     <link rel="shortcut icon" href="../images/favicon.ico" type="image/x-icon"/>
     <link rel="icon" sizes="any" href="../images/favicon.ico">
+    <script src="../js/md5.js"></script>
 </head>
 <body>
 <div class="content">
@@ -47,7 +48,6 @@ if (isAdminLegal()) {
         </div>
     </div>
 </div>
-<script src="../js/login_admin.js"></script>
-<script src="../js/md5.js"></script>
 </body>
+<script src="js/login.js"></script>
 </html>

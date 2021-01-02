@@ -1,13 +1,13 @@
 <?php
-require "../common.php";
+require "../../common.php";
 setContentType();
 session_start();
 if (isAdminLegal()) {
-    header('location: ../admin/index.php');
+    header('location: ../index.php');
     return;
 }
 if (!isset($_POST['account'], $_POST['password'])) {
-    header('location: ../admin/login.php');
+    header('location: ../login.php');
     return;
 }
 $password = $_POST['password'];
@@ -18,7 +18,7 @@ if (!preg_match("/^[a-z0-9]{32}$/", $password)) {
 $account = $_POST['account'];
 $error = '';
 $db = &DB::getInstance();
-require "../config/admin.php";
+require "../../config/admin.php";
 /* @noinspection PhpUndefinedVariableInspection */
 if ($adminAccount !== $account || $adminPassword !== $password) {
     $error = '账号或密码错误！';

@@ -49,7 +49,7 @@ function _login(e) {
             btn_log.disabled = false
         }
     }
-    xhr.open("POST", '../check/admin.php', true);
+    xhr.open("POST", 'operate/login.php', true);
     xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     xhr.send('account=' + account + '&password=' + password + '&rem=' + rem);
 }
