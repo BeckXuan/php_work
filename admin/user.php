@@ -63,6 +63,9 @@ if ($type === '-1') {
                     <?php
                     while ($user = $db->getNextUser()) {
                         $studentID = $user->getStudentID();
+                        if ($studentID === 'admin') {
+                            continue;
+                        }
                         $name = $user->getName();
                         $time = $user->getTime();
 //                        $admitted = $user->isAdmitted();

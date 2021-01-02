@@ -18,7 +18,11 @@ if ($admitted !== '' && $admitted !== '-1' && $admitted !== '0' && $admitted !==
 }
 $originID = $_POST['originID'];
 $db = DB::getInstance();
-if (!$db->studentIDExists($originID)) {
+if ($originID === 'admin') {
+    header("Status: 422 Unprocessable Entity");
+    echo '禁止对该账号操作！';
+    return;
+} else if (!$db->studentIDExists($originID)) {
     header("Status: 422 Unprocessable Entity");
     echo '该学号不存在！';
     return;

@@ -10,7 +10,9 @@ if (!isAdminLegal()) {
 $db = &DB::getInstance();
 $error = null;
 $studentID = $_POST['value'];
-if (!$db->studentIDExists($studentID)) {
+if ($studentID === 'admin') {
+    $error = '禁止对该账号操作！';
+} else if (!$db->studentIDExists($studentID)) {
     $error = '该学号不存在！';
 } else if (!$db->admitUser($studentID)) {
     $error = '执行失败！';
