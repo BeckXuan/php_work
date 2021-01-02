@@ -216,6 +216,11 @@ class DB
         return $this->getNrOfRows('user', 'WHERE `admitted`=1');
     }
 
+    public function getNrOfDeniedUsers()
+    {
+        return $this->getNrOfRows('user', 'WHERE `admitted`=-1');
+    }
+
     public function getNrOfUnauditedUsers()
     {
         return $this->getNrOfRows('user', 'WHERE `admitted`=0');

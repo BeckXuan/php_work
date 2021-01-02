@@ -7,14 +7,19 @@ if (!isAdminLegal()) {
 }
 $db = &DB::getInstance();
 $type = isset($_GET['type']) ? $_GET['type'] : null;
+$nrOfUsers = 0;
 if ($type === '-1') {
     $db->initDeniedUserInfo(0, 100);
+    $nrOfUsers = $db->getNrOfDeniedUsers() - 1; // 除去预留的admin账户...
 } else if ($type === '0') {
     $db->initNoAuditedUserInfo(0, 100);
+    $nrOfUsers = $db->getNrOfUnauditedUsers();
 } else if ($type === '1') {
     $db->initAdmittedUserInfo(0, 100);
+    $nrOfUsers = $db->getNrOfAdmittedUsers();
 } else {
     $db->initUserInformation(0, 100);
+    $nrOfUsers = $db->getNrOfUsers();
 }
 ?>
 <html lang="zh-CN">
@@ -45,6 +50,7 @@ if ($type === '-1') {
                                 class="icon-plus"></i>添加用户</a>
                     <!--<a href="javascript:void(0)" class="btn btn-danger"><i class="icon-trash"></i>批量删除</a>-->
                 </span>
+                <span class="r_f">原始共：<b><?= $nrOfUsers ?></b>条</span>
             </div>
             <div class="table_menu_list">
                 <table class="table table-striped table-bordered table-hover" id="sample-table">

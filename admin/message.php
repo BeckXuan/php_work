@@ -32,7 +32,7 @@ $db->initMessageInformation(0, 100);
        <span class="l_f">
            <a href="javascript:void(0)" id="message_add" class="btn btn-warning"><i class="icon-plus"></i>&nbsp;添加留言</a>
        </span>
-            <span class="r_f">共：<b><?= $db->getNrOfMessages() ?></b>条</span>
+            <span class="r_f">原始共：<b><?= $db->getNrOfMessages() ?></b>条</span>
         </div>
         <div class="feedback">
             <table class="table table-striped table-bordered table-hover" id="sample-table">

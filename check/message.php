@@ -18,7 +18,7 @@ if ($message === "") {
     header('location: page.php?id=' . $articleId);
     return;
 }
-if (!$db->addMessage($articleId, $message, $_SESSION['studentID'])) {
+if ($db->addMessage($articleId, $message, $_SESSION['studentID']) === false) {
     header("Status: 422 Unprocessable Entity");
     echo '留言失败！';
 }

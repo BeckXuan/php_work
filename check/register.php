@@ -22,7 +22,7 @@ $error = '';
 $db = &DB::getInstance();
 if ($db->nameExists($name) || $db->studentIDExists($studentID)) {
     $error = '用户名或学号已存在！';
-} else if (!$db->addUser($name, $studentID, $password, false)) {
+} else if ($db->addUser($name, $studentID, $password, false) === false) {
     $error = '注册失败！数据库错误！';
 } else {
     return;
