@@ -30,9 +30,9 @@ $password = $_POST['password'];
 $modified = [];
 if ($name !== '' && $db->getUserName($originID) !== $name) {
     if ($db->nameExists($name)) {
-        $error = '新用户名已被使用！';
+        $error .= '新用户名已被使用！';
     } else if (!$db->setUserName($originID, $name)) {
-        $error = '修改用户名失败！';
+        $error .= '修改用户名失败！';
     } else {
         $modified['name'] = true;
     }
@@ -57,7 +57,7 @@ if ($admitted !== '') {
 }
 if ($studentID !== '' && $originID !== $studentID) {
     if ($db->studentIDExists($studentID)) {
-        $error = '新学号已被使用！';
+        $error .= '新学号已被使用！';
     } else if (!$db->setUserStudentID($originID, $studentID)) {
         $error .= '修改学号失败！';
     } else {

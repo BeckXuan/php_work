@@ -195,25 +195,38 @@ function member_edit(obj) {
             }, (xhr) => {
                 let json = JSON.parse(xhr.responseText)
                 let modified = json['modified']
+                let successMsg = ''
+                let failureMsg = ''
                 if (modified['studentID']) {
                     originID = studentID
                     DT.cell(_row, 1).data(studentID)
+                    successMsg += '修改学号成功！</br>'
+                } else if (studentID !== '') {
+                    failureMsg += '修改学号失败！</br>'
                 }
                 if (modified['name']) {
                     originName = name
                     DT.cell(_row, 2).data(name)
+                    successMsg += '修改用户名成功！</br>'
+                } else if (name !== '') {
+                    failureMsg += '修改用户名失败！</br>'
                 }
                 if (modified['admitted']) {
                     originAdmitted = admitted
                     DT.cell(_row, -2).data(admitted)
                     DT.cell(_row, -1).data(admitted)
+                    successMsg += '修改状态成功！</br>'
+                } else if (admitted !== '') {
+                    failureMsg += '修改状态失败！</br>'
                 }
                 if (modified['password']) {
-                    // pass
+                    input_password.val('')
+                    successMsg += '修改密码成功！</br>'
                 }
-                layer.alert('错误！' + json['error'], {
+                dt.fnAdjustColumnSizing()
+                layer.alert('成功：</br>' + successMsg + '</br>失败：</br>' + failureMsg + '</br>返回消息：</br>' + json['error'], {
                     title: '提示框',
-                    icon: 2,
+                    icon: 5,
                 });
             })
         }
