@@ -13,7 +13,6 @@ if (!isset($_POST['message'], $_POST['articleId'])) {
 $db = &DB::getInstance();
 $message = $_POST['message'];
 $articleId = $_POST['articleId'];
-$studentID = $_POST['studentID'];
 if ($message === "") {
     header('location: page.php?id=' . $articleId);
     return;

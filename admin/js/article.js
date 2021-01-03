@@ -4,7 +4,7 @@ let table, dt, DT
 $(document).ready(function () {
     table = $('#sample-table')
     dt = table.dataTable({
-        "aaSorting": [[1, "asc"]],//默认第几个排序
+        "aaSorting": [[1, "desc"]],//默认第几个排序
         "bStateSave": false,//状态保存
         "aoColumnDefs": [
             {"orderable": false, "aTargets": [0, 5]},// 制定列不参与排序

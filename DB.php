@@ -459,7 +459,7 @@ class DB
     public function getNrOfMessagesByArticleId($articleId)
     {
         $stmt = $this->_db->prepare("SELECT COUNT(*) FROM `message` WHERE `articleId`=?");
-        $stmt->bind_param('s', $articleId);
+        $stmt->bind_param('i', $articleId);
         if (!$stmt->execute()) {
             $stmt->close();
             return -1;

@@ -46,7 +46,7 @@ $(document).ready(function ($) {
         input_name.val('')
         input_studentID.val('')
         input_password.val('')
-        $("#member_edit input[type='radio']:first").attr('checked', 'checked');
+        $("#member_edit input[type='radio']:first").prop('checked', 'checked');
         layer.open({
             type: 1,
             title: '添加用户',
@@ -138,7 +138,7 @@ function member_edit(obj) {
     let input_password = $("#member_edit input[name$='password']")
     let originID = DT.cell(_row, 1).data()
     let originName = DT.cell(_row, 2).data()
-    let originAdmitted = JSON.parse(DT.cell(_row, -1).data())
+    let originAdmitted = DT.cell(_row, -1).data()
     $("#member_edit input[value='" + originAdmitted + "']").prop('checked', 'checked');
     input_name.val(originName)
     input_studentID.val(originID)
@@ -161,13 +161,10 @@ function member_edit(obj) {
             if (studentID === '' || originID === studentID) {
                 studentID = ''
             }
-            if (password !== '') {
-                password = hex_md5(password)
-            }
             if (originAdmitted === admitted) {
                 admitted = ''
             }
-            if (name === '' && studentID === '' && password === '' && admitted === '') {
+            if (name === '' && studentID === '' && admitted === '' && password === '') {
                 layer.alert("未修改任何信息！", {
                     title: '提示框',
                     icon: 0,
@@ -175,6 +172,7 @@ function member_edit(obj) {
                 layer.close(index);
                 return false;
             }
+            password = hex_md5(password)
             _request('operate/modifyUser.php', 'originID=' + originID + '&name=' + name + '&studentID=' + studentID + '&password=' + password + '&admitted=' + admitted, () => {
                 layer.alert('修改成功！', {
                     title: '提示框',

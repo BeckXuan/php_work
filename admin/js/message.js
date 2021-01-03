@@ -4,7 +4,7 @@ let table, dt, DT
 $(document).ready(function () {
     table = $('#sample-table')
     dt = table.dataTable({
-        "aaSorting": [[1, "desc"]],//默认第几个排序
+        "aaSorting": [[5, "desc"]],//默认第几个排序
         "bStateSave": true,//状态保存
         "aoColumnDefs": [
             //{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
