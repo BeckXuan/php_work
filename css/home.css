@@ -408,6 +408,10 @@
     overflow: hidden;
 }
 
+.ydc-page-content p {
+    text-indent: 2em;
+}
+
 .ydc-page-head h3 {
     height: 20px;
     line-height: 20px;

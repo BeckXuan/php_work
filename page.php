@@ -52,8 +52,8 @@ $name = $_SESSION['name'];
                 <h3><?= $db->getArticleTitle($id) ?></h3>
                 <?php
                 $content = $db->getArticleContent($id);
-                $content = str_replace(' ', '&nbsp;', $content);
-                $content = str_replace("\r\n", '</p><p>', $content);
+                //$content = str_replace(' ', '&nbsp;', $content);
+                $content = str_replace("\n", '</p><p>', $content);
                 ?>
                 <p><?= $content ?></p>
             </div>

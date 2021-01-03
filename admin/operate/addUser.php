@@ -20,7 +20,9 @@ $db = DB::getInstance();
 $error = '';
 $studentID = $_POST['studentID'];
 $name = $_POST['name'];
-if ($db->studentIDExists($studentID)) {
+if ($studentID === 'admin') {
+    $error = '禁止对该账号操作！';
+} else if ($db->studentIDExists($studentID)) {
     $error = '该学号已经存在！';
 } else if ($db->nameExists($name)) {
     $error = '该用户名已经存在！';

@@ -27,6 +27,9 @@ if ($adminAccount !== $account || $adminPassword !== $password) {
     $_SESSION['name'] = 'admin';
     $_SESSION['account'] = $account;
     $_SESSION['studentID'] = 'admin';
+    if (isset($_COOKIE['studentID'])) {
+        setcookie('studentID', '', 0, '/');
+    }
     if (isset($_POST['rem']) && $_POST['rem'] === '1') {
         setcookie('name', $name, time() + 3600, '/', '', false, true);
         setcookie('account', $account, time() + 3600, '/', '', false, true);
