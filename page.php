@@ -38,7 +38,7 @@ $name = $_SESSION['name'];
                         </div>
                         <div class="ydc-user-info-func ydc-flex">
                             <span class="ydc-tag" style="background-color: limegreen;"><?= $studentID ?></span>
-                            <a href="logout.php">退出</a>
+                            <a href="javascript:if(confirm('确实要退出吗?')){location='logout.php'}">退出</a>
                         </div>
                     </div>
                 </div>
@@ -66,7 +66,7 @@ $name = $_SESSION['name'];
     <div style="margin: 0 17.5%">
         <div class="ydc-panes">
             <div class="ydc-pane" style="display:block;">
-                <p style="font-weight: bold;font-size: large;">共有<?= $db->getNrOfMessages() ?>条评论：</p>
+                <p style="font-weight: bold;font-size: large;">共有<?= $db->getNrOfMessagesByArticleId($id) ?>条评论：</p>
                 <div style="border: 5px #ebebeb solid;">
                     <ol class="ydc-pane-list">
                         <?php
