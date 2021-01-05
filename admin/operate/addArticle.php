@@ -7,7 +7,7 @@ if (!isAdminLegal()) {
     return;
 }
 if (!isset($_POST['title'], $_POST['content'])) {
-    header("Status: 422 Unprocessable Entity");
+    http_response_code(400);
     return;
 }
 
@@ -17,7 +17,7 @@ if (($articleId = $db->addArticle($_POST['title'], $_POST['content'])) !== false
     $json = json_encode(compact('articleId', 'time'));
     echo $json;
 } else {
-    header("Status: 422 Unprocessable Entity");
+    http_response_code(406);
     echo '添加失败！';
     return;
 }

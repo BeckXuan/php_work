@@ -18,9 +18,9 @@ if ($message === "") {
     return;
 }
 if ($db->addMessage($articleId, $message, $_SESSION['studentID']) === false) {
-    header("Status: 422 Unprocessable Entity");
+    http_response_code(406);
     echo '留言失败！';
 } else {
-    header("location: ../page.php?id={$articleId}");
+    header('location: ../page.php?id=' . $articleId);
     return;
 }

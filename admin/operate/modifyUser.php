@@ -8,22 +8,22 @@ if (!isAdminLegal()) {
 }
 
 if (!isset($_POST['originID'], $_POST['name'], $_POST['studentID'], $_POST['password'], $_POST['admitted'])) {
-    header("Status: 422 Unprocessable Entity");
+    http_response_code(400);
     return;
 }
 $admitted = $_POST['admitted'];
 if ($admitted !== '' && $admitted !== '-1' && $admitted !== '0' && $admitted !== '1') {
-    header("Status: 422 Unprocessable Entity");
+    http_response_code(400);
     return;
 }
 $originID = $_POST['originID'];
 $db = DB::getInstance();
 if ($originID === 'admin') {
-    header("Status: 422 Unprocessable Entity");
+    http_response_code(406);
     echo '禁止对该账号操作！';
     return;
 } else if (!$db->studentIDExists($originID)) {
-    header("Status: 422 Unprocessable Entity");
+    http_response_code(406);
     echo '该学号不存在！';
     return;
 }
@@ -69,7 +69,7 @@ if ($studentID !== '' && $originID !== $studentID) {
     }
 }
 if ($error !== '') {
-    header("Status: 422 Unprocessable Entity");
+    http_response_code(406);
     $json = json_encode(compact('error', 'modified'));
     echo $json;
 }

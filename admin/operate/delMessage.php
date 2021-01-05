@@ -17,5 +17,5 @@ if (!$db->messageExists($messageId)) {
 } else {
     return;
 }
-header("Status: 422 Unprocessable Entity");
+http_response_code(406);
 echo $error;

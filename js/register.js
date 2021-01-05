@@ -77,7 +77,7 @@ function validate(type) {
                     //success
                     doc_text.className = ''
                     doc_text.setCustomValidity('')
-                } else if (xhr.status === 422) {
+                } else if (xhr.status === 406) {
                     //error
                     doc_text.className = 'input-check-error'
                     sp.className = 'span-check-error'
@@ -142,12 +142,12 @@ function _register(e) {
                 alert('注册成功！跳到登录界面！')
                 reg_form.reset()
                 document.querySelector('.content').classList.remove('s--signup')
-            } else if (xhr.status === 422) {
+            } else if (xhr.status === 406) {
                 //error
                 alert(xhr.responseText)
             } else {
                 //fail
-                alert('未知错误！')
+                alert(xhr.status + '未知错误！')
             }
             btn_reg.innerText = '注 册'
             btn_reg.disabled = false

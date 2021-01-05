@@ -7,14 +7,14 @@ if (!isAdminLegal()) {
     return;
 }
 if (!isset($_POST['messageId'], $_POST['studentID'], $_POST['articleId'], $_POST['message'])) {
-    header("Status: 422 Unprocessable Entity");
+    http_response_code(400);
     return;
 }
 
 $messageId = $_POST['messageId'];
 $db = DB::getInstance();
 if (!$db->messageExists($messageId)) {
-    header("Status: 422 Unprocessable Entity");
+    http_response_code(406);
     echo '该留言不存在！';
     return;
 }
@@ -32,7 +32,7 @@ if ($message !== '' && !$db->setMessageContent($messageId, $message)) {
     $error .= '修改留言内容失败！';
 }
 if ($error !== '') {
-    header("Status: 422 Unprocessable Entity");
+    http_response_code(406);
     echo $error;
     return;
 }

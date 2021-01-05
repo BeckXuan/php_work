@@ -15,7 +15,7 @@ if (!isset($_POST['studentID'], $_POST['password'])) {
 //获取参数
 $password = $_POST['password'];
 if (!preg_match("/^[a-z0-9]{32}$/", $password)) {
-    http_response_code(403);
+    http_response_code(400);
     return;
 }
 $studentID = $_POST['studentID'];
@@ -43,5 +43,5 @@ if (!$db->studentIDExists($studentID)) {
     }
     return;
 }
-header("Status: 422 Unprocessable Entity");
+http_response_code(406);
 echo $error;

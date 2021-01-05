@@ -1,10 +1,10 @@
 <?php
 require "common.php";
 session_start();
-//if (isUserLegal() || isAdminLegal()) {
-//    header('location: index.php');
-//    return;
-//}
+if (isUserLegal() || isAdminLegal()) {
+    header('location: index.php');
+    return;
+}
 ?>
 <html lang="zh-CN">
 <head>
@@ -13,6 +13,7 @@ session_start();
     <link rel="stylesheet" href="css/login.css">
     <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon"/>
     <link rel="icon" sizes="any" href="images/favicon.ico">
+    <script src="js/md5.js" type="text/javascript"></script>
 </head>
 <body>
 <div class="content">
@@ -83,8 +84,7 @@ session_start();
         document.querySelector('.content').classList.toggle('s--signup')
     })
 </script>
-<script src="js/login.js"></script>
-<script src="js/register.js"></script>
-<script src="js/md5.js"></script>
+<script src="js/login.js" type="text/javascript"></script>
+<script src="js/register.js" type="text/javascript"></script>
 </body>
 </html>

@@ -7,13 +7,13 @@ if (!isset($_POST['name'], $_POST['studentID'], $_POST['password'])) {
     return;
 }
 if (isUserLegal()) {
-    header("Status: 422 Unprocessable Entity");
+    http_response_code(406);
     echo '您已登录！请退出后再尝试注册！';
     return;
 }
 $password = $_POST['password'];
 if (!preg_match("/^[a-z0-9]{32}$/", $password)) {
-    http_response_code(403);
+    http_response_code(400);
     return;
 }
 $name = $_POST['name'];
@@ -27,5 +27,5 @@ if ($db->nameExists($name) || $db->studentIDExists($studentID)) {
 } else {
     return;
 }
-header("Status: 422 Unprocessable Entity");
+http_response_code(406);
 echo $error;

@@ -12,7 +12,7 @@ if (!isset($_POST['account'], $_POST['password'])) {
 }
 $password = $_POST['password'];
 if (!preg_match("/^[a-z0-9]{32}$/", $password)) {
-    http_response_code(403);
+    http_response_code(400);
     return;
 }
 $account = $_POST['account'];
@@ -39,5 +39,5 @@ if ($adminAccount !== $account || $adminPassword !== $password) {
     }
     return;
 }
-header("Status: 422 Unprocessable Entity");
+http_response_code(406);
 echo $error;

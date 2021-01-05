@@ -7,14 +7,14 @@ if (!isAdminLegal()) {
     return;
 }
 if (!isset($_POST['id'], $_POST['title'], $_POST['content'])) {
-    header("Status: 422 Unprocessable Entity");
+    http_response_code(400);
     return;
 }
 
 $id = $_POST['id'];
 $db = DB::getInstance();
 if (!$db->articleExists($id)) {
-    header("Status: 422 Unprocessable Entity");
+    http_response_code(406);
     echo '该文章不存在！';
     return;
 }
@@ -28,6 +28,6 @@ if ($content !== '' && !$db->setArticleContent($id, $content)) {
     $error .= '修改内容失败！';
 }
 if ($error !== '') {
-    header("Status: 422 Unprocessable Entity");
+    http_response_code(406);
     echo $error;
 }

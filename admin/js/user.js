@@ -4,7 +4,7 @@ $(document).ready(function ($) {
     dt = table.dataTable({
         "aaSorting": [[1, "asc"]],//默认第几个排序
         "bStateSave": true,//状态保存
-        "aoColumnDefs": [{"orderable": false, "aTargets": [0, 4, 5]},
+        "aoColumnDefs": [{"orderable": false, "aTargets": [0, 5]},
             {
                 "targets": 0,
                 "render": function () {
@@ -164,6 +164,9 @@ function member_edit(obj) {
             if (originAdmitted === admitted) {
                 admitted = ''
             }
+            if (password !== '') {
+                password = hex_md5(password)
+            }
             if (name === '' && studentID === '' && admitted === '' && password === '') {
                 layer.alert("未修改任何信息！", {
                     title: '提示框',
@@ -172,7 +175,6 @@ function member_edit(obj) {
                 layer.close(index);
                 return false;
             }
-            password = hex_md5(password)
             _request('operate/modifyUser.php', 'originID=' + originID + '&name=' + name + '&studentID=' + studentID + '&password=' + password + '&admitted=' + admitted, () => {
                 layer.alert('修改成功！', {
                     title: '提示框',
@@ -222,7 +224,10 @@ function member_edit(obj) {
                     successMsg += '修改密码成功！</br>'
                 }
                 dt.fnAdjustColumnSizing()
-                layer.alert('成功：</br>' + successMsg + '</br>失败：</br>' + failureMsg + '</br>返回消息：</br>' + json['error'], {
+                if (successMsg !== '') {
+                    successMsg = '成功：</br>' + successMsg + '</br>'
+                }
+                layer.alert(successMsg + '失败：</br>' + failureMsg + '</br>返回消息：</br>' + json['error'], {
                     title: '提示框',
                     icon: 5,
                 });

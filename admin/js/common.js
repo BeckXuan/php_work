@@ -35,7 +35,7 @@ function _request(url, data, success, error) {
         if (status === 200) {
             //success
             success(xhr)
-        } else if (status === 422) {
+        } else if (status === 406) {
             //error
             error(xhr)
         } else if (status === 401) {
