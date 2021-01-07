@@ -5,17 +5,22 @@ if (!isUserLegal() && !isAdminLegal()) {
     header('location: login.php');
     return;
 }
-
 if (!isset($_GET['id'])) {
     header('location: index.php');
     return;
 }
-
 $id = $_GET['id'];
 $db = &DB::getInstance();
+
 $db->initMessageInfoByArticleId($id);
 $studentID = $_SESSION['studentID'];
 $name = $_SESSION['name'];
+$title = '(该文章不存在)';
+$content = '(该文章不存在)';
+if ($db->articleExists($id)) {
+    $title = $db->getArticleTitle($id);
+    $content = $db->getArticleContent($id);
+}
 ?>
 <html lang="zh-CN">
 <head>
@@ -37,7 +42,7 @@ $name = $_SESSION['name'];
                         </div>
                         <div class="ydc-user-info-func ydc-flex">
                             <span class="ydc-tag" style="background-color: limegreen;"><?= $studentID ?></span>
-                            <a href="javascript:if(confirm('确实要退出吗?')){window.location.href='logout.php'}">退出</a>
+                            <a href="javascript:void(0)" onclick="_logout()">退出</a>
                         </div>
                     </div>
                 </div>
@@ -49,13 +54,8 @@ $name = $_SESSION['name'];
     <div class="ydc-content-slide ydc-body">
         <div class="ydc-page-content">
             <div class="ydc-page-head" style="word-break: break-all;">
-                <h3><?= $db->getArticleTitle($id) ?></h3>
-                <?php
-                $content = $db->getArticleContent($id);
-                //$content = str_replace(' ', '&nbsp;', $content);
-                $content = str_replace("\n", '</p><p>', $content);
-                ?>
-                <p><?= $content ?></p>
+                <h3><?= $title ?></h3>
+                <p><?= str_replace("\n", '</p><p>', $content); ?></p>
             </div>
         </div>
     </div>
@@ -88,7 +88,7 @@ html;
                         <input type="hidden" name="studentID" value="<?= $studentID ?>">
                         <input type="hidden" name="articleId" value="<?= $id ?>">
                         <button type="button" class="ydc-reg-form-button"
-                                style="float: left;background-color: grey;margin-left: 18px;" onclick="returnIndex()">
+                                style="float: left;background-color: grey;margin-left: 18px;" onclick="backToIndex()">
                             返回主页
                         </button>
                         <button type="submit" class="ydc-reg-form-button" style="float: right;">发布评论</button>
@@ -105,7 +105,13 @@ html;
     </div>
 </section>
 <script type="text/javascript">
-    function returnIndex() {
+    function _logout() {
+        if (confirm('确实要退出吗?')) {
+            window.location.href = 'logout.php'
+        }
+    }
+
+    function backToIndex() {
         window.location.href = "index.php";
     }
 </script>

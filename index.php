@@ -30,7 +30,8 @@ $db->initArticleInformation(0, 9999);
                         </div>
                         <div class="ydc-user-info-func ydc-flex">
                             <span class="ydc-tag" style="background-color: limegreen"><?= $studentID ?></span>
-                            <a href="javascript:if(confirm('确实要退出吗?')){window.location.href='logout.php'}">退出</a>
+                            <a href="javascript:void(0)"
+                               onclick="if(confirm('确实要退出吗?')){window.location.href='logout.php'}">退出</a>
                         </div>
                     </div>
                 </div>
@@ -75,6 +76,7 @@ $db->initArticleInformation(0, 9999);
                                         <a href="page.php?id={$article->getId()}" target="_blank" >{$article->getTitle()}</a >
                                         <span >{$article->getTime()}</span >
                                     </li >
+
 html;
                                     }
                                     ?>
