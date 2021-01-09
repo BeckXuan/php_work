@@ -35,7 +35,7 @@ if (isAdminLegal()) {
                 <span>记住我</span>
                 <input type="checkbox" name="rem">
             </label>
-            <p class="forgot-pass"><a href="javascript:">忘记密码？</a></p>
+            <p class="forgot-pass"><a href="javascript:void(0)" id="forget">忘记密码？</a></p>
             <button type="submit" class="submit" id="btn_log">登 录</button>
             <button type="button" class="fb-btn" id="btn_usr">使用 <span>学生</span> 帐号登录</button>
         </div>
@@ -51,5 +51,13 @@ if (isAdminLegal()) {
     </div>
 </div>
 </body>
+<script type="text/javascript">
+    document.getElementById('forget').addEventListener('click', function () {
+        layer.msg('请联系程序员处理！', {
+            icon: 5,
+            time: 3000
+        })
+    })
+</script>
 <script src="js/login.js"></script>
 </html>
