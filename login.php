@@ -83,8 +83,12 @@ if (isUserLegal() || isAdminLegal()) {
 
 <script type="text/javascript">
     document.querySelector('.img__btn').addEventListener('click', function () {
-        layer.closeAll('tips')
-        document.querySelector('.content').classList.toggle('s--signup')
+        if (document.querySelector('.content').classList.toggle('s--signup')) {
+            validateAll()
+        } else {
+            stopAllXHR()
+            layer.closeAll('tips')
+        }
     })
 </script>
 <script src="js/login.js" type="text/javascript"></script>

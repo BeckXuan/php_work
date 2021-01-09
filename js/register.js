@@ -116,6 +116,12 @@ function validate(type) {
             xhr.ontimeout = function () {
                 let _message = '请求服务器超时！'
                 doc_text.setCustomValidity(_message)
+                layer.close(tips[type])
+                tips[type] = layer.tips(_message, doc_text, {
+                    tips: [2, '#FFD700'],
+                    tipsMore: true,
+                    time: 0
+                })
                 layer.msg(_message, {icon: 2, time: 3000})
                 sending[type] = false
             }
@@ -125,6 +131,12 @@ function validate(type) {
         xhr.send('value=' + value);
         sending[type] = true
     }, 500)
+}
+
+function validateAll() {
+    for (let key in reg_sps) {
+        validate(key)
+    }
 }
 
 function regResetAll() {
@@ -194,4 +206,13 @@ function _register(e) {
     xhr.open("POST", 'check/register.php', true)
     xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded')
     xhr.send('name=' + name + '&studentID=' + studentID + '&password=' + password)
+}
+
+function stopAllXHR() {
+    for (let key in sending) {
+        if (sending[key] !== null) {
+            XHR[key].abort()
+            sending[key] = null
+        }
+    }
 }
