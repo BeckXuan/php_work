@@ -210,9 +210,9 @@ function _register(e) {
 
 function stopAllXHR() {
     for (let key in sending) {
-        if (sending[key] !== null) {
+        if (sending[key]) {
             XHR[key].abort()
-            sending[key] = null
+            sending[key] = false
         }
     }
 }
