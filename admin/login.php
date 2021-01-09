@@ -15,6 +15,8 @@ if (isAdminLegal()) {
     <link rel="shortcut icon" href="../images/favicon.ico" type="image/x-icon"/>
     <link rel="icon" sizes="any" href="../images/favicon.ico">
     <script src="../js/md5.js"></script>
+    <script src="js/jquery-1.9.1.min.js"></script>
+    <script src="assets/layer/layer.js" type="text/javascript"></script>
 </head>
 <body>
 <div class="content">
