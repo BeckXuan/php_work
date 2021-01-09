@@ -4,7 +4,7 @@ let input_password = log_form['password']
 let input_rem = log_form['rem']
 let btn_log = log_form['btn_log']
 let btn_usr = log_form['btn_usr']
-let XHR = null
+let xhr = null
 log_form.addEventListener('submit', _login)
 btn_usr.addEventListener('click', () => {
     window.location.href = '../login.php'
@@ -17,34 +17,36 @@ function _login(e) {
     let account = input_account.value
     let password = hex_md5(input_password.value)
     let rem = input_rem.checked ? 1 : 0
-    let xhr
-    if (XHR) {
-        xhr = XHR
-    } else {
-        xhr = new XMLHttpRequest();
-        if (!xhr) {
-            alert('浏览器不支持xhr！')
+    if (!xhr) {
+        if (window.XMLHttpRequest) {
+            xhr = new XMLHttpRequest();
+        } else if (window.ActiveXObject) {
+            xhr = new ActiveXObject("Microsoft.XMLHTTP");
+        } else {
+            layer.msg('浏览器不支持XMLHttpRequest！', {icon: 2, time: 3000})
             return
         }
-        XHR = xhr
         xhr.onload = function () {
-            if (xhr.status === 200) {
+            let _status = xhr.status
+            let _message = xhr.responseText
+            if (_status === 200) {
                 //success
-                alert('登陆成功！')
-                window.location.href = 'index.php'
-            } else if (xhr.status === 406) {
-                //error
-                alert(xhr.responseText)
-            } else {
-                //fail
-                alert('未知错误！')
+                layer.msg('登录成功！跳转中...', {icon: 1, time: 0})
+                setTimeout(() => {
+                    window.location.href = 'index.php'
+                }, 800)
+                return
             }
+            if (_status !== 406) {
+                _message = _status + '未知错误！'
+            }
+            layer.msg(_message, {icon: 2, time: 3000})
             btn_log.innerText = '登 录'
             btn_log.disabled = false
         }
         xhr.timeout = 2000;
         xhr.ontimeout = function () {
-            alert('请求服务器超时！')
+            layer.msg('请求服务器超时！', {icon: 2, time: 3000})
             btn_log.innerText = '登 录'
             btn_log.disabled = false
         }

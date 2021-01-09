@@ -23,27 +23,30 @@ function _login(e) {
         } else if (window.ActiveXObject) {
             xhr = new ActiveXObject("Microsoft.XMLHTTP");
         } else {
-            alert('浏览器不支持XMLHttpRequest！')
+            layer.msg('浏览器不支持XMLHttpRequest！', {icon: 2, time: 3000})
             return
         }
         xhr.onload = function () {
-            if (xhr.status === 200) {
+            let _status = xhr.status
+            let _message = xhr.responseText
+            if (_status === 200) {
                 //success
-                alert('登陆成功！')
-                window.location.href = 'index.php'
-            } else if (xhr.status === 406) {
-                //error
-                alert(xhr.responseText)
-            } else {
-                //fail
-                alert(xhr.status + '未知错误！')
+                layer.msg('登录成功！跳转中...', {icon: 1, time: 0})
+                setTimeout(() => {
+                    window.location.href = 'index.php'
+                }, 800)
+                return
             }
+            if (_status !== 406) {
+                _message = _status + '未知错误！'
+            }
+            layer.msg(_message, {icon: 2, time: 3000})
             btn_log.innerText = '登 录'
             btn_log.disabled = false
         }
         xhr.timeout = 2000;
         xhr.ontimeout = function () {
-            alert('请求服务器超时！')
+            layer.msg('请求服务器超时！', {icon: 2, time: 3000})
             btn_log.innerText = '登 录'
             btn_log.disabled = false
         }

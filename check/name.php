@@ -11,4 +11,6 @@ $db = &DB::getInstance();
 if ($db->nameExists($_POST['value'])) {
     http_response_code(406);
     echo "该用户名已存在！";
+} else {
+    echo "该用户名可用";
 }

@@ -10,4 +10,6 @@ $db = &DB::getInstance();
 if ($db->studentIDExists($_POST['value'])) {
     http_response_code(406);
     echo "该学号已存在！";
+} else {
+    echo "该学号可用";
 }

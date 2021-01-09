@@ -28,6 +28,8 @@ if ($db->articleExists($id)) {
     <title></title>
     <link type="text/css" rel="stylesheet" href="css/core.css">
     <link type="text/css" rel="stylesheet" href="css/home.css">
+    <script src="js/jquery-3.5.1.min.js" type="text/javascript"></script>
+    <script src="js/layer.js" type="text/javascript"></script>
 </head>
 <body>
 <!-- head YDC begin -->
@@ -106,9 +108,9 @@ html;
 </section>
 <script type="text/javascript">
     function _logout() {
-        if (confirm('确实要退出吗?')) {
+        layer.confirm('确实要退出吗?', () => {
             window.location.href = 'logout.php'
-        }
+        })
     }
 
     function backToIndex() {

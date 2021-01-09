@@ -17,6 +17,8 @@ $db->initArticleInformation(0, 9999);
     <title>主页</title>
     <link type="text/css" rel="stylesheet" href="css/core.css">
     <link type="text/css" rel="stylesheet" href="css/home.css">
+    <script src="js/jquery-3.5.1.min.js" type="text/javascript"></script>
+    <script src="js/layer.js" type="text/javascript"></script>
 </head>
 <body>
 <header class="ydc-header">
@@ -30,8 +32,7 @@ $db->initArticleInformation(0, 9999);
                         </div>
                         <div class="ydc-user-info-func ydc-flex">
                             <span class="ydc-tag" style="background-color: limegreen"><?= $studentID ?></span>
-                            <a href="javascript:void(0)"
-                               onclick="if(confirm('确实要退出吗?')){window.location.href='logout.php'}">退出</a>
+                            <a href="javascript:void(0)" onclick="_logout()">退出</a>
                         </div>
                     </div>
                 </div>
@@ -95,5 +96,12 @@ html;
         </div>
     </div>
 </section>
+<script type="text/javascript">
+    function _logout() {
+        layer.confirm('确实要退出吗?', () => {
+            window.location.href = 'logout.php'
+        })
+    }
+</script>
 </body>
 </html>

@@ -25,6 +25,11 @@ let sending = {
     'studentID': false,
 }
 
+let tips = {
+    'name': null,
+    'studentID': null
+}
+
 for (let key in reg_sps) {
     reg_inputs[key].addEventListener('input', () => {
         validate(key)
@@ -54,11 +59,19 @@ function validate(type) {
         if (doc_text.validity.valueMissing) {
             doc_text.className = ''
             doc_text.setCustomValidity('')
+            layer.close(tips[type])
             return
         }
         let value = doc_text.value
         doc_text.className = 'input-check-process'
-        doc_text.setCustomValidity('检查是否可用中...')
+        let _message = '检查是否可用中...'
+        doc_text.setCustomValidity(_message)
+        layer.close(tips[type])
+        tips[type] = layer.tips(_message, doc_text, {
+            tips: [2, '#FFD700'],
+            tipsMore: true,
+            time: 0
+        })
         let xhr;
         if (XHR[type]) {
             xhr = XHR[type]
@@ -68,30 +81,42 @@ function validate(type) {
             } else if (window.ActiveXObject) {
                 xhr = new ActiveXObject("Microsoft.XMLHTTP");
             } else {
-                alert('浏览器不支持XMLHttpRequest！')
+                layer.msg('浏览器不支持XMLHttpRequest！', {icon: 2, time: 3000})
                 return
             }
             XHR[type] = xhr
             xhr.onload = function () {
-                if (xhr.status === 200) {
-                    //success
+                layer.close(tips[type])
+                let _status = xhr.status
+                let _message = xhr.responseText
+                if (_status === 200) {
                     doc_text.className = ''
                     doc_text.setCustomValidity('')
-                } else if (xhr.status === 406) {
-                    //error
-                    doc_text.className = 'input-check-error'
-                    sp.className = 'span-check-error'
-                    doc_text.setCustomValidity(xhr.responseText)
-                    //alert(xhr.responseText)
-                } else {
-                    //fail
-                    //alert('服务器连接失败！')
+                    tips[type] = layer.tips(_message, doc_text, {
+                        tips: [2, '#90EE90'],
+                        tipsMore: true,
+                        time: 0
+                    })
+                    return
                 }
+                if (_status !== 406) {
+                    _message = _status + '未知错误！'
+                }
+                doc_text.className = 'input-check-error'
+                sp.className = 'span-check-error'
+                doc_text.setCustomValidity(_message)
+                tips[type] = layer.tips(_message, doc_text, {
+                    tips: [2, '#cb2341'],
+                    tipsMore: true,
+                    time: 0
+                })
                 sending[type] = false
             }
             xhr.timeout = 2000;
             xhr.ontimeout = function () {
-                alert('请求服务器超时！')
+                let _message = '请求服务器超时！'
+                doc_text.setCustomValidity(_message)
+                layer.msg(_message, {icon: 2, time: 3000})
                 sending[type] = false
             }
         }
@@ -107,6 +132,7 @@ function regResetAll() {
         reg_inputs[key].className = ''
         reg_inputs[key].setCustomValidity('')
         reg_sps[key].className = ''
+        layer.closeAll()
     }
 }
 
@@ -133,29 +159,29 @@ function _register(e) {
     } else {
         xhr = new XMLHttpRequest();
         if (!xhr) {
-            alert('浏览器不支持xhr！')
+            layer.msg('浏览器不支持xhr！', {icon: 2, time: 3000})
             return
         }
         xhr.onload = function () {
-            if (xhr.status === 200) {
-                //success
-                alert('注册成功！跳到登录界面！')
+            let _status = xhr.status
+            let _message = xhr.responseText
+            if (_status === 200) {
+                layer.msg('注册成功！请等待管理员审核后登录！', {icon: 1, time: 3000})
                 reg_form.reset()
                 document.querySelector('.content').classList.remove('s--signup')
-            } else if (xhr.status === 406) {
-                //error
-                alert(xhr.responseText)
-            } else {
-                //fail
-                alert(xhr.status + '未知错误！')
+                return
             }
+            if (_status !== 406) {
+                _message = _status + '未知错误！'
+            }
+            layer.msg(_message, {icon: 2, time: 3000})
             btn_reg.innerText = '注 册'
             btn_reg.disabled = false
             btn_rst.disabled = false
         }
         xhr.timeout = 2000;
         xhr.ontimeout = function () {
-            alert('请求服务器超时！')
+            layer.msg('请求服务器超时！', {icon: 2, time: 3000})
             btn_reg.innerText = '注 册'
             btn_reg.disabled = false
             btn_rst.disabled = false
