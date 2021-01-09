@@ -132,7 +132,7 @@ function regResetAll() {
         reg_inputs[key].className = ''
         reg_inputs[key].setCustomValidity('')
         reg_sps[key].className = ''
-        layer.closeAll()
+        layer.closeAll('tips')
     }
 }
 
@@ -168,6 +168,7 @@ function _register(e) {
             if (_status === 200) {
                 layer.msg('注册成功！请等待管理员审核后登录！', {icon: 1, time: 3000})
                 reg_form.reset()
+                layer.closeAll('tips')
                 document.querySelector('.content').classList.remove('s--signup')
                 return
             }
@@ -190,7 +191,7 @@ function _register(e) {
     let name = reg_inputs['name'].value
     let studentID = reg_inputs['studentID'].value
     let password = hex_md5(reg_inputs['password'].value)
-    xhr.open("POST", 'check/register.php', true);
-    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    xhr.send('name=' + name + '&studentID=' + studentID + '&password=' + password);
+    xhr.open("POST", 'check/register.php', true)
+    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded')
+    xhr.send('name=' + name + '&studentID=' + studentID + '&password=' + password)
 }

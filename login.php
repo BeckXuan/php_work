@@ -83,6 +83,7 @@ if (isUserLegal() || isAdminLegal()) {
 
 <script type="text/javascript">
     document.querySelector('.img__btn').addEventListener('click', function () {
+        layer.closeAll('tips')
         document.querySelector('.content').classList.toggle('s--signup')
     })
 </script>
