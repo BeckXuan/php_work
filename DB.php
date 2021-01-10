@@ -164,13 +164,10 @@ class DB
         }
         $stmt = $this->_db->prepare('INSERT INTO `user` (`name`, `studentID`, `password`, `time`) VALUES (?, ?, ?, NOW())');
         $stmt->bind_param('sss', $name, $studentID, $password);
-        if (!$stmt->execute()) {
-            $stmt->close();
-            return false;
-        }
-        $insertId = $stmt->insert_id;
+        $result = $stmt->execute();
         $stmt->close();
-        return $insertId;
+        return $result;
+        // 添加学生没有insert_id, 学号为主键
     }
 
     public function delUser($studentID)
@@ -248,24 +245,25 @@ class DB
         return $this->getUserStudentId('name', $name);
     }
 
-    public function initUserInformation($start, $counter)
+    public function initUserInformation($start, $counter, $orderedByTime = false, $descending = false)
     {
-        return $this->initTableInformation('user', $this->_result_users, 'studentID', $start, $counter);
+        $orderedBy = $orderedByTime ? 'time' : 'studentID';
+        return $this->initTableInformation('user', $this->_result_users, $orderedBy, $start, $counter, $descending);
     }
 
-    public function initAdmittedUserInfo($start, $counter, $orderedByTime = false, $descending = false)
+    public function initAdmittedUserInfo($start, $counter, $orderedByTime = true, $descending = false)
     {
         $orderedBy = $orderedByTime ? 'time' : 'studentID';
         return $this->initTableInformation('user', $this->_result_users, $orderedBy, $start, $counter, $descending, 'WHERE `admitted`=1');
     }
 
-    public function initNoAuditedUserInfo($start, $counter, $orderedByTime = true, $descending = true)
+    public function initNoAuditedUserInfo($start, $counter, $orderedByTime = true, $descending = false)
     {
         $orderedBy = $orderedByTime ? 'time' : 'studentID';
         return $this->initTableInformation('user', $this->_result_users, $orderedBy, $start, $counter, $descending, 'WHERE `admitted`=0');
     }
 
-    public function initDeniedUserInfo($start, $counter, $orderedByTime = true, $descending = true)
+    public function initDeniedUserInfo($start, $counter, $orderedByTime = true, $descending = false)
     {
         $orderedBy = $orderedByTime ? 'time' : 'studentID';
         return $this->initTableInformation('user', $this->_result_users, $orderedBy, $start, $counter, $descending, 'WHERE `admitted`=-1');

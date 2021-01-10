@@ -6,7 +6,10 @@ if (!isAdminLegal()) {
     http_response_code(401);
     return;
 }
-
+if (!isset($_POST['value'])) {
+    http_response_code(400);
+    return;
+}
 $db = &DB::getInstance();
 $error = null;
 $studentID = $_POST['value'];

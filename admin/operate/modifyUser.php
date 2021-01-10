@@ -32,8 +32,10 @@ $name = $_POST['name'];
 $studentID = $_POST['studentID'];
 $password = $_POST['password'];
 $modified = [];
-if ($name !== '' && $db->getUserName($originID) !== $name) {
-    if ($db->nameExists($name)) {
+if ($name !== '') {
+    if ($db->getUserName($originID) === $name) {
+        $modified['name'] = true;
+    } else if ($db->nameExists($name)) {
         $error .= '新用户名已被使用！';
     } else if (!$db->setUserName($originID, $name)) {
         $error .= '修改用户名失败！';

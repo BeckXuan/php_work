@@ -80,7 +80,8 @@ if (isUserLegal() || isAdminLegal()) {
         </form>
     </div>
 </div>
-
+<script src="js/login.js" type="text/javascript"></script>
+<script src="js/register.js" type="text/javascript"></script>
 <script type="text/javascript">
     document.querySelector('.img__btn').addEventListener('click', function () {
         if (document.querySelector('.content').classList.toggle('s--signup')) {
@@ -97,7 +98,5 @@ if (isUserLegal() || isAdminLegal()) {
         })
     })
 </script>
-<script src="js/login.js" type="text/javascript"></script>
-<script src="js/register.js" type="text/javascript"></script>
 </body>
 </html>
