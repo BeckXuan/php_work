@@ -54,15 +54,9 @@ $db->initMessageInformation(0, 100);
                 while ($message = $db->getNextMessage()) {
                     $studentID = $message->getStudentID();
                     $studentName = $db->getUserName($studentID);
-                    //if ($studentName === null) {
-                    //    $studentName = '(该学生不存在)';
-                    //}
                     $studentName = json_encode(compact('studentName'));
                     $articleId = $message->getArticleId();
                     $articleTitle = $db->getArticleTitle($articleId);
-                    //if ($articleTitle === null) {
-                    //    $articleTitle = '(该文章不存在)';
-                    //}
                     $articleTitle = json_encode(compact('articleTitle'));
                     $messageId = $message->getId();
                     $messageContent = $message->getMessage();

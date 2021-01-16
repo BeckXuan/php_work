@@ -32,7 +32,6 @@ if ($type === '-1') {
     <link rel="stylesheet" href="assets/css/font-awesome.min.css"/>
     <script src="js/jquery-1.9.1.min.js"></script>
     <script src="assets/js/bootstrap.min.js"></script>
-    <script src="assets/js/typeahead-bs2.min.js"></script>
     <script src="assets/js/jquery.dataTables.min.js"></script>
     <script src="assets/js/jquery.dataTables.bootstrap.js"></script>
     <script src="assets/layer/layer.js"></script>
@@ -74,12 +73,6 @@ if ($type === '-1') {
                         }
                         $name = $user->getName();
                         $time = $user->getTime();
-//                        $admitted = $user->isAdmitted();
-//                        $class_a = $admitted ? 'btn-success' : '';
-//                        $class_s = $admitted ? 'label-success' : 'label-default';
-//                        $callback = $admitted ? 'stop' : 'start';
-//                        $title = $admitted ? '启用' : '停用';
-//                        $status = !$user->isAudited() ? '待审核' : '已' . $title;
                         $status = null;
                         if (!$user->isAudited()) {
                             $status = 0;
